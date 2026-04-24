@@ -1,26 +1,24 @@
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace Infrastructure.Repositories;
 
 public class ReservationRepository(AppDbContext context)
     : BaseRepository<Reservation, Guid>(context), IReservationRepository
 {
-    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, Guid? guestId = null)
+    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, Guid? guestId = null)
     {
         if (guestId == null)
         {
             var isReserved = await context.Reservations.AnyAsync(r =>
-                r.RoomId == roomId && r.CheckInDate <= checkInDate && checkInDate <= r.CheckOutDate);
+                r.RoomId == roomId && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate));
             return isReserved;
         }
         else
         {
             var isReserved = await context.Reservations.AnyAsync(r =>
-                r.RoomId == roomId && r.CheckInDate <= checkInDate && checkInDate <= r.CheckOutDate &&
+                r.RoomId == roomId && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate) &&
                 r.GuestId != guestId);
             return isReserved;
         }

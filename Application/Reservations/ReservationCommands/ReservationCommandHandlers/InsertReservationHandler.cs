@@ -18,7 +18,7 @@ public class InsertReservationHandler(
         CancellationToken cancellationToken)
     {
         var errorMessage = string.Empty;
-        if (await reservationRepository.IsReservedAsync(request.RoomId, request.CheckInDate))
+        if (await reservationRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate))
             errorMessage += $"room {request.RoomId} is already reserved";
         var room = await roomRepository.GetByIdAsync(request.RoomId, cancellationToken);
         if (room == null)

@@ -17,7 +17,7 @@ public class UpdateReservationHandler(IReservationRepository reservationReposito
         var reservation = await reservationRepository.GetByIdAsync(request.ReservationId, cancellationToken);
         if (reservation == null || reservation.GuestId != request.GuestId)
             errorMessage += $"reservation {request.ReservationId} not found";
-        if (await reservationRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.GuestId))
+        if (await reservationRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate, request.GuestId))
             errorMessage += $"room {request.RoomId} is already reserved";
 
         if (errorMessage != "")
