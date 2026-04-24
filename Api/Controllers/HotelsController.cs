@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class HotelsController(IMediator mediator) : BaseController(mediator)
+public class HotelsController(IMediator mediator) : BaseController()
 {
     [HttpGet]
     [Authorize(Roles = "Guest,Admin")]

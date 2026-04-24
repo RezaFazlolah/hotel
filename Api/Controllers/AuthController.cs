@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class AuthController(IMediator mediator) : BaseController(mediator)
+public class AuthController(IMediator mediator) : BaseController()
 {
     [AllowAnonymous]
     [HttpPost("Register")]

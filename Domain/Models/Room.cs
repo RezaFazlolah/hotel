@@ -9,8 +9,8 @@ public class Room : IBaseModel<Guid>
     public RoomType Type { get; set; }
     public decimal PricePerNight { get; set; }
     // foreign key
-    public Guid? HotelId { get; set; }
+    public Guid HotelId { get; set; }
     // navigation property
-    public Hotel? Hotel { get; set; }
+    public required Hotel Hotel { get; set; }
     public ICollection<Reservation> Reservations { get; set; } = [];
 }

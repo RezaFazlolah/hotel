@@ -20,12 +20,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasForeignKey(r => r.HotelId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Room>()
+            .HasIndex(r => new { r.HotelId, r.Number })
+            .IsUnique();
+
         modelBuilder.Entity<Reservation>()
             .HasOne(r => r.Room)
             .WithMany(rm => rm.Reservations)
             .HasForeignKey(r => r.RoomId)
             .OnDelete(DeleteBehavior.Restrict);
-            
+
         // modelBuilder.Entity<Reservation>()
         //     .HasOne(r => r.Guest)
         //     .WithMany(g => g.Reservations)

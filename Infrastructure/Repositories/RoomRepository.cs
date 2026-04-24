@@ -16,25 +16,19 @@ public class RoomRepository(AppDbContext context) : BaseRepository<Room, Guid>(c
 
     public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
     {
-        if (entity.HotelId != null)
-        {
-            var isRoomNumberUnique =
-                await IsRoomNumberUniqueAsync(entity.HotelId.Value, entity.Number, cancellationToken);
-            if (!isRoomNumberUnique)
-                return null;
-        }
+        var isRoomNumberUnique =
+            await IsRoomNumberUniqueAsync(entity.HotelId, entity.Number, cancellationToken);
+        if (!isRoomNumberUnique)
+            return null;
         return await base.InsertAsync(entity, cancellationToken);
     }
 
     public override async Task<Room?> UpdateAsync(Room entity, CancellationToken cancellationToken)
     {
-        if (entity.HotelId != null)
-        {
-            var isRoomNumberUnique =
-                await IsRoomNumberUniqueAsync(entity.HotelId.Value, entity.Number, cancellationToken);
-            if (!isRoomNumberUnique)
-                return null;
-        }
+        var isRoomNumberUnique =
+            await IsRoomNumberUniqueAsync(entity.HotelId, entity.Number, cancellationToken);
+        if (!isRoomNumberUnique)
+            return null;
 
         return await base.UpdateAsync(entity, cancellationToken);
     }

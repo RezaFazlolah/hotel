@@ -6,7 +6,7 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("API/[controller]")]
-public class BaseController(IMediator mediator) : ControllerBase
+public class BaseController() : ControllerBase
 {
     protected IActionResult HandleResult<T>(Result<T> result)
     {

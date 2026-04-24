@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class ReservationsController(IMediator mediator, IMapper mapper) : BaseController(mediator)
+public class ReservationsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
     [Authorize(Roles = "Guest")]
