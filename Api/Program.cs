@@ -1,4 +1,4 @@
-using System.Text;
+using Api;
 using Api.MiddleWares;
 using Application;
 using Application.Behaviors;
@@ -33,17 +33,23 @@ builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Ass
 
 // AutoMapper
 builder.Services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
+builder.Services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // identity
-// builder.Services.AddIdentityApiEndpoints<AppUser>()
-// .AddRoles<IdentityRole>()
-// .AddEntityFrameworkStores<AppDbContext>();
-
-builder.Services.AddIdentityCore<AppUser>()
+// builder.Services.AddIdentityCore<AppUser>()
+builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 1;
+        options.Password.RequiredUniqueChars = 0;
+    })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
@@ -66,8 +72,7 @@ if (app.Environment.IsDevelopment())
     // app.UseSwaggerUI();
 }
 
-// app.MapIdentityApi<AppUser>();
-// app.MapGroup("api/defaultAuth").MapIdentityApi<AppUser>();
+app.MapGroup("api/defaultAuth").MapIdentityApi<AppUser>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

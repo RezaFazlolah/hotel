@@ -1,6 +1,6 @@
-namespace Application.Auth.AuthDtos;
+namespace Application.DTOs.AuthDtos;
 
-public class LoginAuthDto
+public class LoginDto
 {
     public ICollection<string> Roles { get; set; } = [];
     public Guid Id { get; set; }

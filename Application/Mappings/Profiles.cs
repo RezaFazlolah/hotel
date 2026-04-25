@@ -9,9 +9,9 @@ using Domain.Models;
 
 namespace Application.Mappings;
 
-public class AutoMapperProfiles : Profile
+public class Profiles : Profile
 {
-    public AutoMapperProfiles()
+    public Profiles()
     {
         // room
         CreateMap<Room, RoomDto>()

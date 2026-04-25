@@ -1,25 +1,29 @@
-using Application.Auth.AuthCommands.AuthCommandRequests;
+using Api.DTOs.AuthDTOs;
+using Application.Commands.AuthCommands;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class AuthController(IMediator mediator) : BaseController()
+public class AuthController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [AllowAnonymous]
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegisterAuthCommand request, CancellationToken cancellationToken)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommandDto request, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(request, cancellationToken);
+        var command = mapper.Map<RegisterCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
 
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginAuthCommand request, CancellationToken cancellationToken)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginCommandDto request, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(request, cancellationToken);
+        var command = mapper.Map<LoginCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
 }

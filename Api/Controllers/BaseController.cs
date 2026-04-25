@@ -12,6 +12,8 @@ public class BaseController() : ControllerBase
     {
         if (!result.IsSuccess)
         {
+            if (result.Code == 401)
+                return Unauthorized(result.ErrorMessage);
             if (result.Code == 404)
                 return NotFound(result.ErrorMessage);
         }

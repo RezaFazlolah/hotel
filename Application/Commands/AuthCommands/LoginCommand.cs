@@ -1,10 +1,10 @@
-using Application.Auth.AuthDtos;
+using Application.DTOs.AuthDtos;
 using Application.Result;
 using MediatR;
 
-namespace Application.Auth.AuthCommands.AuthCommandRequests;
+namespace Application.Commands.AuthCommands;
 
-public class LoginAuthCommand : IRequest<Result<LoginAuthDto>>
+public class LoginCommand : IRequest<Result<LoginDto>>
 {
     public string PhoneNumber { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
