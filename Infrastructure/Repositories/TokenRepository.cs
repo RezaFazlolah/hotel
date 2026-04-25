@@ -9,7 +9,7 @@ namespace Infrastructure.Repositories;
 
 public class TokenRepository(IConfiguration configuration) : ITokenRepository
 {
-    public string CreateJwt(IdentityUser user, ICollection<string> roles)
+    public string CreateJwt(AppUser user, ICollection<string> roles)
     {
         var keyValue = configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing");
         var issuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer is missing");

@@ -4,5 +4,5 @@ namespace Infrastructure.Repositories;
 
 public interface ITokenRepository
 {
-    string CreateJwt(IdentityUser user, ICollection<string> roles);
+    string CreateJwt(AppUser user, ICollection<string> roles);
 }

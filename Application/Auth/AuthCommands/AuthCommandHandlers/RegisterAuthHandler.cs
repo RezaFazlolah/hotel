@@ -1,13 +1,14 @@
 using Application.Auth.AuthCommands.AuthCommandRequests;
 using Application.Auth.AuthDtos;
 using Application.Result;
+using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth.AuthCommands.AuthCommandHandlers;
 
-public class RregisterAuthHandler(UserManager<IdentityUser> userManager) : IRequestHandler<RegisterAuthCommand, Result<RegisterAuthDto>>
+public class RregisterAuthHandler(UserManager<AppUser> userManager) : IRequestHandler<RegisterAuthCommand, Result<RegisterAuthDto>>
 {
     public async Task<Result<RegisterAuthDto>> Handle(RegisterAuthCommand request, CancellationToken cancellationToken)
     {
@@ -16,7 +17,7 @@ public class RregisterAuthHandler(UserManager<IdentityUser> userManager) : IRequ
         if (existingUser != null)
             return Result<RegisterAuthDto>.Failure($"user {existingUser.PhoneNumber} is already registered", 400);
 
-        var user = new IdentityUser
+        var user = new AppUser
         {
             PhoneNumber = request.PhoneNumber,
             UserName = request.PhoneNumber

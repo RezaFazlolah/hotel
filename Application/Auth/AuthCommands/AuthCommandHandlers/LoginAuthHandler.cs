@@ -1,6 +1,7 @@
 using Application.Auth.AuthCommands.AuthCommandRequests;
 using Application.Auth.AuthDtos;
 using Application.Result;
+using Infrastructure;
 using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth.AuthCommands.AuthCommandHandlers;
 
-public class LoginAuthHandler(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
+public class LoginAuthHandler(UserManager<AppUser> userManager, ITokenRepository tokenRepository)
     : IRequestHandler<LoginAuthCommand, Result<LoginAuthDto>>
 {
     public async Task<Result<LoginAuthDto>> Handle(LoginAuthCommand request, CancellationToken cancellationToken)
