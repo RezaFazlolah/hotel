@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -11,7 +12,6 @@ public class DbInitializer
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        // 1. Ensure roles exist
         string[] roleNames = { "Admin", "Guest" };
         foreach (var roleName in roleNames)
         {
@@ -21,42 +21,32 @@ public class DbInitializer
             }
         }
 
-        // 2. Define users to seed
         var adminUser = new AppUser
         {
-            PhoneNumber = "+989184129577",
+            UserName = "+989184129577",
+            PhoneNumber = "+989184129577"
         };
 
         var guestUser = new AppUser
         {
-            PhoneNumber = "+989216073852",
+            UserName = "+989216073852",
+            PhoneNumber = "+989216073852"
         };
 
-        if (await userManager.)
+        var adminExists = userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == adminUser.PhoneNumber).Result;
+        if (adminExists == null)
         {
-            var result = await userManager.CreateAsync(adminUser, "1234"); // adjust password
+            var result = await userManager.CreateAsync(adminUser, "1234");
             if (result.Succeeded)
-            {
                 await userManager.AddToRoleAsync(adminUser, "Admin");
-            }
-            else
-            {
-                // Handle errors (in development you may throw or log)
-                throw new Exception($"Failed to seed admin user: {string.Join(", ", result.Errors)}");
-            }
         }
 
-        if (await userManager.FindByEmailAsync(guestUser.Email) == null)
+        var guestExists = userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == guestUser.PhoneNumber).Result;
+        if (guestExists == null)
         {
-            var result = await userManager.CreateAsync(guestUser, "Guest@123");
+            var result = await userManager.CreateAsync(guestUser, "1234");
             if (result.Succeeded)
-            {
                 await userManager.AddToRoleAsync(guestUser, "Guest");
-            }
-            else
-            {
-                throw new Exception($"Failed to seed guest user: {string.Join(", ", result.Errors)}");
-            }
         }
     }
 }
