@@ -1,56 +1,66 @@
-using Application.Rooms.RoomCommands.RoomCommandRequests;
-using Application.Rooms.RoomQueries.RoomQueryRequests;
+using Api.DTOs.RoomDtos;
+using Application.Commands.RoomCommands;
+using Application.Queries.RoomQueries;
+using Application.Result;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class RoomsController(IMediator mediator) : BaseController()
+public class RoomsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
-    [Authorize(Roles = "Guest,Admin")]
+    // [Authorize(Roles = "Guest,Admin")]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllRoomsQuery request,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(request, cancellationToken);
-        return Ok(result);
+        var resultDto = mapper.Map<Result<ICollection<RoomDto>>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Guest,Admin")]
+    // [Authorize(Roles = "Guest,Admin")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new GetRoomByIdQuery() { RoomId = id };
         var result = await mediator.Send(request, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<RoomDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommand request,
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommandDto request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(request, cancellationToken);
-        return HandleResult(result);
+        var command = mapper.Map<InsertRoomCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+        var resultDto = mapper.Map<Result<RoomDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomCommand request,
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomCommandDto request,
         CancellationToken cancellationToken)
     {
-        request.Id = id;
-        var result = await mediator.Send(request, cancellationToken);
-        return HandleResult(result);
+        var command = mapper.Map<UpdateRoomCommand>(request);
+        command.Id = id;
+        var result = await mediator.Send(command, cancellationToken);
+        var resultDto = mapper.Map<Result<RoomDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new DeleteRoomCommand { RoomId = id };
         var result = await mediator.Send(request, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<RoomDto>>(result);
+        return HandleResult(resultDto);
     }
 }

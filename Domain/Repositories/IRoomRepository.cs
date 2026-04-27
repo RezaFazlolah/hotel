@@ -4,5 +4,6 @@ namespace Domain.Repositories;
 
 public interface IRoomRepository : IBaseRepository<Room, Guid>
 {
-    Task<bool> IsRoomNumberUniqueAsync(Guid hotelId, int roomNumber, CancellationToken cancellationToken);
+    // roomId MUST NOT be updated
+    Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber, CancellationToken cancellationToken);
 }

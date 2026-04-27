@@ -1,4 +1,4 @@
-using Api.DTOs.AuthDTOs;
+using Api.DTOs.AuthDtos;
 using Application.Commands.AuthCommands;
 using AutoMapper;
 using MediatR;

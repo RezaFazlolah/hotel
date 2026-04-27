@@ -1,0 +1,11 @@
+using Application.Result;
+using Domain.Models;
+using MediatR;
+
+namespace Application.Commands.ReservationCommands;
+
+public class DeleteReservationCommand : IRequest<Result<Reservation>>
+{
+    public Guid ReservationId { get; init; }
+    public Guid GuestId { get; init; }
+}

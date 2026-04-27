@@ -11,7 +11,7 @@ public abstract class BaseRepository<TEntity, TKey>(AppDbContext context) : IBas
     public virtual async Task<ICollection<TEntity>> GetAllAsync(
         CancellationToken cancellationToken,
         string? filterOn = null, string? filterQuery = null,
-        string? orderBy = null, bool isAscending = true, 
+        string? orderBy = null, bool isAscending = true,
         int pageNumber = 1, int pageSize = int.MaxValue)
     {
         var query = CustomContext();
@@ -57,6 +57,8 @@ public abstract class BaseRepository<TEntity, TKey>(AppDbContext context) : IBas
     }
 
     protected abstract IQueryable<TEntity> CustomContext();
+
     protected abstract IQueryable<TEntity> CustomFilter(IQueryable<TEntity> query, string? filterOn, string? filterQuery);
+
     protected abstract IQueryable<TEntity> CustomSort(IQueryable<TEntity> query, string? orderBy, bool isAscending);
 }

@@ -17,10 +17,5 @@
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
       <PackageReference Include="MediatR" Version="14.0.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Handlers/QueryHandlers/" />
-      <Folder Include="Queries/" />
-    </ItemGroup>
     
 </Project>

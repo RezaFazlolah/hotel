@@ -1,6 +1,7 @@
-using Application.Reservations.ReservationCommands.ReservationCommandRequests;
-using Application.Reservations.ReservationDtos;
-using Application.Reservations.ReservationQueries.ReservationQueryRequests;
+using Api.DTOs.ReservationDtos;
+using Application.Commands.ReservationCommands;
+using Application.Queries.ReservationQueries;
+using Application.Result;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,8 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
 
         var request = new GetAllReservationsQuery() { GuestId = guestId };
         var result = await mediator.Send(request, cancellationToken);
-        return Ok(result);
+        var resultDto = mapper.Map<Result<ICollection<ReservationDto>>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpGet("{id:guid}")]
@@ -33,7 +35,8 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
 
         var request = new GetReservationByIdQuery() { GuestId = guestId, ReservationId = id };
         var result = await mediator.Send(request, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpPost]
@@ -49,21 +52,10 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
         insertReservationCommand.GuestId = guestId;
 
         var result = await mediator.Send(insertReservationCommand, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
     }
 
-    [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Guest")]
-    public async Task<IActionResult> DeleteByGuestAsync(Guid id, CancellationToken cancellationToken)
-    {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
-            return Unauthorized();
-
-        var request = new DeleteReservationCommand() { ReservationId = id, GuestId = guestId };
-        var result = await mediator.Send(request, cancellationToken);
-        return HandleResult(result);
-    }
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "Guest")]
@@ -78,6 +70,21 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
         var request2 = mapper.Map<UpdateReservationCommand>(request);
         request2.GuestId = guestId;
         var result = await mediator.Send(request2, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Guest")]
+    public async Task<IActionResult> DeleteByGuestAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
+            return Unauthorized();
+
+        var request = new DeleteReservationCommand() { ReservationId = id, GuestId = guestId };
+        var result = await mediator.Send(request, cancellationToken);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
     }
 }

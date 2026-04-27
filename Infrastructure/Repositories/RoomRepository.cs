@@ -7,26 +7,27 @@ namespace Infrastructure.Repositories;
 
 public class RoomRepository(AppDbContext context) : BaseRepository<Room, Guid>(context), IRoomRepository
 {
-    public async Task<bool> IsRoomNumberUniqueAsync(Guid hotelId, int roomNumber, CancellationToken cancellationToken)
+    public async Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =
-            !await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber, cancellationToken);
+            !await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber && r.Id != roomId, cancellationToken);
         return isRoomNumberUnique;
     }
 
     public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =
-            await IsRoomNumberUniqueAsync(entity.HotelId, entity.Number, cancellationToken);
+            await IsRoomNumberUniqueAsync(entity.Id, entity.HotelId, entity.Number, cancellationToken);
         if (!isRoomNumberUnique)
             return null;
         return await base.InsertAsync(entity, cancellationToken);
     }
 
+    // roomId MUST NOT be updated
     public override async Task<Room?> UpdateAsync(Room entity, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =
-            await IsRoomNumberUniqueAsync(entity.HotelId, entity.Number, cancellationToken);
+            await IsRoomNumberUniqueAsync(entity.Id, entity.HotelId, entity.Number, cancellationToken);
         if (!isRoomNumberUnique)
             return null;
 
