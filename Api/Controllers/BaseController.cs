@@ -1,4 +1,4 @@
-using Application.Result;
+using Application.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +13,9 @@ public class BaseController() : ControllerBase
         if (!result.IsSuccess)
         {
             if (result.Code == 401)
-                return Unauthorized(result.ErrorMessage);
+                return Unauthorized(result.Errors);
             if (result.Code == 404)
-                return NotFound(result.ErrorMessage);
+                return NotFound(result.Errors);
         }
 
         if (result.IsSuccess)
@@ -23,6 +23,9 @@ public class BaseController() : ControllerBase
             return Ok(result.Value);
         }
 
-        return BadRequest(result.ErrorMessage);
+        return BadRequest(result.Errors);
     }
+
+    private string ErrorsToString(IEnumerable<Error> errors)
+        => string.Join("\n", errors.Select(e => e.Message));
 }

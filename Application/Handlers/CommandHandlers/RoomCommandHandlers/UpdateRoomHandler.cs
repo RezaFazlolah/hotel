@@ -1,5 +1,5 @@
 using Application.Commands.RoomCommands;
-using Application.Result;
+using Application.Models;
 using AutoMapper;
 using Domain.Models;
 using Domain.Repositories;
@@ -12,20 +12,20 @@ public class UpdateRoomHandler(IRoomRepository roomRepository, IHotelRepository 
 {
     public async Task<Result<Room>> Handle(UpdateRoomCommand request, CancellationToken cancellationToken)
     {
-        var errorMessage = "";
+        var errors = new List<Error>();
         var room = await roomRepository.GetByIdAsync(request.Id, cancellationToken);
         if (room == null)
-            errorMessage += $"room {request.Id} not found";
+            errors.Add(new Error($"room {request.Id} not found"));
         if (request.HotelId != null &&
             await hotelRepository.GetByIdAsync(request.HotelId.Value, cancellationToken) == null)
-            errorMessage += $"hotel {request.HotelId} not found";
-        if (errorMessage != "")
-            return Result<Room>.Failure(errorMessage, 404);
+            errors.Add(new Error($"hotel {request.HotelId} not found"));
+        if (errors.Count>0)
+            return Result<Room>.Failure(errors, 404);
 
         mapper.Map(request, room);
         var updatedRoom = await roomRepository.UpdateAsync(room, cancellationToken);
         if (updatedRoom == null)
-            return Result<Room>.Failure($"update room failed", 400);
+            return Result<Room>.Failure(new Error("update room failed"), 400);
         return Result<Room>.Success(updatedRoom);
     }
 }

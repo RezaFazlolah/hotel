@@ -1,5 +1,5 @@
 using Application.Commands.ReservationCommands;
-using Application.Result;
+using Application.Models;
 using AutoMapper;
 using Domain.Models;
 using Domain.Repositories;
@@ -12,20 +12,20 @@ public class UpdateReservationHandler(IReservationRepository reservationReposito
 {
     public async Task<Result<Reservation>> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
     {
-        var errorMessage = "";
+        var errors = new List<Error>();
         var reservation = await reservationRepository.GetByIdAsync(request.ReservationId, cancellationToken);
         if (reservation == null || reservation.GuestId != request.GuestId)
-            errorMessage += $"reservation {request.ReservationId} not found";
+            errors.Add(new Error($"reservation {request.ReservationId} not found"));
         if (await reservationRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate, request.GuestId))
-            errorMessage += $"room {request.RoomId} is already reserved";
+            errors.Add(new Error($"room {request.RoomId} is already reserved"));
 
-        if (errorMessage != "")
-            return Result<Reservation>.Failure(errorMessage, 404);
+        if (errors.Count > 0)
+            return Result<Reservation>.Failure(errors, 404);
 
         mapper.Map(request, reservation);
         var updatedReservation = await reservationRepository.UpdateAsync(reservation, cancellationToken);
         if (updatedReservation == null)
-            return Result<Reservation>.Failure("update reservation failed", 400);
+            return Result<Reservation>.Failure(new Error("update reservation failed"), 400);
         return Result<Reservation>.Success(updatedReservation);
     }
 }

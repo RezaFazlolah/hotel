@@ -1,7 +1,7 @@
 using Api.DTOs.HotelDtos;
 using Application.Commands.HotelCommands;
+using Application.Models;
 using Application.Queries.HotelQueries;
-using Application.Result;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

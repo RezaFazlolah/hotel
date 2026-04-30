@@ -1,5 +1,5 @@
 using Application.Commands.HotelCommands;
-using Application.Result;
+using Application.Models;
 using AutoMapper;
 using Domain.Models;
 using Domain.Repositories;
@@ -14,12 +14,12 @@ public class UpdateHotelHandler(IHotelRepository hotelRepository, IMapper mapper
     {
         var hotel = await hotelRepository.GetByIdAsync(request.Id, cancellationToken);
         if (hotel == null)
-            return Result<Hotel>.Failure($"hotel {request.Id} not found", 404);
+            return Result<Hotel>.Failure(new Error($"hotel {request.Id} not found"), 404);
 
         mapper.Map(request, hotel);
         var updatedHotel = await hotelRepository.UpdateAsync(hotel, cancellationToken);
         if (updatedHotel == null)
-            return Result<Hotel>.Failure($"update hotel {request.Id} failed", 400);
+            return Result<Hotel>.Failure(new Error($"update hotel {request.Id} failed"), 400);
         return Result<Hotel>.Success(mapper.Map<Hotel>(updatedHotel));
     }
 }

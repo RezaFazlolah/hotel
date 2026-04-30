@@ -1,5 +1,5 @@
+using Application.Models;
 using Application.Queries.HotelQueries;
-using Application.Result;
 using Domain.Models;
 using Domain.Repositories;
 using MediatR;
@@ -13,7 +13,7 @@ public class GetHotelByIdHandler(IHotelRepository hotelRepository)
     {
         var hotel = await hotelRepository.GetByIdAsync(request.HotelId, cancellationToken);
         if (hotel == null)
-            return Result<Hotel>.Failure(errorMessage: $"hotel {request.HotelId} not found", code: 404);
+            return Result<Hotel>.Failure(new Error($"hotel {request.HotelId} not found"), code: 404);
         return Result<Hotel>.Success(hotel);
     }
 }

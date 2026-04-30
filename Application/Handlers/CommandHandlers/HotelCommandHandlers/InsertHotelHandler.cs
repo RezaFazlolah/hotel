@@ -1,5 +1,5 @@
 using Application.Commands.HotelCommands;
-using Application.Result;
+using Application.Models;
 using AutoMapper;
 using Domain.Models;
 using Domain.Repositories;
@@ -15,7 +15,7 @@ public class InsertHotelHandler(IHotelRepository hotelRepository, IMapper mapper
         var hotel = mapper.Map<Hotel>(request);
         var result = await hotelRepository.InsertAsync(hotel, cancellationToken);
         if (result == null)
-            return Result<Hotel>.Failure("insert hotel failed", 400);
+            return Result<Hotel>.Failure(new Error("insert hotel failed"), 400);
         return Result<Hotel>.Success(result);
     }
 }

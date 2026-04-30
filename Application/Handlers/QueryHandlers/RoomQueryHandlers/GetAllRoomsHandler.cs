@@ -1,5 +1,5 @@
+using Application.Models;
 using Application.Queries.RoomQueries;
-using Application.Result;
 using Domain.Models;
 using Domain.Repositories;
 using MediatR;

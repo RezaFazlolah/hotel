@@ -1,6 +1,4 @@
-using Application.DTOs.AuthDtos;
-using Application.Result;
-using Infrastructure;
+using Application.Models;
 using MediatR;
 
 namespace Application.Commands.AuthCommands;

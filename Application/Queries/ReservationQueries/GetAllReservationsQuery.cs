@@ -1,4 +1,4 @@
-using Application.Result;
+using Application.Models;
 using Domain.Models;
 using MediatR;
 

@@ -1,5 +1,6 @@
 using Api.DTOs.AuthDtos;
 using Application.Commands.AuthCommands;
+using Application.Models;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +16,8 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
     {
         var command = mapper.Map<RegisterCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<AppUserDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpPost("Login")]
@@ -23,6 +25,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
     {
         var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        return HandleResult(result);
+        var resultDto = mapper.Map<Result<AppUserDto>>(result);
+        return HandleResult(resultDto);
     }
 }

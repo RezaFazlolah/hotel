@@ -1,5 +1,5 @@
+using Application.Models;
 using Application.Queries.HotelQueries;
-using Application.Result;
 using Domain.Models;
 using Domain.Repositories;
 using MediatR;

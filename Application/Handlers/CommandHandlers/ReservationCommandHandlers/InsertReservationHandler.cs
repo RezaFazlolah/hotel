@@ -1,5 +1,5 @@
 using Application.Commands.ReservationCommands;
-using Application.Result;
+using Application.Models;
 using AutoMapper;
 using Domain.Models;
 using Domain.Repositories;
@@ -16,21 +16,21 @@ public class InsertReservationHandler(
     public async Task<Result<Reservation>> Handle(InsertReservationCommand request,
         CancellationToken cancellationToken)
     {
-        var errorMessage = string.Empty;
+        var errors = new List<Error>();
         if (await reservationRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate))
-            errorMessage += $"room {request.RoomId} is already reserved";
+            errors.Add(new Error($"room {request.RoomId} is already reserved"));
         var room = await roomRepository.GetByIdAsync(request.RoomId, cancellationToken);
         if (room == null)
-            errorMessage += $"room {request.RoomId} not found";
-        if (errorMessage != string.Empty)
-            return Result<Reservation>.Failure(errorMessage, 400);
+            errors.Add(new Error($"room {request.RoomId} not found"));
+        if (errors.Count > 0)
+            return Result<Reservation>.Failure(errors, 400);
 
         var reservation = mapper.Map<Reservation>(request);
         var days = (decimal)(request.CheckOutDate - request.CheckInDate).TotalDays;
         reservation.TotalPrice = room.PricePerNight * days;
         var result = await reservationRepository.InsertAsync(reservation, cancellationToken);
         if (result == null)
-            return Result<Reservation>.Failure("reservation failed", 400);
+            return Result<Reservation>.Failure(new Error("reservation failed"), 400);
         return Result<Reservation>.Success(reservation);
     }
 }

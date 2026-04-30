@@ -6,7 +6,7 @@ using Application.Commands.AuthCommands;
 using Application.Commands.HotelCommands;
 using Application.Commands.ReservationCommands;
 using Application.Commands.RoomCommands;
-using Application.Result;
+using Application.Models;
 using AutoMapper;
 using Domain.Models;
 
@@ -19,7 +19,12 @@ public class Profiles : Profile
         // auth
         CreateMap<RegisterCommandDto, RegisterCommand>();
         CreateMap<LoginCommandDto, LoginCommand>();
-
+        CreateMap<AppUser, AppUserDto>()
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.User.Id))
+            .ForMember(dst => dst.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber));
+        CreateMap<Result<AppUser>, Result<AppUserDto>>()
+            .ForMember(dst => dst.Value, opt => opt.MapFrom(src => src.Value));
+        
         // hotel
         CreateMap<Hotel, HotelDto>();
         CreateMap<Result<Hotel>, Result<HotelDto>>()

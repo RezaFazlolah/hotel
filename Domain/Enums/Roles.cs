@@ -1,7 +1,7 @@
 namespace Domain.Enums;
 
-public enum Roles
-{
-    Guest,
-    Admin
-}
+// public enum Roles
+// {
+//     Guest,
+//     Admin
+// }

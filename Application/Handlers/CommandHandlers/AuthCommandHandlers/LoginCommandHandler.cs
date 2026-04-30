@@ -1,5 +1,5 @@
 using Application.Commands.AuthCommands;
-using Application.Result;
+using Application.Models;
 using Infrastructure;
 using Infrastructure.Repositories;
 using MediatR;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 
-public class LoginCommandHandler(UserManager<AppUser> userManager, ITokenRepository tokenRepository)
+public class LoginCommandHandler(UserManager<User> userManager, ITokenRepository tokenRepository)
     : IRequestHandler<LoginCommand, Result<AppUser>>
 {
     public async Task<Result<AppUser>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -16,22 +16,22 @@ public class LoginCommandHandler(UserManager<AppUser> userManager, ITokenReposit
         var user = await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber,
             cancellationToken: cancellationToken);
         if (user == null)
-            return Result<AppUser>.Failure($"user not found", 404);
+            return Result<AppUser>.Failure(new Error("user not found"), 404);
+        
         var checkPassword = await userManager.CheckPasswordAsync(user, request.Password);
         if (checkPassword)
         {
             var roles = await userManager.GetRolesAsync(user);
 
             var jwt = tokenRepository.CreateJwt(user, roles.ToList());
-            var response = new AppUser
+            var loggedinUser = new AppUser
             {
-                Roles = roles,
-                Id = Guid.Parse(user.Id),
+                User = user,
                 Jwt = jwt
             };
-            return Result<AppUser>.Success(response);
+            return Result<AppUser>.Success(loggedinUser);
         }
 
-        return Result<AppUser>.Failure($"login failed", 400);
+        return Result<AppUser>.Failure(new Error($"incorrect password"), 400);
     }
 }

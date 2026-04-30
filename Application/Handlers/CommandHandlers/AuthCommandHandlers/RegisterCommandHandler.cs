@@ -1,5 +1,5 @@
 using Application.Commands.AuthCommands;
-using Application.Result;
+using Application.Models;
 using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -7,17 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 
-public class RegisterCommandHandler(UserManager<AppUser> userManager)
+public class RegisterCommandHandler(UserManager<User> userManager)
     : IRequestHandler<RegisterCommand, Result<AppUser>>
 {
     public async Task<Result<AppUser>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var existingUser = await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber,
-            cancellationToken);
-        if (existingUser != null)
-            return Result<AppUser>.Failure($"user {existingUser.PhoneNumber} is already registered", 400);
-
-        var user = new AppUser
+        var user = new User
         {
             PhoneNumber = request.PhoneNumber,
             UserName = request.PhoneNumber
@@ -25,11 +20,11 @@ public class RegisterCommandHandler(UserManager<AppUser> userManager)
         var result = await userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
-            var errors = new List<string>();
+            var errors = new List<Error>();
             foreach (var error in result.Errors)
-                errors.Add(error.Description);
+                errors.Add(new Error(error.Description));
 
-            return Result<AppUser>.Failure($"user register failed: {string.Join(", ", errors)}", 400);
+            return Result<AppUser>.Failure(errors, 400);
         }
 
         result = await userManager.AddToRoleAsync(user, "Guest");
@@ -37,12 +32,12 @@ public class RegisterCommandHandler(UserManager<AppUser> userManager)
         {
             var registeredUser = new AppUser
             {
-                Id = Guid.Parse(user.Id),
-                PhoneNumber = user.PhoneNumber,
-                Roles = ["Guest"]
+                User = user,
+                Jwt = ""
             };
             return Result<AppUser>.Success(registeredUser);
         }
-        return Result<AppUser>.Failure("user register failed", 400);
+
+        return Result<AppUser>.Failure(new Error("user registration failed"), 400);
     }
 }

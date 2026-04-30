@@ -9,7 +9,7 @@ public class DbInitializer
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
         string[] roleNames = { "Admin", "Guest" };
@@ -21,13 +21,13 @@ public class DbInitializer
             }
         }
 
-        var adminUser = new AppUser
+        var adminUser = new User
         {
             UserName = "+989184129577",
             PhoneNumber = "+989184129577"
         };
 
-        var guestUser = new AppUser
+        var guestUser = new User
         {
             UserName = "+989216073852",
             PhoneNumber = "+989216073852"

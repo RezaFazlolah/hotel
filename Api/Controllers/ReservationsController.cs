@@ -1,7 +1,7 @@
 using Api.DTOs.ReservationDtos;
 using Application.Commands.ReservationCommands;
+using Application.Models;
 using Application.Queries.ReservationQueries;
-using Application.Result;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -1,5 +1,5 @@
+using Application.Models;
 using Application.Queries.RoomQueries;
-using Application.Result;
 using Domain.Models;
 using Domain.Repositories;
 using MediatR;
@@ -12,7 +12,7 @@ public class GetRoomByIdHandler(IRoomRepository roomRepository) : IRequestHandle
     {
         var room = await roomRepository.GetByIdAsync(request.RoomId, cancellationToken);
         if (room == null)
-            return Result<Room>.Failure(errorMessage: $"room {request.RoomId} not found", code: 404);
+            return Result<Room>.Failure(new Error($"room {request.RoomId} not found"), code: 404);
         return Result<Room>.Success(room);
     }
 }
