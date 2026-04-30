@@ -12,7 +12,7 @@ namespace Api.Controllers;
 public class HotelsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
-    [Authorize(Roles = "Guest,Admin")]
+    // [Authorize(Roles = "Guest,Admin")]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllHotelsQuery request,
         CancellationToken cancellationToken)
     {
@@ -22,7 +22,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Guest,Admin")]
+    // [Authorize(Roles = "Guest,Admin")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new GetHotelByIdQuery() { HotelId = id };
@@ -32,7 +32,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> InsertAsync([FromBody] InsertHotelCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -43,7 +43,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateHotelCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -55,7 +55,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new DeleteHotelCommand

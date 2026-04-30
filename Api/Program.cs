@@ -16,13 +16,11 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
-builder.Services.AddOpenApi();
-
+    
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
-builder.Services.AddSwaggerGen(options => { options.CustomSchemaIds(type => type.FullName); });
+builder.Services.AddSwaggerGen();
+// builder.Services.AddSwaggerGen(options => { options.CustomSchemaIds(type => type.FullName); });
 
 // MediatR
 builder.Services.AddMediatR(cfg =>
@@ -43,15 +41,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // identity
-// builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
-//     {
-//         options.Password.RequireDigit = false;
-//         options.Password.RequireLowercase = false;
-//         options.Password.RequireUppercase = false;
-//         options.Password.RequireNonAlphanumeric = false;
-//         options.Password.RequiredLength = 1;
-//         options.Password.RequiredUniqueChars = 0;
-//     })
 builder.Services.AddIdentityCore<AppUser>(options =>
     {
         options.Password.RequireDigit = false;
@@ -64,6 +53,7 @@ builder.Services.AddIdentityCore<AppUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
+// auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
         options.TokenValidationParameters = new TokenValidationParameters
@@ -92,15 +82,13 @@ app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     // Scalar
-    app.MapScalarApiReference();
+    // app.MapOpenApi();
+    // app.MapScalarApiReference();
     // Swagger
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
-// app.MapGroup("api/defaultAuth").MapIdentityApi<AppUser>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

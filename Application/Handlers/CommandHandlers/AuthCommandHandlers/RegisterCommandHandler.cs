@@ -1,5 +1,4 @@
 using Application.Commands.AuthCommands;
-using Application.DTOs.AuthDtos;
 using Application.Result;
 using Infrastructure;
 using MediatR;
@@ -9,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 
 public class RegisterCommandHandler(UserManager<AppUser> userManager)
-    : IRequestHandler<RegisterCommand, Result<RegisterDto>>
+    : IRequestHandler<RegisterCommand, Result<AppUser>>
 {
-    public async Task<Result<RegisterDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AppUser>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var existingUser = await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber,
             cancellationToken);
         if (existingUser != null)
-            return Result<RegisterDto>.Failure($"user {existingUser.PhoneNumber} is already registered", 400);
+            return Result<AppUser>.Failure($"user {existingUser.PhoneNumber} is already registered", 400);
 
         var user = new AppUser
         {
@@ -30,20 +29,20 @@ public class RegisterCommandHandler(UserManager<AppUser> userManager)
             foreach (var error in result.Errors)
                 errors.Add(error.Description);
 
-            return Result<RegisterDto>.Failure($"user register failed: {string.Join(", ", errors)}", 400);
+            return Result<AppUser>.Failure($"user register failed: {string.Join(", ", errors)}", 400);
         }
 
         result = await userManager.AddToRoleAsync(user, "Guest");
         if (result.Succeeded)
         {
-            var registerAuthDto = new RegisterDto
+            var registeredUser = new AppUser
             {
                 Id = Guid.Parse(user.Id),
                 PhoneNumber = user.PhoneNumber,
                 Roles = ["Guest"]
             };
-            return Result<RegisterDto>.Success(registerAuthDto);
+            return Result<AppUser>.Success(registeredUser);
         }
-        return Result<RegisterDto>.Failure("user register failed", 400);
+        return Result<AppUser>.Failure("user register failed", 400);
     }
 }

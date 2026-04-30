@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
+[AllowAnonymous]
 public class AuthController(IMediator mediator, IMapper mapper) : BaseController()
 {
-    [AllowAnonymous]
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommandDto request, CancellationToken cancellationToken)
     {
@@ -18,7 +18,6 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         return HandleResult(result);
     }
 
-    [AllowAnonymous]
     [HttpPost("Login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginCommandDto request, CancellationToken cancellationToken)
     {
