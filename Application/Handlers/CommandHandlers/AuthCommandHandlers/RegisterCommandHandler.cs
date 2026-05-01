@@ -1,9 +1,8 @@
 using Application.Commands.AuthCommands;
 using Application.Models;
-using Infrastructure;
+using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 
@@ -20,10 +19,7 @@ public class RegisterCommandHandler(UserManager<User> userManager)
         var result = await userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
-            var errors = new List<Error>();
-            foreach (var error in result.Errors)
-                errors.Add(new Error(error.Description));
-
+            var errors = result.Errors.Select(e => new Error(e.Description));
             return Result<AppUser>.Failure(errors, 400);
         }
 

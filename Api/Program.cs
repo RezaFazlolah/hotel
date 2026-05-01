@@ -3,6 +3,7 @@ using Api;
 using Api.MiddleWares;
 using Application;
 using Application.Behaviors;
+using Domain.Models;
 using Domain.Repositories;
 using FluentValidation;
 using Infrastructure;
@@ -73,7 +74,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

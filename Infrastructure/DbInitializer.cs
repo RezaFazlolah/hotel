@@ -1,10 +1,13 @@
+using Domain.Models;
+using Domain.Repositories;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
-public class DbInitializer
+public class DbInitializer(IUserRepository userRepository)
 {
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
@@ -13,6 +16,7 @@ public class DbInitializer
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
         string[] roleNames = { "Admin", "Guest" };
+        // var roleNames = userRepository.RolesToString.Values;
         foreach (var roleName in roleNames)
         {
             if (!await roleManager.RoleExistsAsync(roleName))
