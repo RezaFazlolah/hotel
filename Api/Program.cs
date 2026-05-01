@@ -39,7 +39,8 @@ builder.Services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
 
 // identity
 builder.Services.AddIdentityCore<User>(options =>

@@ -6,11 +6,12 @@ using Domain.Models;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Repositories;
 
-public class UserRepository(UserManager<User> userManager)
+public class UserRepository(UserManager<User> userManager, IConfiguration configuration)
     : IUserRepository
 {
     public Dictionary<UserRoles, string> RolesToString { get; } = new()
@@ -19,7 +20,8 @@ public class UserRepository(UserManager<User> userManager)
         [UserRoles.Guest] = "Guest",
     };
 
-    private Dictionary<string, UserRoles> StringToRoles => RolesToString.ToDictionary(pair => pair.Value, pair => pair.Key);
+    private Dictionary<string, UserRoles> StringToRoles =>
+        RolesToString.ToDictionary(pair => pair.Value, pair => pair.Key);
 
     public async Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken)
         => await GetByPhoneNumberAsync(phoneNumber, cancellationToken) != null;
@@ -40,17 +42,7 @@ public class UserRepository(UserManager<User> userManager)
         return result.Succeeded;
     }
 
-    public async Task<string?> LoginAsync(User user, string password, CancellationToken cancellationToken)
-    {
-        var passwordChecked = await userManager.CheckPasswordAsync(user, password);
-        if (!passwordChecked)
-            return null;
-        var roles = await userManager.GetRolesAsync(user);
-        var jwt = CreateJwt(user, await GetRolesAsync(user, cancellationToken));
-        return jwt;
-    }
-
-    public string? CreateJwt(User user, IEnumerable<UserRoles> userRoles)
+    public async Task<string?> CreateJwt(User user)
     {
         var keyValue = configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing");
         var issuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer is missing");
@@ -65,7 +57,7 @@ public class UserRepository(UserManager<User> userManager)
         if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
             claims.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
 
-        var roles = userRoles.Select(ur => )
+        var roles = await userManager.GetRolesAsync(user);
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
@@ -81,12 +73,10 @@ public class UserRepository(UserManager<User> userManager)
             claims: claims,
             expires: expires,
             signingCredentials: credentials);
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     public async Task<IEnumerable<UserRoles>> GetRolesAsync(User user, CancellationToken cancellationToken)
-    {
-        var roles = await userManager.GetRolesAsync(user);
-        return roles.Select(r=>StringToRoles[r]).ToList();
-    }
+        => (await userManager.GetRolesAsync(user)).Select(r => StringToRoles[r]).ToList();
 }
