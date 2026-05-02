@@ -24,7 +24,7 @@ public class LoginCommandHandler(IUserRepository userRepository)
         var loggedUser = new AppUser
         {
             User = user,
-            Jwt = await userRepository.CreateJwt(user)
+            Jwt = await userRepository.GenerateJwt(user)
         };
         return Result<AppUser>.Success(loggedUser);
     }

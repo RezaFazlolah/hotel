@@ -12,10 +12,6 @@ public class RegisterCommandHandler(IUserRepository userRepository)
 {
     public async Task<Result<AppUser>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userExists = await userRepository.UserExistsAsync(request.PhoneNumber, cancellationToken);
-        if (userExists)
-            return Result<AppUser>.Failure(new Error("user already registered"), 400);
-
         var user = new User
         {
             PhoneNumber = request.PhoneNumber,
@@ -23,12 +19,13 @@ public class RegisterCommandHandler(IUserRepository userRepository)
         };
 
         var result = await userRepository.RegisterAsync(user, request.Password, request.Role, cancellationToken);
-        return result
+
+        return result.Succeeded
             ? Result<AppUser>.Success(new AppUser
             {
                 User = user,
                 Jwt = ""
             })
-            : Result<AppUser>.Failure(new Error("user registration failed"), 400);
+            : Result<AppUser>.Failure(result.Errors.Select(e => new Error(e.Description)).ToList(), 400);
     }
 }

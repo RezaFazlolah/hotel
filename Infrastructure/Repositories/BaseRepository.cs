@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public abstract class BaseRepository<TEntity, TKey>(AppDbContext context) : IBaseRepository<TEntity, TKey>
+public abstract class BaseRepository<TEntity, TKey>(AppDbContext context)
+    : IBaseRepository<TEntity, TKey>
     where TEntity : class, IBaseModel<TKey>
     where TKey : IEquatable<TKey>
 {
@@ -58,7 +59,8 @@ public abstract class BaseRepository<TEntity, TKey>(AppDbContext context) : IBas
 
     protected abstract IQueryable<TEntity> CustomContext();
 
-    protected abstract IQueryable<TEntity> CustomFilter(IQueryable<TEntity> query, string? filterOn, string? filterQuery);
+    protected abstract IQueryable<TEntity> CustomFilter(IQueryable<TEntity> query, string? filterOn,
+        string? filterQuery);
 
     protected abstract IQueryable<TEntity> CustomSort(IQueryable<TEntity> query, string? orderBy, bool isAscending);
 }

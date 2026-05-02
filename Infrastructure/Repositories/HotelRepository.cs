@@ -6,7 +6,8 @@ using Domain.Enums;
 
 namespace Infrastructure.Repositories;
 
-public class HotelRepository(AppDbContext context) : BaseRepository<Hotel, Guid>(context), IHotelRepository
+public class HotelRepository(AppDbContext context)
+    : BaseRepository<Hotel, Guid>(context), IHotelRepository
 {
     protected override IQueryable<Hotel> CustomContext()
     {
@@ -57,7 +58,7 @@ public class HotelRepository(AppDbContext context) : BaseRepository<Hotel, Guid>
                     : query.OrderByDescending(h => h.Rating);
             }
         }
-        
+
         return query;
     }
 }

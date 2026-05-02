@@ -1,5 +1,6 @@
 using Domain.Enums;
 using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Repositories;
 
@@ -10,9 +11,9 @@ public interface IUserRepository
     Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);
     Task<bool> PasswordChecks(User user, string password);
 
-    Task<bool> RegisterAsync(User user, string password, UserRoles userRole, CancellationToken cancellationToken);
+    Task<IdentityResult> RegisterAsync(User user, string password, UserRoles userRole,
+        CancellationToken cancellationToken);
 
-    // Task<string?> LoginAsync(User user, string password, CancellationToken cancellationToken);
-    Task<string?> CreateJwt(User user);
+    Task<string?> GenerateJwt(User user);
     Task<IEnumerable<UserRoles>> GetRolesAsync(User user, CancellationToken cancellationToken);
 }

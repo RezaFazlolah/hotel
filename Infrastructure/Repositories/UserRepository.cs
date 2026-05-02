@@ -32,47 +32,38 @@ public class UserRepository(UserManager<User> userManager, IConfiguration config
     public async Task<bool> PasswordChecks(User user, string password)
         => await userManager.CheckPasswordAsync(user, password);
 
-    public async Task<bool> RegisterAsync(User user, string password, UserRoles userRole,
+    public async Task<IdentityResult> RegisterAsync(User user, string password, UserRoles userRole,
         CancellationToken cancellationToken)
     {
         var result = await userManager.CreateAsync(user, password);
         if (!result.Succeeded)
-            return false;
-        result = await userManager.AddToRoleAsync(user, RolesToString[userRole]);
-        return result.Succeeded;
+            return result;
+        return await userManager.AddToRoleAsync(user, RolesToString[userRole]);
     }
 
-    public async Task<string?> CreateJwt(User user)
+    public async Task<string?> GenerateJwt(User user)
     {
-        var keyValue = configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is missing");
-        var issuer = configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("Jwt:Issuer is missing");
-        var audience = configuration["Jwt:Audience"] ?? throw new InvalidOperationException("Jwt:Audience is missing");
-
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Name, user.UserName ?? string.Empty)
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.PhoneNumber, user.PhoneNumber ?? string.Empty),
+            new(JwtRegisteredClaimNames.Name, user.FullName),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
-            claims.Add(new Claim(ClaimTypes.MobilePhone, user.PhoneNumber));
-
         var roles = await userManager.GetRolesAsync(user);
-        foreach (var role in roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
+        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.UtcNow.AddMinutes(150);
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+        var expirationDuration = configuration["Jwt:DurationInMinutes"] ??
+                                 throw new InvalidOperationException("Jwt:DurationInMinutes is missing");
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: configuration["Jwt:Issuer"],
+            audience: configuration["Jwt:Audience"],
             claims: claims,
-            expires: expires,
-            signingCredentials: credentials);
+            expires: DateTime.UtcNow.AddMinutes(int.Parse(expirationDuration)),
+            signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256));
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

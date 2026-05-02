@@ -31,6 +31,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .HasForeignKey(r => r.RoomId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<User>().Ignore(u => u.FullName);
+
         // modelBuilder.Entity<Reservation>()
         //     .HasOne(r => r.Guest)
         //     .WithMany(g => g.Reservations)
