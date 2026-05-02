@@ -16,6 +16,6 @@ public class InsertHotelHandler(IHotelRepository hotelRepository, IMapper mapper
         var result = await hotelRepository.InsertAsync(hotel, cancellationToken);
         if (result == null)
             return Result<Hotel>.Failure(new Error("insert hotel failed"), 400);
-        return Result<Hotel>.Success(result);
+        return Result<Hotel>.Success(result, 201);
     }
 }

@@ -26,6 +26,6 @@ public class InsertRoomHandler(IRoomRepository roomRepository, IHotelRepository 
         var result = await roomRepository.InsertAsync(room, cancellationToken);
         if (result == null)
             return Result<Room>.Failure(new Error($"insert room failed"), 400);
-        return Result<Room>.Success(result);
+        return Result<Room>.Success(result, 201);
     }
 }

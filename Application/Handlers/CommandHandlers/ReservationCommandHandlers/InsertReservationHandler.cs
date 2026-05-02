@@ -31,6 +31,6 @@ public class InsertReservationHandler(
         var result = await reservationRepository.InsertAsync(reservation, cancellationToken);
         if (result == null)
             return Result<Reservation>.Failure(new Error("reservation failed"), 400);
-        return Result<Reservation>.Success(reservation);
+        return Result<Reservation>.Success(reservation, 201);
     }
 }

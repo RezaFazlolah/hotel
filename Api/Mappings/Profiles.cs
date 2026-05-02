@@ -19,11 +19,8 @@ public class Profiles : Profile
         // auth
         CreateMap<RegisterCommandDto, RegisterCommand>();
         CreateMap<LoginCommandDto, LoginCommand>();
-        CreateMap<AppUser, AppUserDto>()
-            .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.User.Id))
-            .ForMember(dst => dst.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber));
-        CreateMap<Result<AppUser>, Result<AppUserDto>>()
-            .ForMember(dst => dst.Value, opt => opt.MapFrom(src => src.Value));
+        CreateMap<User, UserDto>();
+        CreateMap<Result<User>, Result<UserDto>>();
         
         // hotel
         CreateMap<Hotel, HotelDto>();

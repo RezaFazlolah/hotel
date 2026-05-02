@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
+[Authorize]
 public class RoomsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
-    // [Authorize(Roles = "Guest,Admin")]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllRoomsQuery request,
         CancellationToken cancellationToken)
     {
@@ -22,7 +22,6 @@ public class RoomsController(IMediator mediator, IMapper mapper) : BaseControlle
     }
 
     [HttpGet("{id:guid}")]
-    // [Authorize(Roles = "Guest,Admin")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new GetRoomByIdQuery() { RoomId = id };

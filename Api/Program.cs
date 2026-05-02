@@ -18,12 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Scalar
+builder.Services.AddOpenApi();
+
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// builder.Services.AddSwaggerGen(options => { options.CustomSchemaIds(type => type.FullName); });
 
-// MediatRF
+// MediatR
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
@@ -88,8 +90,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     // Scalar
-    // app.MapOpenApi();
-    // app.MapScalarApiReference();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
     // Swagger
     app.UseSwagger();
     app.UseSwaggerUI();

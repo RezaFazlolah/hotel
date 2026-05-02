@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
+[Authorize]
 public class ReservationsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
-    [Authorize(Roles = "Guest")]
     public async Task<IActionResult> GetAllByGuestAsync(CancellationToken cancellationToken)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -26,7 +26,6 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Guest")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -40,7 +39,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpPost]
-    [Authorize(Roles = "Guest")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> InsertByGuestAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -58,7 +57,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
 
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Guest")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateByGuestAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -75,7 +74,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Guest")]
+    // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteByGuestAsync(Guid id, CancellationToken cancellationToken)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

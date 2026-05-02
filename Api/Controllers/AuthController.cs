@@ -18,7 +18,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         var command = mapper.Map<RegisterCommand>(request);
         command.Role = UserRoles.Guest;
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<AppUserDto>>(result);
+        var resultDto = mapper.Map<Result<UserDto>>(result);
         return HandleResult(resultDto);
     }
 
@@ -27,7 +27,6 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
     {
         var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<AppUserDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 }

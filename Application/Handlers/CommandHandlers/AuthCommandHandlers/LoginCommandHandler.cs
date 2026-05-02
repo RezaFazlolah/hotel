@@ -9,23 +9,17 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 
 public class LoginCommandHandler(IUserRepository userRepository)
-    : IRequestHandler<LoginCommand, Result<AppUser>>
+    : IRequestHandler<LoginCommand, Result<string>>
 {
-    public async Task<Result<AppUser>> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByPhoneNumberAsync(request.PhoneNumber, cancellationToken);
         if (user == null)
-            return Result<AppUser>.Failure(new Error("user not found"), 404);
+            return Result<string>.Failure(new Error("user not found"), 404);
 
         var passwordChecked = await userRepository.PasswordChecks(user, request.Password);
-        if (!passwordChecked)
-            return Result<AppUser>.Failure(new Error($"incorrect password"), 400);
-
-        var loggedUser = new AppUser
-        {
-            User = user,
-            Jwt = await userRepository.GenerateJwt(user)
-        };
-        return Result<AppUser>.Success(loggedUser);
+        return passwordChecked
+            ? Result<string>.Success(await userRepository.GenerateJwt(user))
+            : Result<string>.Failure(new Error($"incorrect password"), 400);
     }
 }

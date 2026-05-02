@@ -1,5 +1,4 @@
 using Application.Models;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,20 +9,20 @@ public class BaseController() : ControllerBase
 {
     protected IActionResult HandleResult<T>(Result<T> result)
     {
-        if (!result.IsSuccess)
+        if (result.IsSuccess)
+        {
+            if (result.Code == 201)
+                return Created("", result.Value);
+            return Ok(result.Value);
+        }
+        else
         {
             if (result.Code == 401)
                 return Unauthorized(result.Errors);
             if (result.Code == 404)
                 return NotFound(result.Errors);
+            return BadRequest(result.Errors);
         }
-
-        if (result.IsSuccess)
-        {
-            return Ok(result.Value);
-        }
-
-        return BadRequest(result.Errors);
     }
 
     private string ErrorsToString(IEnumerable<Error> errors)

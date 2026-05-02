@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
-public class DbInitializer(IUserRepository userRepository)
+public class DbInitializer()
 {
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
@@ -18,24 +18,11 @@ public class DbInitializer(IUserRepository userRepository)
         string[] roleNames = { "Admin", "Guest" };
         // var roleNames = userRepository.RolesToString.Values;
         foreach (var roleName in roleNames)
-        {
             if (!await roleManager.RoleExistsAsync(roleName))
-            {
                 await roleManager.CreateAsync(new IdentityRole(roleName));
-            }
-        }
 
-        var adminUser = new User
-        {
-            UserName = "+989184129577",
-            PhoneNumber = "+989184129577"
-        };
-
-        var guestUser = new User
-        {
-            UserName = "+989216073852",
-            PhoneNumber = "+989216073852"
-        };
+        var adminUser = new User { UserName = "+989184129577", PhoneNumber = "+989184129577" };
+        var guestUser = new User { UserName = "+989216073852", PhoneNumber = "+989216073852" };
 
         var adminExists = userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == adminUser.PhoneNumber).Result;
         if (adminExists == null)
