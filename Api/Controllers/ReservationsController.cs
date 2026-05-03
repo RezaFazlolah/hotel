@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Authorize]
+// [Authorize]
 public class ReservationsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
@@ -54,7 +54,6 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
         var resultDto = mapper.Map<Result<ReservationDto>>(result);
         return HandleResult(resultDto);
     }
-
 
     [HttpPut("{id:guid}")]
     // [Authorize(Roles = "Admin")]

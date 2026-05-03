@@ -9,5 +9,5 @@ public class RegisterCommand : IRequest<Result<User>>
 {
     public string PhoneNumber { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
-    public required UserRoles Role { get; set; }
+    public required string UserRole { get; set; }
 }

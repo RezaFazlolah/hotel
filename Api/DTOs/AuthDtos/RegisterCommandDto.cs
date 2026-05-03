@@ -4,8 +4,7 @@ namespace Api.DTOs.AuthDtos;
 
 public class RegisterCommandDto
 {
-    public string PhoneNumber { get; set; } = string.Empty;
-
-    public string Password { get; set; } = string.Empty;
-    // public UserRoles UserRole { get; set; } = UserRoles.Guest;
+    public required string PhoneNumber { get; set; }
+    public required string Password { get; set; }
+    public required string UserRole { get; set; }
 }

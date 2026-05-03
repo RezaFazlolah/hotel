@@ -1,5 +1,5 @@
+using Domain.Enums;
 using Domain.Models;
-using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,8 +14,7 @@ public class DbInitializer()
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        string[] roleNames = { "Admin", "Guest" };
-        // var roleNames = userRepository.RolesToString.Values;
+        string[] roleNames = { UserRoles.Admin, UserRoles.Guest };
         foreach (var roleName in roleNames)
             if (!await roleManager.RoleExistsAsync(roleName))
                 await roleManager.CreateAsync(new IdentityRole(roleName));

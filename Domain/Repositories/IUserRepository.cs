@@ -6,14 +6,14 @@ namespace Domain.Repositories;
 
 public interface IUserRepository
 {
-    Dictionary<UserRoles, string> RolesToString { get; }
+    // Dictionary<UserRoles, string> RolesToString { get; }
     Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken);
     Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);
     Task<bool> PasswordChecks(User user, string password);
 
-    Task<IdentityResult> RegisterAsync(User user, string password, UserRoles userRole,
+    Task<IdentityResult> RegisterAsync(User user, string password, string userRole,
         CancellationToken cancellationToken);
 
     Task<string?> GenerateJwt(User user);
-    Task<IEnumerable<UserRoles>> GetRolesAsync(User user, CancellationToken cancellationToken);
+    Task<IEnumerable<string>> GetRolesAsync(User user, CancellationToken cancellationToken);
 }

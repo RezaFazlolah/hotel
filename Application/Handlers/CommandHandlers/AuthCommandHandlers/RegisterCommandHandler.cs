@@ -18,7 +18,7 @@ public class RegisterCommandHandler(IUserRepository userRepository)
             UserName = request.PhoneNumber
         };
 
-        var result = await userRepository.RegisterAsync(user, request.Password, request.Role, cancellationToken);
+        var result = await userRepository.RegisterAsync(user, request.Password, request.UserRole, cancellationToken);
         return result.Succeeded
             ? Result<User>.Success(await userRepository.GetByPhoneNumberAsync(user.PhoneNumber, cancellationToken), 201)
             : Result<User>.Failure(result.Errors.Select(e => new Error(e.Description)).ToList(), 400);

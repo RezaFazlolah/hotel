@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Authorize]
+// [Authorize]
 public class RoomsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]

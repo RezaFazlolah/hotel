@@ -14,14 +14,14 @@ namespace Infrastructure.Services;
 public class UserService(UserManager<User> userManager, IConfiguration configuration)
     : IUserRepository
 {
-    public Dictionary<UserRoles, string> RolesToString { get; } = new()
-    {
-        [UserRoles.Admin] = "Admin",
-        [UserRoles.Guest] = "Guest",
-    };
+    // public Dictionary<UserRoles, string> RolesToString { get; } = new()
+    // {
+    //     [UserRoles.Admin] = "Admin",
+    //     [UserRoles.Guest] = "Guest",
+    // };
 
-    private Dictionary<string, UserRoles> StringToRoles =>
-        RolesToString.ToDictionary(pair => pair.Value, pair => pair.Key);
+    // private Dictionary<string, UserRoles> StringToRoles =>
+    //     RolesToString.ToDictionary(pair => pair.Value, pair => pair.Key);
 
     public async Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken)
         => await GetByPhoneNumberAsync(phoneNumber, cancellationToken) != null;
@@ -32,13 +32,13 @@ public class UserService(UserManager<User> userManager, IConfiguration configura
     public async Task<bool> PasswordChecks(User user, string password)
         => await userManager.CheckPasswordAsync(user, password);
 
-    public async Task<IdentityResult> RegisterAsync(User user, string password, UserRoles userRole,
+    public async Task<IdentityResult> RegisterAsync(User user, string password, string userRole,
         CancellationToken cancellationToken)
     {
         var result = await userManager.CreateAsync(user, password);
         if (!result.Succeeded)
             return result;
-        return await userManager.AddToRoleAsync(user, RolesToString[userRole]);
+        return await userManager.AddToRoleAsync(user, userRole);
     }
 
     public async Task<string?> GenerateJwt(User user)
@@ -68,6 +68,6 @@ public class UserService(UserManager<User> userManager, IConfiguration configura
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<IEnumerable<UserRoles>> GetRolesAsync(User user, CancellationToken cancellationToken)
-        => (await userManager.GetRolesAsync(user)).Select(r => StringToRoles[r]).ToList();
+    public async Task<IEnumerable<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
+        => await userManager.GetRolesAsync(user);
 }
