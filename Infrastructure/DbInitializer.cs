@@ -1,6 +1,5 @@
 using Domain.Models;
 using Domain.Repositories;
-using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

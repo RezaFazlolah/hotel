@@ -2,9 +2,9 @@ using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Services;
 
-public abstract class BaseRepository<TEntity, TKey>(AppDbContext context)
+public abstract class BaseService<TEntity, TKey>(AppDbContext context)
     : IBaseRepository<TEntity, TKey>
     where TEntity : class, IBaseModel<TKey>
     where TKey : IEquatable<TKey>

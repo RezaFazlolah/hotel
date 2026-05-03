@@ -1,13 +1,11 @@
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using Domain.Enums;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Services;
 
-public class HotelRepository(AppDbContext context)
-    : BaseRepository<Hotel, Guid>(context), IHotelRepository
+public class HotelService(AppDbContext context)
+    : BaseService<Hotel, Guid>(context), IHotelRepository
 {
     protected override IQueryable<Hotel> CustomContext()
     {

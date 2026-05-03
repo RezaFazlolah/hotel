@@ -1,0 +1,53 @@
+-----------------------------------------
+[] auth
+    [] mapping strategy between enum UserRoles and its string equivalent
+        [] mapping between server and client?
+        [] mapping between server and DB?
+    [] add reservation logics to Logic.md
+    [T] for now and because of simplicity each user can only have 1 role
+    [] login: role is not passed from client, because each user has exactly 1 role, it can be deduced
+    [] registration
+        [] separate registration endpoint for admin who can specify user role, obviously this endpoint requires authorization 
+        [] check for role existence before creating user, otherwise you end up with a user who has no role
+
+[] add HotelManager role
+
+[] reservation logic:
+    [] add reservation logics to Logic.md
+    [] 2 reservations for same room cant have overlapping time
+    [] CheckOutDate must be after CheckInDate(can you enforce this at DB level as well as application level?)
+
+
+[] guest, manager and admin can sort & filter reservations appropriately, e.g.
+
+[] soft delete reservation(i.e. bool Deleted column for table) instead of hard deleting(i.e. removing that reservation
+row from DB)
+
+[]
+
+-----------------------------------------
+
+[] FUTURE
+[] add rating service
+[] add payment service
+[] every action must be logged
+[]
+
+-----------------------------------------
+[] enum RoomType
+By default they are stored as integers. That’s fine, but if you ever need human‑readable values in the database, you can
+convert them to strings via Fluent API (not required)
+
+[] enum ReservationStatus
+Consider adding a ReservationStatus enum (e.g., Pending, Confirmed, Cancelled, Completed) to manage the lifecycle of a
+reservation
+
+[] Max lengths on Name and Address
+e.g., [MaxLength(200)], helps to keep the database efficient and avoid silent truncation
+
+[] Foreign key columns automatically get indexes, but if you anticipate frequent queries filtering by CheckInDate or
+GuestId, consider adding additional indexes via Fluent API for performance
+
+[]
+
+-----------------------------------------

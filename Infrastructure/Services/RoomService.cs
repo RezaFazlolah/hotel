@@ -1,12 +1,12 @@
+using Domain.Enums;
 using Domain.Models;
 using Domain.Repositories;
-using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Services;
 
-public class RoomRepository(AppDbContext context)
-    : BaseRepository<Room, Guid>(context), IRoomRepository
+public class RoomService(AppDbContext context)
+    : BaseService<Room, Guid>(context), IRoomRepository
 {
     public async Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber,
         CancellationToken cancellationToken)

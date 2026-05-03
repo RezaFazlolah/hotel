@@ -1,0 +1,11 @@
+@baseUrl = http://localhost:5008/api
+@json = application/json
+@jwt = 
+@Id = 
+
+GET {{baseUrl}}/hotels
+# GET {{baseUrl}}/hotels/{{Id}}
+Authorization: Bearer {{jwt}}
+Accept: {{json}}
+Content-Type: {{json}}
+# check nigger/12/23, it has good examples for using .http

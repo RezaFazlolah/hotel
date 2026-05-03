@@ -7,7 +7,7 @@ using Domain.Models;
 using Domain.Repositories;
 using FluentValidation;
 using Infrastructure;
-using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -77,10 +77,10 @@ builder.Services.AddAuthentication(options =>
         }
     );
 
-builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-builder.Services.AddScoped<IHotelRepository, HotelRepository>();
-builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomService>();
+builder.Services.AddScoped<IHotelRepository, HotelService>();
+builder.Services.AddScoped<IReservationRepository, ReservationService>();
+builder.Services.AddScoped<IUserRepository, UserService>();
 
 var app = builder.Build();
 

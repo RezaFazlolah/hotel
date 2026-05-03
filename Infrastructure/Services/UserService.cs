@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Services;
 
-public class UserRepository(UserManager<User> userManager, IConfiguration configuration)
+public class UserService(UserManager<User> userManager, IConfiguration configuration)
     : IUserRepository
 {
     public Dictionary<UserRoles, string> RolesToString { get; } = new()

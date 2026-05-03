@@ -1,10 +1,11 @@
 using Application.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [ApiController]
-[Route("API/[controller]")]
+[Route("api/[controller]")]
 public class BaseController() : ControllerBase
 {
     protected IActionResult HandleResult<T>(Result<T> result)
