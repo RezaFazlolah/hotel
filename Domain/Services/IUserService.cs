@@ -5,12 +5,11 @@ namespace Domain.Services;
 
 public interface IUserService
 {
-    // Dictionary<UserRoles, string> RolesToString { get; }
     Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken);
     Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);
     Task<bool> PasswordChecks(User user, string password);
 
-    Task<IdentityResult> RegisterAsync(User user, string password, string userRole,
+    Task<IdentityResult> RegisterAsync(User user, string password, string role,
         CancellationToken cancellationToken);
 
     Task<string?> GenerateJwt(User user);

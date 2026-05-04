@@ -11,18 +11,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services;
 
-public class UserService(UserManager<User> userManager, IConfiguration configuration)
+public class UserService(
+    UserManager<User> userManager,
+    RoleManager<IdentityRole> roleManager,
+    IConfiguration configuration)
     : IUserService
 {
-    // public Dictionary<UserRoles, string> RolesToString { get; } = new()
-    // {
-    //     [UserRoles.Admin] = "Admin",
-    //     [UserRoles.Guest] = "Guest",
-    // };
-
-    // private Dictionary<string, UserRoles> StringToRoles =>
-    //     RolesToString.ToDictionary(pair => pair.Value, pair => pair.Key);
-
     public async Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken)
         => await GetByPhoneNumberAsync(phoneNumber, cancellationToken) != null;
 
@@ -32,13 +26,16 @@ public class UserService(UserManager<User> userManager, IConfiguration configura
     public async Task<bool> PasswordChecks(User user, string password)
         => await userManager.CheckPasswordAsync(user, password);
 
-    public async Task<IdentityResult> RegisterAsync(User user, string password, string userRole,
+    public async Task<IdentityResult> RegisterAsync(User user, string password, string role,
         CancellationToken cancellationToken)
     {
+        if (!await roleManager.RoleExistsAsync(role))
+            return await userManager.AddToRoleAsync(user, role); // this is only for returning error
+
         var result = await userManager.CreateAsync(user, password);
         if (!result.Succeeded)
             return result;
-        return await userManager.AddToRoleAsync(user, userRole);
+        return await userManager.AddToRoleAsync(user, role);
     }
 
     public async Task<string?> GenerateJwt(User user)

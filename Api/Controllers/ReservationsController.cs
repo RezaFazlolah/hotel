@@ -3,6 +3,7 @@ using Application.Commands.ReservationCommands;
 using Application.Models;
 using Application.Queries.ReservationQueries;
 using AutoMapper;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpPost]
-    // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> InsertByGuestAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -56,7 +57,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpPut("{id:guid}")]
-    // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> UpdateByGuestAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -73,7 +74,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> DeleteByGuestAsync(Guid id, CancellationToken cancellationToken)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

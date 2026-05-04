@@ -3,6 +3,7 @@ using Application.Commands.HotelCommands;
 using Application.Models;
 using Application.Queries.HotelQueries;
 using AutoMapper;
+using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpPost]
-    // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> InsertAsync([FromBody] InsertHotelCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -42,7 +43,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpPut("{id:guid}")]
-    // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateHotelCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -54,7 +55,7 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new DeleteHotelCommand

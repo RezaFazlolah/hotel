@@ -17,7 +17,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         CancellationToken cancellationToken)
     {
         var command = mapper.Map<RegisterCommand>(request);
-        // command.UserRole = UserRoles.Guest;
+        command.Role = UserRoles.Guest;
         var result = await mediator.Send(command, cancellationToken);
         var resultDto = mapper.Map<Result<UserDto>>(result);
         return HandleResult(resultDto);
