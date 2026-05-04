@@ -1,11 +1,44 @@
 @baseUrl = http://localhost:5008/api
 @json = application/json
-@jwt = 
+@jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYTQ4MGQxMi0wOTlhLTQzYjYtODVkYi1jODVhM2QyZmJiNzUiLCJwaG9uZV9udW1iZXIiOiIrOTg5MjE2MDczODUyIiwibmFtZSI6IiAiLCJqdGkiOiI5MGU2Nzk3Mi1kZWQ1LTQ1MGEtOWUyMi1hOGE0ODA0Y2QyYWQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHdWVzdCIsImV4cCI6MTc3Nzg0NDE2NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDA4IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MDA4In0.KbvpMPCHnyCLindubkCKuA_AT5CJjPxFxxGvkv-cLfE"
 @Id = 
 
+### Auth
+### Register
+POST {{baseUrl}}/Auth/Register
+Accept: {{json}}
+Content-Type: {{json}}
+
+{
+    "PhoneNumber": "+989123456789",
+    "Password": "1234",
+    "UserRole": "Guest"
+}
+
+### Login
+POST {{baseUrl}}/Auth/Login
+Content-Type: {{json}}
+
+{
+    "PhoneNumber": "+989216073852",
+    "Password": "1234"
+}
+
+#### Hotel
+### GetAll
 GET {{baseUrl}}/hotels
-# GET {{baseUrl}}/hotels/{{Id}}
 Authorization: Bearer {{jwt}}
 Accept: {{json}}
 Content-Type: {{json}}
+
+### GetById
+
+
+### Insert
+
+### Update
+
+### Delete
+
+# GET {{baseUrl}}/hotels/{{Id}}
 # check nigger/12/23, it has good examples for using .http

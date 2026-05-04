@@ -1,10 +1,9 @@
-using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Domain.Repositories;
+namespace Domain.Services;
 
-public interface IUserRepository
+public interface IUserService
 {
     // Dictionary<UserRoles, string> RolesToString { get; }
     Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken);

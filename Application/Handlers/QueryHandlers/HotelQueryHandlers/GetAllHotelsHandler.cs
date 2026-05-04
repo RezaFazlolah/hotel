@@ -1,16 +1,16 @@
 using Application.Models;
 using Application.Queries.HotelQueries;
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using MediatR;
 
 namespace Application.Handlers.QueryHandlers.HotelQueryHandlers;
 
-public class GetAllHotelsHandler(IHotelRepository hotelRepository) : IRequestHandler<GetAllHotelsQuery, Result<ICollection<Hotel>>>
+public class GetAllHotelsHandler(IHotelService hotelService) : IRequestHandler<GetAllHotelsQuery, Result<ICollection<Hotel>>>
 {
     public async Task<Result<ICollection<Hotel>>> Handle(GetAllHotelsQuery request, CancellationToken cancellationToken)
     {
-        var hotels = await hotelRepository.GetAllAsync(
+        var hotels = await hotelService.GetAllAsync(
                 cancellationToken,
                 filterOn: request.FilterOn,
                 filterQuery: request.FilterQuery,

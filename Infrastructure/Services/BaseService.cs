@@ -1,11 +1,11 @@
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
 public abstract class BaseService<TEntity, TKey>(AppDbContext context)
-    : IBaseRepository<TEntity, TKey>
+    : IBaseService<TEntity, TKey>
     where TEntity : class, IBaseModel<TKey>
     where TKey : IEquatable<TKey>
 {

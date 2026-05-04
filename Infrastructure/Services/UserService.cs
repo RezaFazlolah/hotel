@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Domain.Enums;
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Infrastructure.Services;
 
 public class UserService(UserManager<User> userManager, IConfiguration configuration)
-    : IUserRepository
+    : IUserService
 {
     // public Dictionary<UserRoles, string> RolesToString { get; } = new()
     // {

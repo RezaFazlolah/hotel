@@ -1,18 +1,18 @@
 using Application.Models;
 using Application.Queries.RoomQueries;
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using MediatR;
 
 namespace Application.Handlers.QueryHandlers.RoomQueryHandlers;
 
-public class GetAllRoomsHandler(IRoomRepository roomRepository)
+public class GetAllRoomsHandler(IRoomService roomService)
     : IRequestHandler<GetAllRoomsQuery, Result<ICollection<Room>>>
 {
     public async Task<Result<ICollection<Room>>> Handle(GetAllRoomsQuery request,
         CancellationToken cancellationToken)
     {
-        var rooms = await roomRepository.GetAllAsync(
+        var rooms = await roomService.GetAllAsync(
             cancellationToken,
             filterOn: request.FilterOn,
             filterQuery: request.FilterQuery,

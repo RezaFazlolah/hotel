@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Todo", "Todo", "{701B9DCA-412A-4C3F-B511-BBCCDD6C0B76}"
 	ProjectSection(SolutionItems) = preProject
-		Todo.md = Todo.md
+		Todo.txt = Todo.txt
 		Logic.md = Logic.md
 	EndProjectSection
 EndProject

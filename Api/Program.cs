@@ -4,7 +4,7 @@ using Api.MiddleWares;
 using Application;
 using Application.Behaviors;
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using FluentValidation;
 using Infrastructure;
 using Infrastructure.Services;
@@ -77,10 +77,10 @@ builder.Services.AddAuthentication(options =>
         }
     );
 
-builder.Services.AddScoped<IRoomRepository, RoomService>();
-builder.Services.AddScoped<IHotelRepository, HotelService>();
-builder.Services.AddScoped<IReservationRepository, ReservationService>();
-builder.Services.AddScoped<IUserRepository, UserService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

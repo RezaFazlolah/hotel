@@ -1,8 +1,8 @@
 using Domain.Models;
 
-namespace Domain.Repositories;
+namespace Domain.Services;
 
-public interface IReservationRepository : IBaseRepository<Reservation, Guid>
+public interface IReservationService : IBaseService<Reservation, Guid>
 {
     Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, Guid? guestId = null);
 }

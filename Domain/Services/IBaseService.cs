@@ -1,6 +1,6 @@
-namespace Domain.Repositories;
+namespace Domain.Services;
 
-public interface IBaseRepository<TEntity, in TKey>
+public interface IBaseService<TEntity, in TKey>
 {
     Task<ICollection<TEntity>> GetAllAsync(CancellationToken cancellationToken, string? filterOn = null, string? filterQuery = null,
         string? orderBy = null, bool isAscending = true, 

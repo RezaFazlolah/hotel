@@ -1,12 +1,12 @@
 using Application.Models;
 using Application.Queries.ReservationQueries;
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using MediatR;
 
 namespace Application.Handlers.QueryHandlers.ReservationQueryHandlers;
 
-public class GetAllReservationsHandler(IReservationRepository reservationRepository)
+public class GetAllReservationsHandler(IReservationService reservationService)
     : IRequestHandler<GetAllReservationsQuery, Result<ICollection<Reservation>>>
 {
     public async Task<Result<ICollection<Reservation>>> Handle(GetAllReservationsQuery request,
@@ -14,7 +14,7 @@ public class GetAllReservationsHandler(IReservationRepository reservationReposit
     {
         var guestIdString = request.GuestId.ToString();
         var reservations =
-            await reservationRepository.GetAllAsync(cancellationToken, filterOn: "GuestId", filterQuery: guestIdString);
+            await reservationService.GetAllAsync(cancellationToken, filterOn: "GuestId", filterQuery: guestIdString);
 
         return Result<ICollection<Reservation>>.Success(reservations);
     }

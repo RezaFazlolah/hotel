@@ -1,11 +1,11 @@
 using Domain.Models;
-using Domain.Repositories;
+using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
 public class ReservationService(AppDbContext context)
-    : BaseService<Reservation, Guid>(context), IReservationRepository
+    : BaseService<Reservation, Guid>(context), IReservationService
 {
     public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
         Guid? guestId = null)
