@@ -6,7 +6,7 @@ public class Room : IBaseModel<Guid>
 {
     public Guid Id { get; set; }
     public int Number { get; set; }
-    public RoomType Type { get; set; }
+    public string Type { get; set; }
     public decimal PricePerNight { get; set; }
     // foreign key
     public Guid HotelId { get; set; }

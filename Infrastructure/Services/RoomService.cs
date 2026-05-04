@@ -48,19 +48,11 @@ public class RoomService(AppDbContext context)
         {
             // filter by room number
             if (filterOn.Equals("Number", StringComparison.OrdinalIgnoreCase)) // case-insensitive
-            {
                 query = query.Where(r => r.Number.ToString().Contains(filterQuery));
-            }
 
             // filter by room type
             if (filterOn.Equals("Type", StringComparison.OrdinalIgnoreCase))
-            {
-                // convert enum RoomType to string
-                if (Enum.TryParse<RoomType>(filterQuery, true, out var type))
-                {
-                    query = query.Where(r => r.Type == type);
-                }
-            }
+                query = query.Where(r => r.Type == filterQuery);
         }
 
         return query;
