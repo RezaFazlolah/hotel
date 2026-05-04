@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[AllowAnonymous]
 public class AuthController(IMediator mediator, IMapper mapper) : BaseController()
 {
-    [HttpPost("Register")]
+    [AllowAnonymous]
+    [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -23,11 +23,24 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         return HandleResult(resultDto);
     }
 
-    [HttpPost("Login")]
+
+    [AllowAnonymous]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginAsync([FromBody] LoginCommandDto request, CancellationToken cancellationToken)
     {
         var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
+    }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPost("registerByAdmin")]
+    public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminCommandDto request,
+        CancellationToken cancellationToken)
+    {
+        var command = mapper.Map<RegisterCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+        var resultDto = mapper.Map<Result<UserDto>>(result);
+        return HandleResult(resultDto);
     }
 }

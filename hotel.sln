@@ -14,7 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Todo", "Todo", "{701B9DCA-412A-4C3F-B511-BBCCDD6C0B76}"
 	ProjectSection(SolutionItems) = preProject
 		Todo.txt = Todo.txt
-		Logic.md = Logic.md
+		Logic.txt = Logic.txt
 	EndProjectSection
 EndProject
 Global

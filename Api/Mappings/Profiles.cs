@@ -17,8 +17,9 @@ public class Profiles : Profile
     public Profiles()
     {
         // auth
-        CreateMap<RegisterCommandDto, RegisterCommand>();
         CreateMap<LoginCommandDto, LoginCommand>();
+        CreateMap<RegisterCommandDto, RegisterCommand>();
+        CreateMap<RegisterByAdminCommandDto, RegisterCommand>();
         CreateMap<User, UserDto>();
         CreateMap<Result<User>, Result<UserDto>>();
         

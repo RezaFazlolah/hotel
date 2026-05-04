@@ -30,7 +30,8 @@ public class UserService(
         CancellationToken cancellationToken)
     {
         if (!await roleManager.RoleExistsAsync(role))
-            return await userManager.AddToRoleAsync(user, role); // this is only for returning error
+            return IdentityResult.Failed(new IdentityError {Description = $"role {role} not found"});            
+            // return await userManager.AddToRoleAsync(user, role); // this is only for returning error
 
         var result = await userManager.CreateAsync(user, password);
         if (!result.Succeeded)
