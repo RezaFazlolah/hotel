@@ -54,7 +54,7 @@ builder.Services.AddIdentityCore<User>(options =>
         options.Password.RequiredLength = 1;
         options.Password.RequiredUniqueChars = 0;
     })
-    .AddRoles<IdentityRole>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>();
 
 // auth

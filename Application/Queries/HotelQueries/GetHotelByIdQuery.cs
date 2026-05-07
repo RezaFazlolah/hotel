@@ -6,5 +6,5 @@ namespace Application.Queries.HotelQueries;
 
 public class GetHotelByIdQuery : IRequest<Result<Hotel>>
 {
-    public Guid HotelId { get; set; }
+    public required Guid HotelId { get; set; }
 }

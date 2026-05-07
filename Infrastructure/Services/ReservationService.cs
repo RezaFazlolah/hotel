@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Services;
 
 public class ReservationService(AppDbContext context)
-    : BaseService<Reservation, Guid>(context), IReservationService
+    : BaseService<Guid, Reservation>(context), IReservationService
 {
     public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
         Guid? guestId = null)
@@ -25,13 +25,14 @@ public class ReservationService(AppDbContext context)
         }
     }
 
-    protected override IQueryable<Reservation> CustomContext()
-    {
-        return context.Reservations
-            .Include(r => r.Room);
-        // .Include(r => r.Guest);
-    }
+    public ICollection<Reservation> GetByHotel(Guid hotelId)
+        => CustomContext().Where(r => hotelId == r.Room.HotelId).ToList();
 
+    protected override IQueryable<Reservation> CustomContext()
+        => context.Reservations
+            .Include(r => r.Room)
+            .Include(r => r.Guest);
+    
     protected override IQueryable<Reservation> CustomFilter(IQueryable<Reservation> query, string? filterOn,
         string? filterQuery)
     {
@@ -54,5 +55,10 @@ public class ReservationService(AppDbContext context)
         }
 
         return query;
+    }
+
+    public Task<Guid> DeleteAsync(Reservation id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

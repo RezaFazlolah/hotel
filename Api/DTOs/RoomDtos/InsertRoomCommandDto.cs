@@ -4,8 +4,8 @@ namespace Api.DTOs.RoomDtos;
 
 public class InsertRoomCommandDto
 {
-    public int Number { get; set; }
-    public string Type { get; set; }
+    public required int Number { get; set; }
+    public RoomType Type { get; set; }
     public decimal PricePerNight { get; set; }
-    public Guid? HotelId { get; set; }
+    public required Guid HotelId { get; set; }
 }

@@ -12,8 +12,9 @@ public class GetHotelByIdHandler(IHotelService hotelService)
     public async Task<Result<Hotel>> Handle(GetHotelByIdQuery request, CancellationToken cancellationToken)
     {
         var hotel = await hotelService.GetByIdAsync(request.HotelId, cancellationToken);
-        if (hotel == null)
-            return Result<Hotel>.Failure(new Error($"hotel {request.HotelId} not found"), code: 404);
-        return Result<Hotel>.Success(hotel);
+
+        return hotel == null
+            ? Result<Hotel>.Failure(new Error($"hotel {request.HotelId} not found"), code: 404)
+            : Result<Hotel>.Success(hotel);
     }
 }

@@ -29,8 +29,9 @@ public class InsertReservationHandler(
         var days = (decimal)(request.CheckOutDate - request.CheckInDate).TotalDays;
         reservation.TotalPrice = room.PricePerNight * days;
         var result = await reservationService.InsertAsync(reservation, cancellationToken);
-        if (result == null)
-            return Result<Reservation>.Failure(new Error("reservation failed"), 400);
-        return Result<Reservation>.Success(reservation, 201);
+
+        return result == null
+            ? Result<Reservation>.Failure(new Error("reservation failed"), 400)
+            : Result<Reservation>.Success(reservation, 201);
     }
 }

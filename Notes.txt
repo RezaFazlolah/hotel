@@ -1,0 +1,23 @@
+=========================================================================================
+[] Domain
+    [] Models/Reservation.cs
+        [] why did you use DateTimeOffset instead of DateTime for CheckInDate & CheckOutDate properties?
+    [] Services/ IBaseService.cs
+        public interface IBaseService<TEntity, in TKey>
+        what the hell is <in TKey>
+
+=========================================================================================
+[] Infrastructure
+    [] AppDbContext.cs
+        [] modelBuilder.Entity<User>().Ignore(u => u.FullName);
+            ignore calculated properties in DB
+    []        
+
+=========================================================================================
+[] Application
+    [] 
+
+=========================================================================================
+[] Api
+    [] 
+    

@@ -3,6 +3,7 @@ using Application.Models;
 using Domain.Models;
 using Domain.Services;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -16,8 +16,9 @@ public class DeleteReservationHandler(IReservationService reservationService, IM
         if (reservation == null || reservation.GuestId != request.GuestId)
             return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), 404);
         reservation = await reservationService.DeleteAsync(reservation.Id, cancellationToken);
-        if (reservation == null)
-            return Result<Reservation>.Failure(new Error($"delete hotel {request.ReservationId} failed"), 400);
-        return Result<Reservation>.Success(reservation);
+
+        return reservation == null
+            ? Result<Reservation>.Failure(new Error($"delete hotel {request.ReservationId} failed"), 400)
+            : Result<Reservation>.Success(reservation);
     }
 }

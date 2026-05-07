@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
-public abstract class BaseService<TEntity, TKey>(AppDbContext context)
-    : IBaseService<TEntity, TKey>
-    where TEntity : class, IBaseModel<TKey>
-    where TKey : IEquatable<TKey>
+public abstract class BaseService<TId, TEntity>(AppDbContext context)
+    : IBaseService<TId, TEntity>
+    where TId : IEquatable<TId>, new()
+    where TEntity : class, IBaseModel<TId>
 {
     public virtual async Task<ICollection<TEntity>> GetAllAsync(
         CancellationToken cancellationToken,
@@ -24,13 +24,11 @@ public abstract class BaseService<TEntity, TKey>(AppDbContext context)
         // pagination
         query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-        return await query.ToListAsync(cancellationToken: cancellationToken);
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken)
-    {
-        return await CustomContext().FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken: cancellationToken);
-    }
+    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
+        => await CustomContext().FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken: cancellationToken);
 
     public virtual async Task<TEntity?> InsertAsync(TEntity entity, CancellationToken cancellationToken)
     {
@@ -46,12 +44,11 @@ public abstract class BaseService<TEntity, TKey>(AppDbContext context)
         return entity;
     }
 
-    public virtual async Task<TEntity?> DeleteAsync(TKey id, CancellationToken cancellationToken)
+    public virtual async Task<TEntity?> DeleteAsync(TId id, CancellationToken cancellationToken)
     {
         var entity = await GetByIdAsync(id, cancellationToken);
         if (entity == null)
             return null;
-
         context.Set<TEntity>().Remove(entity);
         await context.SaveChangesAsync(cancellationToken);
         return entity;

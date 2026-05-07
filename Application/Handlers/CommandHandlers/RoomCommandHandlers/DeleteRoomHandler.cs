@@ -14,8 +14,9 @@ public class DeleteRoomHandler(IRoomService roomService)
         if (await roomService.GetByIdAsync(request.RoomId, cancellationToken) == null)
             return Result<Room>.Failure(new Error($"room {request.RoomId} not found"), 404);
         var result = await roomService.DeleteAsync(request.RoomId, cancellationToken);
-        if (result == null)
-            return Result<Room>.Failure(new Error($"insert room failed"), 400);
-        return Result<Room>.Success(result);
+
+        return result == null
+            ? Result<Room>.Failure(new Error($"insert room failed"), 400)
+            : Result<Room>.Success(result);
     }
 }

@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Application.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,17 @@ namespace Api.Controllers;
 [Route("api/[controller]")]
 public class BaseController() : ControllerBase
 {
+    protected Guid? UserId
+    {
+        get
+        {
+            var userIdAsString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            return Guid.TryParse(userIdAsString, out var userId)
+                ? userId
+                : null;
+        }
+    }
+
     protected IActionResult HandleResult<T>(Result<T> result)
     {
         if (result.IsSuccess)

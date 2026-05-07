@@ -25,8 +25,8 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var request = new GetHotelByIdQuery() { HotelId = id };
-        var result = await mediator.Send(request, cancellationToken);
+        var query = new GetHotelByIdQuery() { HotelId = id };
+        var result = await mediator.Send(query, cancellationToken);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return HandleResult(resultDto);
     }
@@ -58,11 +58,8 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     // [Authorize(Roles = UserRoles.Admin)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var request = new DeleteHotelCommand
-        {
-            HotelId = id
-        };
-        var result = await mediator.Send(request, cancellationToken);
+        var command = new DeleteHotelCommand { HotelId = id };
+        var result = await mediator.Send(command, cancellationToken);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return HandleResult(resultDto);
     }

@@ -1,7 +1,7 @@
 namespace Domain.Models;
 
-public interface IBaseModel<TKey>
-    where TKey : IEquatable<TKey>
+public interface IBaseModel<TId>
+    where TId : IEquatable<TId>, new()
 {
-    public TKey Id { get; set; }
+    public TId Id { get; set; }
 }

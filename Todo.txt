@@ -5,9 +5,10 @@
         [T] mapping between server and DB?
     [T] for now and because of simplicity each user can only have 1 role
     [] login: role is not passed from client, because each user has exactly 1 role, it can be deduced
-    [] registration
-        [] separate registration endpoint for admin who can specify user role, obviously this endpoint requires authorization
+    [T] registration
+        [T] separate registration endpoint for admin who can specify user role, obviously this endpoint requires authorization
         [T] check for role existence before creating user, otherwise you end up with a user who has no role
+    [] think about admin and manager controller endpoints. how should it be implemented? separate endpoints and controller or common?    
 [] add HotelManager role
 [] reservation logic:
         [] add reservation logics to Logic.md
@@ -18,7 +19,7 @@
     row from DB)
 [] admin should be able to see all users
 [] separate auth and app DbContext's
-
+[] fix reservation controllers
 =========================================================================================
 [] FUTURE
 [] add rating service
@@ -27,6 +28,8 @@
 [] rating system
 look at trevoir william course/ section 7/ lecture 4/ 01':16"
 [] add refresh token for jwt
+[] hotel stores collection of its rooms
+[] 
 
 =========================================================================================
 [] enum RoomType

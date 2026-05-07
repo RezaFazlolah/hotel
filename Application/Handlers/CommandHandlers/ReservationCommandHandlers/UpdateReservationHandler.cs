@@ -16,7 +16,8 @@ public class UpdateReservationHandler(IReservationService reservationService, IM
         var reservation = await reservationService.GetByIdAsync(request.ReservationId, cancellationToken);
         if (reservation == null || reservation.GuestId != request.GuestId)
             errors.Add(new Error($"reservation {request.ReservationId} not found"));
-        if (await reservationService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate, request.GuestId))
+        if (await reservationService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
+                request.GuestId))
             errors.Add(new Error($"room {request.RoomId} is already reserved"));
 
         if (errors.Count > 0)
@@ -24,8 +25,9 @@ public class UpdateReservationHandler(IReservationService reservationService, IM
 
         mapper.Map(request, reservation);
         var updatedReservation = await reservationService.UpdateAsync(reservation, cancellationToken);
-        if (updatedReservation == null)
-            return Result<Reservation>.Failure(new Error("update reservation failed"), 400);
-        return Result<Reservation>.Success(updatedReservation);
+
+        return updatedReservation == null
+            ? Result<Reservation>.Failure(new Error("update reservation failed"), 400)
+            : Result<Reservation>.Success(updatedReservation);
     }
 }

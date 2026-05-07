@@ -6,5 +6,5 @@ namespace Application.Commands.RoomCommands;
 
 public class DeleteRoomCommand : IRequest<Result<Room>>
 {
-    public Guid RoomId { get; set; }
+    public required Guid RoomId { get; set; }
 }

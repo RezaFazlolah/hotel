@@ -8,6 +8,6 @@ public class InsertReservationCommand : IRequest<Result<Reservation>>
 {
     public DateTimeOffset CheckInDate { get; set; }
     public DateTimeOffset CheckOutDate { get; set; }
-    public Guid GuestId { get; set; }
-    public Guid RoomId { get; set; }
+    public required Guid GuestId { get; set; }
+    public required Guid RoomId { get; set; }
 }

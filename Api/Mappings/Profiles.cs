@@ -22,7 +22,7 @@ public class Profiles : Profile
         CreateMap<RegisterByAdminCommandDto, RegisterCommand>();
         CreateMap<User, UserDto>();
         CreateMap<Result<User>, Result<UserDto>>();
-        
+
         // hotel
         CreateMap<Hotel, HotelDto>();
         CreateMap<Result<Hotel>, Result<HotelDto>>()

@@ -12,8 +12,9 @@ public class GetReservationByIdHandler(IReservationService reservationService)
     public async Task<Result<Reservation>> Handle(GetReservationByIdQuery request, CancellationToken cancellationToken)
     {
         var reservation = await reservationService.GetByIdAsync(request.ReservationId, cancellationToken);
-        if (reservation == null || reservation.GuestId != request.GuestId)
-            return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), 404);
-        return Result<Reservation>.Success(reservation);
+
+        return (reservation == null || reservation.GuestId != request.GuestId)
+            ? Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), 404)
+            : Result<Reservation>.Success(reservation);
     }
 }

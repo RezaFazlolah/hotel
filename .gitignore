@@ -10,7 +10,7 @@
 # sqlite database
 *.db-shm   
 *.db-wal
-
+*.odg
 
 # dotenv files
 .env

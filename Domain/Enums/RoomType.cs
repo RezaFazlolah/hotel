@@ -1,7 +1,7 @@
 namespace Domain.Enums;
 
-public static class RoomType
+public enum RoomType
 {
-    public const string Normal = "Normal";
-    public const string Vip = "Vip";
+    Normal = 0,
+    Vip = 1
 }

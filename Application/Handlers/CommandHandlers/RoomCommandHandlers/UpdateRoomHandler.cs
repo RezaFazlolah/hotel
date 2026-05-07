@@ -19,13 +19,14 @@ public class UpdateRoomHandler(IRoomService roomService, IHotelService hotelServ
         if (request.HotelId != null &&
             await hotelService.GetByIdAsync(request.HotelId.Value, cancellationToken) == null)
             errors.Add(new Error($"hotel {request.HotelId} not found"));
-        if (errors.Count>0)
+        if (errors.Count > 0)
             return Result<Room>.Failure(errors, 404);
 
         mapper.Map(request, room);
         var updatedRoom = await roomService.UpdateAsync(room, cancellationToken);
-        if (updatedRoom == null)
-            return Result<Room>.Failure(new Error("update room failed"), 400);
-        return Result<Room>.Success(updatedRoom);
+
+        return updatedRoom == null
+            ? Result<Room>.Failure(new Error("update room failed"), 400)
+            : Result<Room>.Success(updatedRoom);
     }
 }

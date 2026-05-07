@@ -6,5 +6,5 @@ namespace Application.Queries.RoomQueries;
 
 public class GetRoomByIdQuery : IRequest<Result<Room>>
 {
-    public Guid RoomId { get; set; }
+    public required Guid RoomId { get; set; }
 }

@@ -6,6 +6,7 @@ using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Api.Controllers;
 
@@ -17,12 +18,11 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         CancellationToken cancellationToken)
     {
         var command = mapper.Map<RegisterCommand>(request);
-        command.Role = UserRoles.Guest;
+        command.Role = UserRole.Guest;
         var result = await mediator.Send(command, cancellationToken);
         var resultDto = mapper.Map<Result<UserDto>>(result);
         return HandleResult(resultDto);
     }
-
 
     [AllowAnonymous]
     [HttpPost("login")]
@@ -33,7 +33,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         return HandleResult(result);
     }
 
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = "Admin")]
     [HttpPost("registerByAdmin")]
     public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminCommandDto request,
         CancellationToken cancellationToken)

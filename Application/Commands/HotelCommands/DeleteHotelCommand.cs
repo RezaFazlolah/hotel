@@ -6,5 +6,5 @@ namespace Application.Commands.HotelCommands;
 
 public class DeleteHotelCommand : IRequest<Result<Hotel>>
 {
-    public Guid HotelId { get; set; }
+    public required Guid HotelId { get; set; }
 }

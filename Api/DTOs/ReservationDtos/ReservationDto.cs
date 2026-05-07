@@ -9,7 +9,5 @@ public class ReservationDto
     public DateTimeOffset CheckInDate { get; set; }
     public DateTimeOffset CheckOutDate { get; set; }
     public decimal TotalPrice { get; set; }
-
-    // navigation property
     public required RoomDto RoomDto { get; set; }
 }

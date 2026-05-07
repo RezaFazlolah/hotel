@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Services;
 
 public class RoomService(AppDbContext context)
-    : BaseService<Room, Guid>(context), IRoomService
+    : BaseService<Guid, Room>(context), IRoomService
 {
     public async Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber,
         CancellationToken cancellationToken)
@@ -38,9 +38,9 @@ public class RoomService(AppDbContext context)
     }
 
     protected override IQueryable<Room> CustomContext()
-    {
-        return context.Rooms.Include(r => r.Hotel).Include(r => r.Reservations);
-    }
+        => context.Rooms
+            .Include(r => r.Hotel)
+            .Include(r => r.Reservations);
 
     protected override IQueryable<Room> CustomFilter(IQueryable<Room> query, string? filterOn, string? filterQuery)
     {
@@ -52,7 +52,7 @@ public class RoomService(AppDbContext context)
 
             // filter by room type
             if (filterOn.Equals("Type", StringComparison.OrdinalIgnoreCase))
-                query = query.Where(r => r.Type == filterQuery);
+                query = query.Where(r => r.Type.ToString() == filterQuery);
         }
 
         return query;

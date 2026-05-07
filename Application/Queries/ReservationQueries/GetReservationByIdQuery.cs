@@ -7,6 +7,6 @@ namespace Application.Queries.ReservationQueries;
 public class GetReservationByIdQuery
     : IRequest<Result<Reservation>>
 {
-    public Guid ReservationId { get; init; }
-    public Guid GuestId { get; init; }
+    public Guid UserId { get; init; }
+    public required Guid ReservationId { get; init; }
 }

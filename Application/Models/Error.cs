@@ -1,9 +1,6 @@
 namespace Application.Models;
 
-public struct Error
+public struct Error(string message)
 {
-    public string Message { get; set; }
-
-    public Error(string message)
-        => Message = message;
+    public string Message { get; set; } = message;
 }

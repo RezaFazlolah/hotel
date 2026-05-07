@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Services;
 
 public class HotelService(AppDbContext context)
-    : BaseService<Hotel, Guid>(context), IHotelService
+    : BaseService<Guid, Hotel>(context), IHotelService
 {
     protected override IQueryable<Hotel> CustomContext()
     {

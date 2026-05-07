@@ -11,8 +11,9 @@ public class GetRoomByIdHandler(IRoomService roomService) : IRequestHandler<GetR
     public async Task<Result<Room>> Handle(GetRoomByIdQuery request, CancellationToken cancellationToken)
     {
         var room = await roomService.GetByIdAsync(request.RoomId, cancellationToken);
-        if (room == null)
-            return Result<Room>.Failure(new Error($"room {request.RoomId} not found"), code: 404);
-        return Result<Room>.Success(room);
+
+        return room == null
+            ? Result<Room>.Failure(new Error($"room {request.RoomId} not found"), code: 404)
+            : Result<Room>.Success(room);
     }
 }

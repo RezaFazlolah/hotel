@@ -18,8 +18,9 @@ public class UpdateHotelHandler(IHotelService hotelService, IMapper mapper)
 
         mapper.Map(request, hotel);
         var updatedHotel = await hotelService.UpdateAsync(hotel, cancellationToken);
-        if (updatedHotel == null)
-            return Result<Hotel>.Failure(new Error($"update hotel {request.Id} failed"), 400);
-        return Result<Hotel>.Success(mapper.Map<Hotel>(updatedHotel));
+
+        return updatedHotel == null
+            ? Result<Hotel>.Failure(new Error($"update hotel {request.Id} failed"), 400)
+            : Result<Hotel>.Success(mapper.Map<Hotel>(updatedHotel));
     }
 }

@@ -14,8 +14,8 @@ public class DeleteHotelHandler(IHotelService hotelService)
         if (await hotelService.GetByIdAsync(request.HotelId, cancellationToken) == null)
             return Result<Hotel>.Failure(new Error($"hotel {request.HotelId} not found"), 404);
         var result = await hotelService.DeleteAsync(request.HotelId, cancellationToken);
-        if (result == null)
-            return Result<Hotel>.Failure(new Error($"delete hotel {request.HotelId} failed"), 400);
-        return Result<Hotel>.Success(result);
+        return result == null
+            ? Result<Hotel>.Failure(new Error($"delete hotel {request.HotelId} failed"), 400)
+            : Result<Hotel>.Success(result);
     }
 }
