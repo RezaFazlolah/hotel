@@ -16,7 +16,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
-        var query = new GetAllReservationsQuery { UserId = UserId };
+        var query = new GetAllReservationsQuery { UserId = GetRequestId().Value };
         var result = await mediator.Send(query, cancellationToken);
         var resultDto = mapper.Map<Result<ICollection<ReservationDto>>>(result);
         return HandleResult(resultDto);

@@ -7,35 +7,28 @@ using MediatR;
 
 namespace Application.Handlers.QueryHandlers.ReservationQueryHandlers;
 
-public class GetAllReservationsHandler(IReservationService reservationService, IUserService userService)
+public class GetAllReservationsHandler(
+    IReservationService reservationService,
+    IUserService userService,
+    IGuestService guestService,
+    IManagerService managerService,
+    IAdminService adminService)
     : IRequestHandler<GetAllReservationsQuery, Result<ICollection<Reservation>>>
 {
     public async Task<Result<ICollection<Reservation>>> Handle(GetAllReservationsQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        if (request.UserId == null)
-            return Result<ICollection<Reservation>>.Failure(new Error("user is null"), 400);
-
-        var roles = await userService.GetRolesAsync(request.UserId.Value, cancellationToken);
+        var roles = await userService.GetRolesAsync(request.UserId, ct);
+        ICollection<Reservation> reservations;
 
         if (roles.Contains(UserRole.Admin))
-        {
-            return Result<ICollection<Reservation>>.Success(await reservationService.GetAllAsync(cancellationToken));
-        }
+            reservations = await adminService.GetReservationsAsync(request.UserId, ct);
         else if (roles.Contains(UserRole.Manager))
-        {
-            var hotelId = 
-            return Result<ICollection<Reservation>>.Success(reservationService.GetByHotel(hotelId, cancellationToken));
-        }
+            reservations = await managerService.GetReservationsAsync(request.UserId, ct);
         else if (roles.Contains(UserRole.Guest))
-        {
-        }
+            reservations = await guestService.GetReservationsAsync(request.UserId, ct);
         else
-        {
-        }
-
-        var reservations =
-            await reservationService.GetAllAsync(cancellationToken, filterOn: "GuestId", filterQuery: guestIdString);
+            return Result<ICollection<Reservation>>.Failure(new Error("user role is not supported"), 400);
 
         return Result<ICollection<Reservation>>.Success(reservations);
     }

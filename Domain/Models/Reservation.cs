@@ -2,7 +2,8 @@ using Domain.Enums;
 
 namespace Domain.Models;
 
-public class Reservation : IBaseModel<Guid>
+public class Reservation
+    : IBaseModel<Guid>
 {
     public Guid Id { get; set; }
     public required DateTimeOffset CheckInDate { get; set; }

@@ -2,7 +2,10 @@ using Domain.Models;
 
 namespace Domain.Services;
 
-public interface IManagerService : IUserService
+public interface IManagerService
+    : IUserService
 {
-    Hotel? GetHotelByManagerIdAsync(Guid managerId);
+    Task<ICollection<Reservation>> GetReservationsAsync(Guid managerId, CancellationToken ct);
+    Task<Guid> GetHotelIdAsync(Guid managerId, CancellationToken ct);
+    Task<ICollection<Guid>> GetHotelsIdAsync(IEnumerable<Guid> managersId, CancellationToken ct);
 }

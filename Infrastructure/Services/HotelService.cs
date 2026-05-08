@@ -9,7 +9,8 @@ public class HotelService(AppDbContext context)
 {
     protected override IQueryable<Hotel> CustomContext()
     {
-        return context.Hotels.Include(h => h.Rooms);
+        return context.Hotels
+            .Include(h => h.Rooms);
     }
 
     protected override IQueryable<Hotel> CustomFilter(IQueryable<Hotel> query, string? filterOn, string? filterQuery)
@@ -58,5 +59,26 @@ public class HotelService(AppDbContext context)
         }
 
         return query;
+    }
+
+    public async Task<ICollection<Room>> GetRoomsAsync(Guid hotelId, CancellationToken ct)
+        => await GetRoomsAsync([hotelId], ct);
+
+    public async Task<ICollection<Room>> GetRoomsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
+        => await context.Rooms.Where(r => hotelsId.Contains(r.HotelId)).ToListAsync(ct);
+
+    public async Task<ICollection<Guid>> GetRoomsIdAsync(Guid hotelId, CancellationToken ct)
+        => await GetRoomsIdAsync([hotelId], ct);
+
+    public async Task<ICollection<Guid>> GetRoomsIdAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
+        => await context.Rooms.Where(r => hotelsId.Contains(r.HotelId)).Select(r => r.Id).ToListAsync(ct);
+
+    public async Task<ICollection<Reservation>> GetReservationsAsync(Guid hotelId, CancellationToken ct)
+        => await GetReservationsAsync([hotelId], ct);
+
+    public async Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
+    {
+        var roomsId = await GetRoomsIdAsync(hotelsId, ct);
+        return await context.Reservations.Where(r => roomsId.Contains(r.Id)).ToListAsync(ct);
     }
 }

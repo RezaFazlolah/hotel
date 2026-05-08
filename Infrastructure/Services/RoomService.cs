@@ -17,6 +17,12 @@ public class RoomService(AppDbContext context)
         return isRoomNumberUnique;
     }
 
+    public async Task<ICollection<Reservation>> GetReservationsAsync(Guid roomId, CancellationToken ct)
+        => await GetReservationsAsync([roomId], ct);
+
+    public async Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct)
+        => await context.Reservations.Where(r => roomsId.Contains(r.RoomId)).ToListAsync(ct);
+
     public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =

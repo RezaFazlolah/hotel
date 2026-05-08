@@ -1,5 +1,6 @@
 namespace Domain.Models;
 
-public class Admin : User
+public class Admin
+    : User
 {
 }

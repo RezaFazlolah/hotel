@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Domain.Services;
 
 public interface IUserService
-    // : IBaseService<Guid, User>
+    : IBaseService<Guid, User>
 {
     Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken);
     Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken);

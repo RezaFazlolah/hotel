@@ -12,15 +12,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
 
+    public DbSet<Guest> Guests { get; set; }
+    public DbSet<Manager> Managers { get; set; }
+    public DbSet<Admin> Admins { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>()
-            .HasDiscriminator<string>("UserType")
-            .HasValue<Guest>("Guest")
-            .HasValue<Manager>("Manager")
-            .HasValue<Admin>("Admin");
+        // modelBuilder.Entity<User>().ToTable("Users");   // optional, Users table name becomes Users instead of AspNetUsers
+        modelBuilder.Entity<Guest>().ToTable("Guests");
+        modelBuilder.Entity<Manager>().ToTable("Managers");
+        modelBuilder.Entity<Admin>().ToTable("Admins");
 
         modelBuilder.Entity<Manager>()
             .HasOne(m => m.Hotel)
