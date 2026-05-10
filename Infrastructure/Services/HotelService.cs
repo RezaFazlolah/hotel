@@ -81,4 +81,8 @@ public class HotelService(AppDbContext context)
         var roomsId = await GetRoomsIdAsync(hotelsId, ct);
         return await context.Reservations.Where(r => roomsId.Contains(r.Id)).ToListAsync(ct);
     }
+
+    public async Task<bool> RoomNumberExistsAsync(int roomNumber, Guid hotelId, CancellationToken cancellationToken)
+        => (await context.Rooms.FirstOrDefaultAsync(r => r.HotelId == hotelId && r.Number == roomNumber,
+            cancellationToken: cancellationToken)) != null;
 }

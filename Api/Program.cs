@@ -1,8 +1,10 @@
 using System.Text;
 using Api;
 using Api.MiddleWares;
+using Api.Services;
 using Application;
 using Application.Behaviors;
+using Application.Interfaces;
 using Domain.Models;
 using Domain.Services;
 using FluentValidation;
@@ -77,10 +79,14 @@ builder.Services.AddAuthentication(options =>
         }
     );
 
+// HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 var app = builder.Build();
 

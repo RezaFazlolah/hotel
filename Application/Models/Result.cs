@@ -12,6 +12,6 @@ public class Result<T>
     public static Result<T> Failure(IEnumerable<Error> errors, int code) =>
         new() { IsSuccess = false, Code = code, Errors = errors };
 
-    public static Result<T> Failure(Error error, int code) =>
-        new() { IsSuccess = false, Code = code, Errors = [error] };
+    public static Result<T> Failure(Error error, int code)
+        => Failure([error], code);
 }

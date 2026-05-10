@@ -10,13 +10,16 @@ namespace Api.Controllers;
 [Route("api/[controller]")]
 public class BaseController() : ControllerBase
 {
-    protected Guid? GetRequestId()
-    {
-        var userIdAsString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
-        return Guid.TryParse(userIdAsString, out var userId)
-            ? userId
-            : null;
-    }
+    // protected Guid? RequestId
+    // {
+    //     get
+    //     {
+    //         var userIdAsString = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+    //         return Guid.TryParse(userIdAsString, out var userId)
+    //             ? userId
+    //             : null;
+    //     }
+    // }
 
     protected IActionResult HandleResult<T>(Result<T> result)
     {

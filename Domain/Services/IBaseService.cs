@@ -7,8 +7,9 @@ public interface IBaseService<in TId, TEntity>
         string? orderBy = null, bool isAscending = true,
         int pageNumber = 1, int pageSize = int.MaxValue);
 
-    Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken);
+    Task<TEntity> GetByIdAsync(TId id, CancellationToken cancellationToken);
     Task<TEntity?> InsertAsync(TEntity entity, CancellationToken cancellationToken);
     Task<TEntity?> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
     Task<TEntity?> DeleteAsync(TId id, CancellationToken cancellationToken);
+    Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken);
 }

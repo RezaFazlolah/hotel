@@ -11,4 +11,6 @@ public interface IHotelService
     Task<ICollection<Guid>> GetRoomsIdAsync(IEnumerable<Guid> hotelsId, CancellationToken ct);
     Task<ICollection<Reservation>> GetReservationsAsync(Guid hotelId, CancellationToken ct);
     Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct);
+    Task<bool> RoomNumberExistsAsync(int roomNumber, Guid hotelId, CancellationToken cancellationToken);
+
 }

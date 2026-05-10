@@ -11,13 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers;
 
 // [Authorize]
-public class ReservationsController(IMediator mediator, IMapper mapper) : BaseController()
+public class ReservationsController(IMediator mediator, IMapper mapper, IConfiguration configuration) : BaseController()
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
-        var query = new GetAllReservationsQuery { UserId = GetRequestId().Value };
-        var result = await mediator.Send(query, cancellationToken);
+        var result = await mediator.Send(new GetAllReservationsQuery(), cancellationToken);
         var resultDto = mapper.Map<Result<ICollection<ReservationDto>>>(result);
         return HandleResult(resultDto);
     }
@@ -37,39 +36,26 @@ public class ReservationsController(IMediator mediator, IMapper mapper) : BaseCo
     }
 
     [HttpPost]
-    // [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = "Guest")]
+    // it only supports Guest(for now)
     public async Task<IActionResult> InsertAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        // var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        // if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
-        //     return Unauthorized();
-        //
-        // var insertReservationCommand = mapper.Map<InsertReservationCommand>(request);
-        // insertReservationCommand.GuestId = guestId;
-        //
-        // var result = await mediator.Send(insertReservationCommand, cancellationToken);
-        // var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        // return HandleResult(resultDto);
+        var command = mapper.Map<InsertReservationCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpPut("{id:guid}")]
-    // [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = "Guest")]
     public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        // var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        // if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
-        //     return Unauthorized();
-        //
-        // request.ReservationId = id;
-        // var request2 = mapper.Map<UpdateReservationCommand>(request);
-        // request2.GuestId = guestId;
-        // var result = await mediator.Send(request2, cancellationToken);
-        // var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        // return HandleResult(resultDto);
+        var command = mapper.Map<UpdateReservationCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
     }
 
     [HttpDelete("{id:guid}")]

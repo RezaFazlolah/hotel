@@ -27,8 +27,8 @@ public abstract class BaseService<TId, TEntity>(AppDbContext context)
         return await query.ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken)
-        => await CustomContext().FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken: cancellationToken);
+    public virtual async Task<TEntity> GetByIdAsync(TId id, CancellationToken cancellationToken)
+        => await CustomContext().FirstAsync(e => e.Id.Equals(id), cancellationToken: cancellationToken);
 
     public virtual async Task<TEntity?> InsertAsync(TEntity entity, CancellationToken cancellationToken)
     {
@@ -53,6 +53,9 @@ public abstract class BaseService<TId, TEntity>(AppDbContext context)
         await context.SaveChangesAsync(cancellationToken);
         return entity;
     }
+
+    public virtual async Task<bool> ExistsAsync(TId id, CancellationToken cancellationToken)
+        => await context.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), cancellationToken);
 
     protected abstract IQueryable<TEntity> CustomContext();
 

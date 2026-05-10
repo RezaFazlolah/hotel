@@ -21,7 +21,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     {
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<User>().ToTable("Users");   // optional, Users table name becomes Users instead of AspNetUsers
         modelBuilder.Entity<Guest>().ToTable("Guests");
         modelBuilder.Entity<Manager>().ToTable("Managers");
         modelBuilder.Entity<Admin>().ToTable("Admins");
@@ -52,7 +51,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 
         // ignore calculated properties
         modelBuilder.Entity<User>().Ignore(u => u.FullName);
-        modelBuilder.Entity<Reservation>().Ignore(r => r.TotalPrice);
 
         // enum conversions
         modelBuilder.Entity<Room>()

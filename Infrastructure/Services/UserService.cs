@@ -18,7 +18,7 @@ public class UserService(
     IConfiguration configuration)
     : BaseService<Guid, User>(context), IUserService
 {
-    public async Task<bool> UserExistsAsync(string phoneNumber, CancellationToken cancellationToken)
+    public async Task<bool> ExistsAsync(string phoneNumber, CancellationToken cancellationToken)
         => await GetByPhoneNumberAsync(phoneNumber, cancellationToken) != null;
 
     public async Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken)

@@ -1,6 +1,8 @@
 using Application.Commands.ReservationCommands;
+using Application.Interfaces;
 using Application.Models;
 using AutoMapper;
+using Domain.Enums;
 using Domain.Models;
 using Domain.Services;
 using MediatR;
@@ -10,6 +12,8 @@ namespace Application.Handlers.CommandHandlers.ReservationCommandHandlers;
 public class InsertReservationHandler(
     IReservationService reservationService,
     IRoomService roomService,
+    ICurrentUserService currentUserService,
+    IUserService userService,
     IMapper mapper)
     : IRequestHandler<InsertReservationCommand, Result<Reservation>>
 {
@@ -17,19 +21,26 @@ public class InsertReservationHandler(
         CancellationToken cancellationToken)
     {
         var errors = new List<Error>();
-        if (await reservationService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate))
-            errors.Add(new Error($"room {request.RoomId} is already reserved"));
-        var room = await roomService.GetByIdAsync(request.RoomId, cancellationToken);
-        if (room == null)
+        if (!await roomService.ExistsAsync(request.RoomId, cancellationToken))
             errors.Add(new Error($"room {request.RoomId} not found"));
+        if (await reservationService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
+                cancellationToken))
+            errors.Add(new Error($"room {request.RoomId} is reserved"));
         if (errors.Count > 0)
             return Result<Reservation>.Failure(errors, 400);
 
-        var reservation = mapper.Map<Reservation>(request);
-        var days = (decimal)(request.CheckOutDate - request.CheckInDate).TotalDays;
-        reservation.TotalPrice = room.PricePerNight * days;
-        var result = await reservationService.InsertAsync(reservation, cancellationToken);
+        var requestorId = currentUserService.CurrentUserId.Value;
+        var roles = await userService.GetRolesAsync(requestorId, cancellationToken);
+        if (roles.Contains(UserRole.Guest))
+            request.GuestId = requestorId;
+        else
+            throw new NotImplementedException();
 
+        var reservation = mapper.Map<Reservation>(request);
+        reservation.TotalPrice = await reservationService.CalculateTotalPriceAsync(request.RoomId, request.CheckInDate,
+            request.CheckOutDate, cancellationToken);
+
+        var result = await reservationService.InsertAsync(reservation, cancellationToken);
         return result == null
             ? Result<Reservation>.Failure(new Error("reservation failed"), 400)
             : Result<Reservation>.Success(reservation, 201);

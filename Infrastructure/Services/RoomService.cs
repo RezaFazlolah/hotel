@@ -5,17 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
-public class RoomService(AppDbContext context)
+public class RoomService(AppDbContext context, IHotelService hotelService)
     : BaseService<Guid, Room>(context), IRoomService
 {
-    public async Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber,
-        CancellationToken cancellationToken)
-    {
-        var isRoomNumberUnique =
-            !await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber && r.Id != roomId,
-                cancellationToken);
-        return isRoomNumberUnique;
-    }
+    // public async Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var isRoomNumberUnique =
+    //         !await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber && r.Id != roomId,
+    //             cancellationToken);
+    //     return isRoomNumberUnique;
+    // }
 
     public async Task<ICollection<Reservation>> GetReservationsAsync(Guid roomId, CancellationToken ct)
         => await GetReservationsAsync([roomId], ct);
@@ -26,7 +26,7 @@ public class RoomService(AppDbContext context)
     public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =
-            await IsRoomNumberUniqueAsync(entity.Id, entity.HotelId, entity.Number, cancellationToken);
+            !await hotelService.RoomNumberExistsAsync(entity.Number, entity.HotelId, cancellationToken);
         if (!isRoomNumberUnique)
             return null;
         return await base.InsertAsync(entity, cancellationToken);
@@ -36,7 +36,7 @@ public class RoomService(AppDbContext context)
     public override async Task<Room?> UpdateAsync(Room entity, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =
-            await IsRoomNumberUniqueAsync(entity.Id, entity.HotelId, entity.Number, cancellationToken);
+            !await hotelService.RoomNumberExistsAsync(entity.Number, entity.HotelId, cancellationToken);
         if (!isRoomNumberUnique)
             return null;
 
