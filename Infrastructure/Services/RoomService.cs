@@ -1,5 +1,4 @@
-using Domain.Enums;
-using Domain.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,15 +7,6 @@ namespace Infrastructure.Services;
 public class RoomService(AppDbContext context, IHotelService hotelService)
     : BaseService<Guid, Room>(context), IRoomService
 {
-    // public async Task<bool> IsRoomNumberUniqueAsync(Guid roomId, Guid hotelId, int roomNumber,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var isRoomNumberUnique =
-    //         !await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber && r.Id != roomId,
-    //             cancellationToken);
-    //     return isRoomNumberUnique;
-    // }
-
     public async Task<ICollection<Reservation>> GetReservationsAsync(Guid roomId, CancellationToken ct)
         => await GetReservationsAsync([roomId], ct);
 

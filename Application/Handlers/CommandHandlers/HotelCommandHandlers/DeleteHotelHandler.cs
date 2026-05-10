@@ -1,6 +1,6 @@
 using Application.Commands.HotelCommands;
+using Application.Interfaces.ServiceInterfaces;
 using Application.Models;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 

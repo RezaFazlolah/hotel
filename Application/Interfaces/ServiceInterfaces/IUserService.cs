@@ -2,7 +2,7 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Domain.Interfaces;
+namespace Application.Interfaces.ServiceInterfaces;
 
 public interface IUserService
     : IBaseService<Guid, User>
@@ -14,7 +14,6 @@ public interface IUserService
     Task<IdentityResult> RegisterAsync(User user, string password, UserRole role,
         CancellationToken cancellationToken);
 
-    Task<string?> GenerateJwt(User user);
     Task<IEnumerable<UserRole>> GetRolesAsync(User user, CancellationToken cancellationToken);
     Task<IEnumerable<UserRole>> GetRolesAsync(Guid userId, CancellationToken cancellationToken);
 }

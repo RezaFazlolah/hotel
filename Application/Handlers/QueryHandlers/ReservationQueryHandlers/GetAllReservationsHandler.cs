@@ -1,8 +1,8 @@
 using Application.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 using Application.Models;
 using Application.Queries.ReservationQueries;
 using Domain.Enums;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 

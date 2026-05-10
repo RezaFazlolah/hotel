@@ -1,5 +1,5 @@
 using System.Numerics;
-using Domain.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ public class AdminService(
     UserManager<User> userManager,
     RoleManager<Role> roleManager,
     IConfiguration configuration)
-    : UserService(context, userManager, roleManager, configuration), IAdminService
+    : UserService(context, userManager, roleManager), IAdminService
 {
     public async Task<ICollection<Reservation>> GetReservationsAsync(Guid adminId, CancellationToken ct)
         => await context.Reservations.ToListAsync(ct);

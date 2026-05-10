@@ -1,5 +1,5 @@
+using Application.Interfaces.ServiceInterfaces;
 using Domain.Enums;
-using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 

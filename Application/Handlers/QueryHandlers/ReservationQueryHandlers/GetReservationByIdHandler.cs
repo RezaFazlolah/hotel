@@ -1,6 +1,6 @@
+using Application.Interfaces.ServiceInterfaces;
 using Application.Models;
 using Application.Queries.ReservationQueries;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 

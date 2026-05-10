@@ -1,4 +1,4 @@
-using Domain.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 

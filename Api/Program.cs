@@ -5,7 +5,7 @@ using Api.Services;
 using Application;
 using Application.Behaviors;
 using Application.Interfaces;
-using Domain.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure;
@@ -90,6 +90,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

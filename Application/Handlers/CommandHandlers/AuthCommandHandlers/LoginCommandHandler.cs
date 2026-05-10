@@ -1,6 +1,6 @@
 using Application.Commands.AuthCommands;
+using Application.Interfaces.ServiceInterfaces;
 using Application.Models;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 
-public class LoginCommandHandler(IUserService userService)
+public class LoginCommandHandler(IUserService userService, ITokenService tokenService)
     : IRequestHandler<LoginCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -20,7 +20,7 @@ public class LoginCommandHandler(IUserService userService)
 
         var passwordChecked = await userService.PasswordChecks(user, request.Password);
         return passwordChecked
-            ? Result<string>.Success(await userService.GenerateJwt(user))
+            ? Result<string>.Success(await tokenService.GenerateJwt(user))
             : Result<string>.Failure(new Error($"incorrect password"), 400);
     }
 }

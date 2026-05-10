@@ -1,6 +1,6 @@
 using Domain.Models;
 
-namespace Domain.Interfaces;
+namespace Application.Interfaces.ServiceInterfaces;
 
 public interface IReservationService
     : IBaseService<Guid, Reservation>

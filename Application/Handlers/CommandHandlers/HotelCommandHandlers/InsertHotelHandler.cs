@@ -1,7 +1,7 @@
 using Application.Commands.HotelCommands;
+using Application.Interfaces.ServiceInterfaces;
 using Application.Models;
 using AutoMapper;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 

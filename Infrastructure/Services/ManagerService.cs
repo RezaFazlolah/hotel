@@ -1,4 +1,4 @@
-using Domain.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ public class ManagerService(
     UserManager<User> userManager,
     RoleManager<Role> roleManager,
     IConfiguration configuration)
-    : UserService(context, userManager, roleManager, configuration), IManagerService
+    : UserService(context, userManager, roleManager), IManagerService
 {
     /// <summary>
     /// after ReservationService's GetReservations() method which supports filtering is properly implemented,

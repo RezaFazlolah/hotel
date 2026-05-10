@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Interfaces;
+using Application.Interfaces.ServiceInterfaces;
 
 namespace Api.Services;
 

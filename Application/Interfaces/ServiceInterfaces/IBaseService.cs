@@ -1,4 +1,4 @@
-namespace Domain.Interfaces;
+namespace Application.Interfaces.ServiceInterfaces;
 
 public interface IBaseService<in TId, TEntity>
 {
