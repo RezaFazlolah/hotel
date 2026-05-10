@@ -60,16 +60,10 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
 
     [HttpDelete("{id:guid}")]
     // [Authorize(Roles = UserRoles.Admin)]
-    public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> CancelAsync(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        // var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        // if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
-        //     return Unauthorized();
-        //
-        // var request = new DeleteReservationCommand() { ReservationId = id, GuestId = guestId };
-        // var result = await mediator.Send(request, cancellationToken);
-        // var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        // return HandleResult(resultDto);
+        var result = await mediator.Send(new CancelReservationCommand() { ReservationId = id }, cancellationToken);
+        var resultDto = mapper.Map<Result<ReservationDto>>(result);
+        return HandleResult(resultDto);
     }
 }

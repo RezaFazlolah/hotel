@@ -29,10 +29,10 @@ public class InsertReservationHandler(
         if (errors.Count > 0)
             return Result<Reservation>.Failure(errors, 400);
 
-        var requestorId = currentUserService.CurrentUserId.Value;
-        var roles = await userService.GetRolesAsync(requestorId, cancellationToken);
+        var currentUserId = currentUserService.CurrentUserId.Value;
+        var roles = await userService.GetRolesAsync(currentUserId, cancellationToken);
         if (roles.Contains(UserRole.Guest))
-            request.GuestId = requestorId;
+            request.GuestId = currentUserId;
         else
             throw new NotImplementedException();
 

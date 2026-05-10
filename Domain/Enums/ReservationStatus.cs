@@ -2,7 +2,7 @@ namespace Domain.Enums;
 
 public enum ReservationStatus
 {
-    Pending = 0,
+    Confirmed = 0,
     Cancelled = 1,
-    Confirmed = 2
+    // Pending = 2
 }

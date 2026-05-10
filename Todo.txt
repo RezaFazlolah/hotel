@@ -20,16 +20,6 @@
 [] admin should be able to see all users
 [] separate auth and app DbContext's
 [] fix reservation controllers
-=========================================================================================
-[] FUTURE
-[] add rating service
-[] add payment service
-[] every action must be logged
-[] rating system
-look at trevoir william course/ section 7/ lecture 4/ 01':16"
-[] add refresh token for jwt
-[] hotel stores collection of its rooms
-[] 
 
 =========================================================================================
 [] enum RoomType

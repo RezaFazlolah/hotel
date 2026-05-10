@@ -1,0 +1,9 @@
+=========================================================================================
+[] add rating service
+[] add payment service
+[] every action must be logged
+[] rating system
+look at trevoir william course/ section 7/ lecture 4/ 01':16"
+[] add refresh token for jwt
+[] hotel stores collection of its rooms
+[] it should be clear that who did what. e.g. if a reservation is cancelled, who cancelled it and when? is logging the solution
