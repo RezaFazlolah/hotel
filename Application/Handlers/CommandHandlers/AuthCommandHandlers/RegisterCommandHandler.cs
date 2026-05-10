@@ -1,7 +1,7 @@
 using Application.Commands.AuthCommands;
 using Application.Models;
+using Domain.Interfaces;
 using Domain.Models;
-using Domain.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

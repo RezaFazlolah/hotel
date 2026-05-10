@@ -1,7 +1,7 @@
 using Application.Models;
 using Application.Queries.RoomQueries;
+using Domain.Interfaces;
 using Domain.Models;
-using Domain.Services;
 using MediatR;
 
 namespace Application.Handlers.QueryHandlers.RoomQueryHandlers;

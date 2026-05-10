@@ -1,5 +1,5 @@
+using Domain.Interfaces;
 using Domain.Models;
-using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;

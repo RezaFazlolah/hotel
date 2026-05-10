@@ -1,5 +1,5 @@
+using Domain.Interfaces;
 using Domain.Models;
-using Domain.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

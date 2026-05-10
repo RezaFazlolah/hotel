@@ -1,6 +1,6 @@
 using Domain.Models;
 
-namespace Domain.Services;
+namespace Domain.Interfaces;
 
 public interface IManagerService
     : IUserService

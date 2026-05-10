@@ -2,7 +2,7 @@ using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Domain.Services;
+namespace Domain.Interfaces;
 
 public interface IUserService
     : IBaseService<Guid, User>
