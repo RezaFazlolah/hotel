@@ -1,4 +1,3 @@
-using Application.Interfaces;
 using Application.Interfaces.ServiceInterfaces;
 using Application.Queries.ReservationQueries;
 using Domain.Models;
@@ -9,7 +8,6 @@ using SharedKernel.Enums;
 namespace Application.Handlers.QueryHandlers.ReservationQueryHandlers;
 
 public class GetAllReservationsHandler(
-    IReservationService reservationService,
     ICurrentUserService currentUserService,
     IUserService userService,
     IGuestService guestService,
@@ -20,16 +18,16 @@ public class GetAllReservationsHandler(
     public async Task<Result<ICollection<Reservation>>> Handle(GetAllReservationsQuery request,
         CancellationToken ct)
     {
-        var requesterId = currentUserService.CurrentUserId;
-        var roles = await userService.GetRolesAsync(requesterId.Value, ct);
+        var userId = currentUserService.CurrentUserId;
+        var roles = await userService.GetRolesAsync(userId, ct);
         ICollection<Reservation> reservations;
 
         if (roles.Contains(UserRole.Admin))
-            reservations = await adminService.GetReservationsAsync(requesterId.Value, ct);
+            reservations = await adminService.GetReservationsAsync(userId, ct);
         else if (roles.Contains(UserRole.Manager))
-            reservations = await managerService.GetReservationsAsync(requesterId.Value, ct);
+            reservations = await managerService.GetReservationsAsync(userId, ct);
         else if (roles.Contains(UserRole.Guest))
-            reservations = await guestService.GetReservationsAsync(requesterId.Value, ct);
+            reservations = await guestService.GetReservationsAsync(userId, ct);
         else
             return Result<ICollection<Reservation>>.Failure(new Error("user role is not supported"), 400);
 

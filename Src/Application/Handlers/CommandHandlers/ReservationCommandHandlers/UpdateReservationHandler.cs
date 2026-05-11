@@ -23,7 +23,7 @@ public class UpdateReservationHandler(
 
         var errors = new List<Error>();
         if (await reservationService.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
-                currentUserService.CurrentUserId.Value, cancellationToken))
+                currentUserService.CurrentUserId, cancellationToken))
             errors.Add(new Error($"room {reservation.RoomId} is reserved"));
         if (errors.Count > 0)
             return Result<Reservation>.Failure(errors, 404);

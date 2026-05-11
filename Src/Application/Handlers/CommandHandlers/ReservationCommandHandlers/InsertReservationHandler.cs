@@ -29,7 +29,7 @@ public class InsertReservationHandler(
         if (errors.Count > 0)
             return Result<Reservation>.Failure(errors, 400);
 
-        var currentUserId = currentUserService.CurrentUserId.Value;
+        var currentUserId = currentUserService.CurrentUserId;
         var roles = await userService.GetRolesAsync(currentUserId, cancellationToken);
         if (roles.Contains(UserRole.Guest))
             request.GuestId = currentUserId;

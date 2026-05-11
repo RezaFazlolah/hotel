@@ -8,14 +8,5 @@ namespace Api.Services;
 public class CurrentUserService(IHttpContextAccessor httpContextAccessor)
     : ICurrentUserService
 {
-    public Guid? CurrentUserId
-    {
-        get
-        {
-            var currentUserId = httpContextAccessor?.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            if (currentUserId == null)
-                return null;
-            return Guid.TryParse(currentUserId, out var result) ? result : null;
-        }
-    }
+    public Guid CurrentUserId => Guid.Parse(httpContextAccessor?.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? string.Empty);
 }
