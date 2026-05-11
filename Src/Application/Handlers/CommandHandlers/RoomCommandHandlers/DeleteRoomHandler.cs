@@ -1,8 +1,8 @@
 using Application.Commands.RoomCommands;
 using Application.Interfaces.ServiceInterfaces;
-using Application.Models;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Common;
 
 namespace Application.Handlers.CommandHandlers.RoomCommandHandlers;
 

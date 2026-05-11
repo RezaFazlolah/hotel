@@ -1,11 +1,11 @@
 using Api.DTOs.RoomDtos;
 using Application.Commands.RoomCommands;
-using Application.Models;
 using Application.Queries.RoomQueries;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Common;
 
 namespace Api.Controllers;
 

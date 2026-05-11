@@ -6,9 +6,9 @@ using Application.Commands.AuthCommands;
 using Application.Commands.HotelCommands;
 using Application.Commands.ReservationCommands;
 using Application.Commands.RoomCommands;
-using Application.Models;
 using AutoMapper;
 using Domain.Models;
+using SharedKernel.Common;
 
 namespace Api.Mappings;
 

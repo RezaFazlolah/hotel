@@ -1,9 +1,9 @@
 using Application.Interfaces;
 using Application.Interfaces.ServiceInterfaces;
-using Application.Models;
 using Application.Queries.ReservationQueries;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Application.Handlers.QueryHandlers.ReservationQueryHandlers;

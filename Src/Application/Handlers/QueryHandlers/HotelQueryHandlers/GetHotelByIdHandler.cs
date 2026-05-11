@@ -1,8 +1,8 @@
 using Application.Interfaces.ServiceInterfaces;
-using Application.Models;
 using Application.Queries.HotelQueries;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Common;
 
 namespace Application.Handlers.QueryHandlers.HotelQueryHandlers;
 

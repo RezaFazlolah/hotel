@@ -1,12 +1,12 @@
 using Api.DTOs.AuthDtos;
 using Application.Commands.AuthCommands;
-using Application.Models;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SharedKernel;
+using SharedKernel.Common;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
 

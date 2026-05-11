@@ -1,5 +1,5 @@
-using Application.Models;
 using MediatR;
+using SharedKernel.Common;
 
 namespace Application.Commands.AuthCommands;
 

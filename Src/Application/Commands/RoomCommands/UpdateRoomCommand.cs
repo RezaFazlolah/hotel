@@ -1,6 +1,6 @@
-using Application.Models;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Application.Commands.RoomCommands;

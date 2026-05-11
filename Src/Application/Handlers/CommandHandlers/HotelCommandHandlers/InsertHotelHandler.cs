@@ -1,9 +1,9 @@
 using Application.Commands.HotelCommands;
 using Application.Interfaces.ServiceInterfaces;
-using Application.Models;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Common;
 
 namespace Application.Handlers.CommandHandlers.HotelCommandHandlers;
 

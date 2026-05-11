@@ -1,4 +1,4 @@
-namespace Application.Models;
+namespace SharedKernel.Common;
 
 public struct Error(string message)
 {

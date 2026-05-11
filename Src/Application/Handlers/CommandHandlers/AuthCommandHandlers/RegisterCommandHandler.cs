@@ -1,9 +1,9 @@
 using Application.Commands.AuthCommands;
 using Application.Interfaces.ServiceInterfaces;
-using Application.Models;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using SharedKernel.Common;
 
 namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 

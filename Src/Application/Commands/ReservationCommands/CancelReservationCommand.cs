@@ -1,6 +1,6 @@
-using Application.Models;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Common;
 
 namespace Application.Commands.ReservationCommands;
 
