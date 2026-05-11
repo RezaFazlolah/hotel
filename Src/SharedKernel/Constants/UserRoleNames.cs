@@ -1,6 +1,6 @@
 using SharedKernel.Enums;
 
-namespace SharedKernel;
+namespace SharedKernel.Constants;
 
 public static class UserRoleNames
 {
