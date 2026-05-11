@@ -6,6 +6,7 @@
 # REZA's manual ignores
 [mM]igrations/
 [bB]in/
+[bB]in\\Debug/
 [oO]bj/
 
 # sqlite database
