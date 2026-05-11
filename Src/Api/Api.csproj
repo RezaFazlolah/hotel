@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="bin\" />
       <Folder Include="DTOs/HotelDtos/" />
       <Folder Include="Mappings/" />
     </ItemGroup>
