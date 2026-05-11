@@ -5,15 +5,11 @@
 
 # REZA's manual ignores
 [mM]igrations/
-[bB]in/
-[bB]in\\Debug/
-[oO]bj/
-
-# sqlite database
-*.db-shm   
+*.db-shm
 *.db-wal
 *.odg
 /Test.cs
+
 # dotenv files
 .env
 
