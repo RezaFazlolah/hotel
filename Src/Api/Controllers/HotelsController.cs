@@ -3,7 +3,6 @@ using Application.Commands.HotelCommands;
 using Application.Models;
 using Application.Queries.HotelQueries;
 using AutoMapper;
-using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

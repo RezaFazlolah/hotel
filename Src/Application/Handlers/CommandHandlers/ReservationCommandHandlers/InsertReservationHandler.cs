@@ -3,9 +3,9 @@ using Application.Interfaces;
 using Application.Interfaces.ServiceInterfaces;
 using Application.Models;
 using AutoMapper;
-using Domain.Enums;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Enums;
 
 namespace Application.Handlers.CommandHandlers.ReservationCommandHandlers;
 

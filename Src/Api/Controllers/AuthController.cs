@@ -2,11 +2,11 @@ using Api.DTOs.AuthDtos;
 using Application.Commands.AuthCommands;
 using Application.Models;
 using AutoMapper;
-using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using SharedKernel.Enums;
 
 namespace Api.Controllers;
 

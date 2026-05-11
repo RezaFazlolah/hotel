@@ -3,7 +3,6 @@ using Application.Commands.ReservationCommands;
 using Application.Models;
 using Application.Queries.ReservationQueries;
 using AutoMapper;
-using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

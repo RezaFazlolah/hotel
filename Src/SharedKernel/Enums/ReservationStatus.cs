@@ -1,4 +1,4 @@
-namespace Domain.Enums;
+namespace SharedKernel.Enums;
 
 public enum ReservationStatus
 {

@@ -1,6 +1,6 @@
-using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
+using SharedKernel.Enums;
 
 namespace Application.Interfaces.ServiceInterfaces;
 

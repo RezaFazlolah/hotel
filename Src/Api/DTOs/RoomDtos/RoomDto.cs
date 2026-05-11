@@ -1,5 +1,5 @@
 using Api.DTOs.HotelDtos;
-using Domain.Enums;
+using SharedKernel.Enums;
 
 namespace Api.DTOs.RoomDtos;
 

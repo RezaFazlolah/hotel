@@ -1,5 +1,3 @@
-using Domain.Enums;
-
 namespace Api.DTOs.AuthDtos;
 
 public class LoginCommandDto

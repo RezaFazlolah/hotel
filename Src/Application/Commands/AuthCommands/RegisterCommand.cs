@@ -1,7 +1,7 @@
 using Application.Models;
-using Domain.Enums;
 using Domain.Models;
 using MediatR;
+using SharedKernel.Enums;
 
 namespace Application.Commands.AuthCommands;
 
