@@ -31,7 +31,7 @@ public class RoomsController(IMediator mediator, IMapper mapper) : BaseControlle
     }
 
     [HttpPost]
-    // [Authorize(Roles = UserRoles.Admin)]
+    // [Authorize(Roles = UserRoleNames.Admin)]
     public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -42,7 +42,7 @@ public class RoomsController(IMediator mediator, IMapper mapper) : BaseControlle
     }
 
     [HttpPut("{id:guid}")]
-    // [Authorize(Roles = UserRoles.Admin)]
+    // [Authorize(Roles = UserRoleNames.Admin)]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -54,7 +54,7 @@ public class RoomsController(IMediator mediator, IMapper mapper) : BaseControlle
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = UserRoles.Admin)]
+    // [Authorize(Roles = UserRoleNames.Admin)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var request = new DeleteRoomCommand { RoomId = id };

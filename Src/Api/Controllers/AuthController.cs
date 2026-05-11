@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using SharedKernel;
 using SharedKernel.Enums;
 
 namespace Api.Controllers;
@@ -33,7 +34,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         return HandleResult(result);
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = UserRoleNames.Admin)]
     [HttpPost("registerByAdmin")]
     public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminCommandDto request,
         CancellationToken cancellationToken)

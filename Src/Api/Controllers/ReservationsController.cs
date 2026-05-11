@@ -6,6 +6,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel;
 
 namespace Api.Controllers;
 
@@ -35,7 +36,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
     }
 
     [HttpPost]
-    [Authorize(Roles = "Guest")]
+    [Authorize(Roles = UserRoleNames.Guest)]
     // it only supports Guest(for now)
     public async Task<IActionResult> InsertAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
@@ -47,7 +48,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Guest")]
+    [Authorize(Roles = UserRoleNames.Guest)]
     public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -58,7 +59,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = UserRoles.Admin)]
+    // [Authorize(Roles = UserRoleNames.Admin)]
     public async Task<IActionResult> CancelAsync(Guid id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CancelReservationCommand() { ReservationId = id }, cancellationToken);
