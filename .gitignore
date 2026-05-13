@@ -9,6 +9,7 @@
 *.db-wal
 *.odg
 /Test.cs
+*.txt
 
 # dotenv files
 .env
