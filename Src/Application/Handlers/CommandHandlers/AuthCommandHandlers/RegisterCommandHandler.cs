@@ -10,7 +10,7 @@ namespace Application.Handlers.CommandHandlers.AuthCommandHandlers;
 public class RegisterCommandHandler(IUserService userService)
     : IRequestHandler<RegisterCommand, Result<User>>
 {
-    public async Task<Result<User>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<Result<User>> Handle(RegisterCommand request, CancellationToken ct)
     {
         var user = new User
         {
@@ -18,9 +18,12 @@ public class RegisterCommandHandler(IUserService userService)
             UserName = request.PhoneNumber
         };
 
-        var result = await userService.RegisterAsync(user, request.Password, request.Role, cancellationToken);
-        return result.Succeeded
-            ? Result<User>.Success(await userService.GetByPhoneNumberAsync(user.PhoneNumber, cancellationToken), 201)
-            : Result<User>.Failure(result.Errors.Select(e => new Error(e.Description)).ToList(), 400);
+        if (!await userService.RoleExistsAsync(request.Role, ct))
+            return Result<User>.Failure(new Error("role not found"), 400);
+        
+        var result = await userService.InsertAsync(user, request.Password, ct);
+        return result == null
+            ? Result<User>.Failure(new Error("user registed failed"), 400)
+            : Result<User>.Success(result, 201);
     }
 }

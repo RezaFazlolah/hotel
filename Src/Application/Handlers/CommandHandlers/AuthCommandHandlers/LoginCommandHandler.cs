@@ -20,7 +20,7 @@ public class LoginCommandHandler(IUserService userService, ITokenService tokenSe
 
         var passwordChecked = await userService.PasswordChecks(user, request.Password);
         return passwordChecked
-            ? Result<string>.Success(await tokenService.GenerateJwt(user))
+            ? Result<string>.Success((await tokenService.GenerateJwt(user)).Value)
             : Result<string>.Failure(new Error($"incorrect password"), 400);
     }
 }

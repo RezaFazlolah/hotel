@@ -1,6 +1,7 @@
 using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Enums;
 
 namespace Infrastructure.Services;
 
@@ -11,18 +12,28 @@ public class RoomService(AppDbContext context, IHotelService hotelService)
         => await GetReservationsAsync([roomId], ct);
 
     public async Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct)
+        // implement with ReservationService's GetReservations() with proper filter instead of this
         => await context.Reservations.Where(r => roomsId.Contains(r.RoomId)).ToListAsync(ct);
 
-    public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
-    {
-        var isRoomNumberUnique =
-            !await hotelService.RoomNumberExistsAsync(entity.Number, entity.HotelId, cancellationToken);
-        if (!isRoomNumberUnique)
-            return null;
-        return await base.InsertAsync(entity, cancellationToken);
-    }
+    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, CancellationToken ct)
+        // implement with ReservationService's Exists() with proper filter instead of this
+        => await context.Reservations.AnyAsync(r =>
+            r.RoomId == roomId && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate) &&
+            r.Status != ReservationStatus.Cancelled, ct);
 
-    // roomId MUST NOT be updated
+    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, Guid guestId,
+        CancellationToken ct)
+        // implement with ReservationService's Exists() with proper filter instead of this
+        => await context.Reservations.AnyAsync(r =>
+            r.RoomId == roomId && !(r.CheckOutDate < checkInDate ||
+                                    checkOutDate < r.CheckInDate && r.Status != ReservationStatus.Cancelled) &&
+            r.GuestId != guestId, ct);
+
+    public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
+        => await hotelService.RoomNumberExistsAsync(entity.Number, entity.HotelId, cancellationToken)
+            ? null
+            : await base.InsertAsync(entity, cancellationToken);
+
     public override async Task<Room?> UpdateAsync(Room entity, CancellationToken cancellationToken)
     {
         var isRoomNumberUnique =

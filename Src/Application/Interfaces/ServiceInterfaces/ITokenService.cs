@@ -1,8 +1,9 @@
 using Domain.Models;
+using SharedKernel.Common;
 
 namespace Application.Interfaces.ServiceInterfaces;
 
 public interface ITokenService
 {
-    Task<string?> GenerateJwt(User user);
+    Task<Result<string>> GenerateJwt(User user);
 }

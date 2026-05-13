@@ -1,5 +1,4 @@
 using Application.Commands.ReservationCommands;
-using Application.Interfaces;
 using Application.Interfaces.ServiceInterfaces;
 using AutoMapper;
 using Domain.Models;
@@ -23,7 +22,7 @@ public class InsertReservationHandler(
         var errors = new List<Error>();
         if (!await roomService.ExistsAsync(request.RoomId, cancellationToken))
             errors.Add(new Error($"room {request.RoomId} not found"));
-        if (await reservationService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
+        if (await roomService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
                 cancellationToken))
             errors.Add(new Error($"room {request.RoomId} is reserved"));
         if (errors.Count > 0)

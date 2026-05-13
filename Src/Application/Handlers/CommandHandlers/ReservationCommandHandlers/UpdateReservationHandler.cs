@@ -11,6 +11,7 @@ namespace Application.Handlers.CommandHandlers.ReservationCommandHandlers;
 public class UpdateReservationHandler(
     IReservationService reservationService,
     ICurrentUserService currentUserService,
+    IRoomService roomService,
     IMapper mapper)
     : IRequestHandler<UpdateReservationCommand, Result<Reservation>>
 {
@@ -22,7 +23,7 @@ public class UpdateReservationHandler(
         var reservation = await reservationService.GetByIdAsync(request.ReservationId, cancellationToken);
 
         var errors = new List<Error>();
-        if (await reservationService.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
+        if (await roomService.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
                 currentUserService.CurrentUserId, cancellationToken))
             errors.Add(new Error($"room {reservation.RoomId} is reserved"));
         if (errors.Count > 0)

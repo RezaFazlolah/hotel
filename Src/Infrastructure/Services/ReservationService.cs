@@ -12,19 +12,6 @@ public class ReservationService(AppDbContext context, IRoomService roomService)
         => await context.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
             cancellationToken);
 
-    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
-        CancellationToken ct)
-        => await context.Reservations.AnyAsync(r =>
-            r.RoomId == roomId && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate) &&
-            r.Status != ReservationStatus.Cancelled, ct);
-
-    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
-        Guid guestId, CancellationToken ct)
-        => await context.Reservations.AnyAsync(r =>
-            r.RoomId == roomId && !(r.CheckOutDate < checkInDate ||
-                                    checkOutDate < r.CheckInDate && r.Status != ReservationStatus.Cancelled) &&
-            r.GuestId != guestId, ct);
-
     public async Task<decimal> CalculateTotalPriceAsync(Guid roomId, DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct)

@@ -65,24 +65,28 @@ public class HotelService(AppDbContext context)
         => await GetRoomsAsync([hotelId], ct);
 
     public async Task<ICollection<Room>> GetRoomsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
+    // implement with RoomService's GetRooms() with proper filter instead of this
         => await context.Rooms.Where(r => hotelsId.Contains(r.HotelId)).ToListAsync(ct);
 
     public async Task<ICollection<Guid>> GetRoomsIdAsync(Guid hotelId, CancellationToken ct)
         => await GetRoomsIdAsync([hotelId], ct);
 
     public async Task<ICollection<Guid>> GetRoomsIdAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
+    // implement with RoomService's GetRoomsId() with proper filter instead of this
         => await context.Rooms.Where(r => hotelsId.Contains(r.HotelId)).Select(r => r.Id).ToListAsync(ct);
 
     public async Task<ICollection<Reservation>> GetReservationsAsync(Guid hotelId, CancellationToken ct)
         => await GetReservationsAsync([hotelId], ct);
 
     public async Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
+    // implement with ReservationService's GetReservations() with proper filter instead of this
     {
         var roomsId = await GetRoomsIdAsync(hotelsId, ct);
         return await context.Reservations.Where(r => roomsId.Contains(r.Id)).ToListAsync(ct);
     }
 
     public async Task<bool> RoomNumberExistsAsync(int roomNumber, Guid hotelId, CancellationToken cancellationToken)
-        => (await context.Rooms.FirstOrDefaultAsync(r => r.HotelId == hotelId && r.Number == roomNumber,
-            cancellationToken: cancellationToken)) != null;
+        // implement with RoomService's RoomExists() with proper filter instead of this
+        => (await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber,
+            cancellationToken: cancellationToken));
 }

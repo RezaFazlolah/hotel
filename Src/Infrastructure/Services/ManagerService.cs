@@ -21,7 +21,8 @@ public class ManagerService(
     /// use that instead of querying Reservation table directly from here,
     /// something like reservationService.GetReservations(filterOn= "managerId", filterQuery= managerId)
     /// </summary>
-    public async Task<ICollection<Reservation>> GetReservationsAsync(Guid managerId, CancellationToken ct)
+    public override async Task<ICollection<Reservation>> GetReservationsAsync(Guid managerId, CancellationToken ct)
+        // implement with ReservationService's GetReservations() with proper filter instead of this
     {
         var hotelId = await GetHotelIdAsync(managerId, ct);
         return await hotelService.GetReservationsAsync(hotelId, ct);
@@ -29,7 +30,8 @@ public class ManagerService(
 
     public async Task<Guid> GetHotelIdAsync(Guid managerId, CancellationToken ct)
         => (await context.Managers.FirstAsync(m => m.Id == managerId, ct)).HotelId;
-
+    // after filtering for HotelService's GetAllReservations() properly implemented, use something like
+    // reservationService.GetReservations(filterOn="guestId", filterQuery=guestId)
     public async Task<ICollection<Guid>> GetHotelsIdAsync(IEnumerable<Guid> managersId, CancellationToken ct)
         => await context.Managers.Where(m => managersId.Contains(m.HotelId)).Select(m => m.HotelId).ToListAsync(ct);
 }

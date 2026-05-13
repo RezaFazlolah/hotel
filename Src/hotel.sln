@@ -11,19 +11,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{FAD6EE67-AE26-47DE-B084-3A44E1F64278}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Todo", "Todo", "{701B9DCA-412A-4C3F-B511-BBCCDD6C0B76}"
-	ProjectSection(SolutionItems) = preProject
-		Todo.txt = Todo.txt
-		Logic.txt = Logic.txt
-		DbDiagram.odg = DbDiagram.odg
-		Problems.txt = Problems.txt
-		Notes.txt = Notes.txt
-		CLI.txt = CLI.txt
-		Test.cs = Test.cs
-		Future.txt = Future.txt
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{2A97356F-4057-4F29-92E9-C42BEF4C7351}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Draft", "Draft", "{169ADB1F-9EAD-4EEE-9E48-C34FA24DC5B1}"
+	ProjectSection(SolutionItems) = preProject
+		..\compose.yaml = ..\compose.yaml
+		..\Logic.txt = ..\Logic.txt
+		..\CLI.txt = ..\CLI.txt
+		..\Notes.txt = ..\Notes.txt
+		..\Future.txt = ..\Future.txt
+		..\Problems.txt = ..\Problems.txt
+		..\DbDiagram.odg = ..\DbDiagram.odg
+		..\Test.cs = ..\Test.cs
+		..\ReadMe.md = ..\ReadMe.md
+		..\Todo.txt = ..\Todo.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

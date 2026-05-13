@@ -3,7 +3,7 @@ namespace SharedKernel.Common;
 public class Result<T>
 {
     public bool IsSuccess { get; init; }
-    public T? Value { get; init; }
+    public T Value { get; init; }
     public IEnumerable<Error> Errors { get; init; } = [];
     public int Code { get; init; }
 

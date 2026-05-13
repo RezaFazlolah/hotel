@@ -6,6 +6,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SharedKernel.Common;
 
 namespace Infrastructure.Services;
 
@@ -14,7 +15,7 @@ public class TokenService(IConfiguration configuration,
     RoleManager<Role> roleManager)
     : ITokenService
 {
-    public async Task<string?> GenerateJwt(User user)
+    public async Task<Result<string>> GenerateJwt(User user)
     {
         var claims = new List<Claim>
         {
@@ -38,6 +39,7 @@ public class TokenService(IConfiguration configuration,
             expires: DateTime.UtcNow.AddMinutes(int.Parse(expirationDuration)),
             signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256));
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var result = new JwtSecurityTokenHandler().WriteToken(token);
+        return Result<string>.Success(result);
     }
 }

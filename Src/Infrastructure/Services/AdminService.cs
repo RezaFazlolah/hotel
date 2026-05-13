@@ -14,9 +14,7 @@ public class AdminService(
     IConfiguration configuration)
     : UserService(context, userManager, roleManager), IAdminService
 {
-    public async Task<ICollection<Reservation>> GetReservationsAsync(Guid adminId, CancellationToken ct)
-        => await context.Reservations.ToListAsync(ct);
-    // second approach
-    // reservationService.GetReservations()
-    // which approach is better? both performance-wise and maintenance-wise
+    public override async Task<ICollection<Reservation>> GetReservationsAsync(Guid adminId, CancellationToken ct)
+        // implement with ReservationService's GetReservations() with proper filter instead of this
+        => throw new NotImplementedException();
 }
