@@ -5,11 +5,13 @@
 
 # REZA's manual ignores
 [mM]igrations/
+*.db
 *.db-shm
 *.db-wal
 *.odg
 /Test.cs
 *.txt
+bin\\Debug/
 
 # dotenv files
 .env
