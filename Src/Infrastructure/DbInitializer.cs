@@ -17,19 +17,27 @@ public class DbInitializer()
         // hotel
         var hotels = new List<Hotel>
         {
-            new() { Name = "Parsian", Address = "Hamadan", Rating = 3.8m },
-            new() { Name = "Spinas", Address = "Tehran", Rating = 4.5m }
+            new() { Id = Guid.Parse("26d4ed41-66a0-4448-a031-84248db7b35c") ,Name = "Parsian", Address = "Hamadan", Rating = 3.8m },
+            new() { Id = Guid.Parse("34a4ed41-66a0-4448-a031-84248db7b72f"), Name = "Spinas", Address = "Tehran", Rating = 4.5m }
         };
-        await context.Hotels.AddRangeAsync(hotels);
-        await context.SaveChangesAsync();
+        
+        if(!context.Hotels.Any())
+        {
+            await context.Hotels.AddRangeAsync(hotels);
+            await context.SaveChangesAsync();
+        }
 
         // room
         var rooms = new List<Room>
         {
             new Room { Number = 101, Type = RoomType.Normal, PricePerNight = 100, HotelId = hotels[0].Id },
         };
-        await context.Rooms.AddRangeAsync(rooms);
-        await context.SaveChangesAsync();
+
+        if (!context.Rooms.Any())
+        {
+            await context.Rooms.AddRangeAsync(rooms);
+            await context.SaveChangesAsync();
+        }
 
         // roles
         foreach (var role in Enum.GetNames<UserRole>())
@@ -42,7 +50,7 @@ public class DbInitializer()
             (new Guest { FirstName = "ali", UserName = "+989184129511", PhoneNumber = "+989184129511" },
                 UserRole.Guest.ToString(),
                 "1234"),
-            (new Manager { FirstName = "hasan", UserName = "+9891841222", PhoneNumber = "+9891841222", HotelId = hotels[0].Id },
+            (new Manager { FirstName = "hasan", UserName = "+989184129522", PhoneNumber = "+989184129522", HotelId = hotels[0].Id },
                 UserRole.Manager.ToString(),
                 "1234"),
             (new Admin { FirstName = "mamad", UserName = "+989184129533", PhoneNumber = "+989184129533" },

@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Application.Handlers.CommandHandlers.ReservationCommandHandlers;
 
@@ -17,11 +18,8 @@ public class CancelReservationHandler(
     public async Task<Result<Reservation>> Handle(CancelReservationCommand request, CancellationToken cancellationToken)
     {
         if (!await reservationService.ExistsAsync(request.ReservationId, cancellationToken))
-            return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), 404);
+            return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), ResultCode.NotFound);
 
-        var cancelledReservation = await reservationService.CancelAsync(request.ReservationId, cancellationToken);
-        return cancelledReservation == null
-            ? Result<Reservation>.Failure(new Error($"delete reservation {request.ReservationId} failed"), 400)
-            : Result<Reservation>.Success(cancelledReservation);
+        return await reservationService.CancelAsync(request.ReservationId, cancellationToken);
     }
 }

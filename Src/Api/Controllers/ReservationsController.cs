@@ -38,7 +38,6 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
 
     [HttpPost]
     [Authorize(Roles = UserRoleNames.Guest)]
-    // it only supports Guest(for now)
     public async Task<IActionResult> InsertAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {

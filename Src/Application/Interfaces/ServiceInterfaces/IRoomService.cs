@@ -1,18 +1,19 @@
 using Domain.Models;
+using SharedKernel.Common;
 
 namespace Application.Interfaces.ServiceInterfaces;
 
 public interface IRoomService
     : IBaseService<Guid, Room>
 {
-    Task<ICollection<Reservation>> GetReservationsAsync(Guid roomId, CancellationToken ct);
-    Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct);
+    Task<Result<ICollection<Reservation>>> GetReservationsAsync(Guid roomId, CancellationToken ct);
+    Task<Result<ICollection<Reservation>>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct);
 
+    Task<Result<bool>> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
     // check if there is any reservation
-    Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
         CancellationToken ct);
 
-    // check if there is any reservation, but guestId is ignored, its mainly used for updating reservation
-    Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
+    Task<Result<bool>> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate,
+    // check if there is any reservation, but guestId is ignored, its used for updating reservation
         Guid guestId, CancellationToken ct);
 }

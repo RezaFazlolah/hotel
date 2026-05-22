@@ -1,8 +1,10 @@
+using System.Security.Cryptography;
 using Application.Commands.ReservationCommands;
 using Application.Interfaces.ServiceInterfaces;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
@@ -19,29 +21,42 @@ public class InsertReservationHandler(
     public async Task<Result<Reservation>> Handle(InsertReservationCommand request,
         CancellationToken cancellationToken)
     {
-        var errors = new List<Error>();
-        if (!await roomService.ExistsAsync(request.RoomId, cancellationToken))
-            errors.Add(new Error($"room {request.RoomId} not found"));
-        if (await roomService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
-                cancellationToken))
-            errors.Add(new Error($"room {request.RoomId} is reserved"));
-        if (errors.Count > 0)
-            return Result<Reservation>.Failure(errors, 400);
+        throw new NotImplementedException();
 
-        var currentUserId = currentUserService.CurrentUserId;
-        var roles = await userService.GetRolesAsync(currentUserId, cancellationToken);
-        if (roles.Contains(UserRole.Guest))
-            request.GuestId = currentUserId;
-        else
-            throw new NotImplementedException();
-
-        var reservation = mapper.Map<Reservation>(request);
-        reservation.TotalPrice = await reservationService.CalculateTotalPriceAsync(request.RoomId, request.CheckInDate,
-            request.CheckOutDate, cancellationToken);
-
-        var result = await reservationService.InsertAsync(reservation, cancellationToken);
-        return result == null
-            ? Result<Reservation>.Failure(new Error("reservation failed"), 400)
-            : Result<Reservation>.Success(reservation, 201);
+        // var errors = new List<Error>();
+        // if (!await roomService.ExistsAsync(request.RoomId, cancellationToken))
+        //     errors.Add(new Error($"room {request.RoomId} not found"));
+        // if (await roomService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
+        //         cancellationToken))
+        //     errors.Add(new Error($"room {request.RoomId} is reserved"));
+        // if (errors.Count > 0)
+        //     return Result<Reservation>.Failure(errors, 400);
+        //
+        // var currentUserId = currentUserService.Id;
+        // var roles = await userService.GetRolesAsync(currentUserId, cancellationToken);
+        //
+        // if (roles.Contains(UserRole.Admin))
+        //     // check errors
+        //     // insert reservation
+        //     _ = 3;
+        // else if (roles.Contains(UserRole.Manager))
+        //     // check errors
+        //     // insert reservation            
+        //     _ = 4; 
+        // else if (roles.Contains(UserRole.Guest))
+        //     // check errors
+        //     // insert reservation            
+        //     _ = 5; 
+        // else
+        //     return Result<Reservation>.Failure(new Error("user role not supported"), 403);
+        //
+        // var reservation = mapper.Map<Reservation>(request);
+        // reservation.TotalPrice = await reservationService.CalculateTotalPriceAsync(request.RoomId, request.CheckInDate,
+        //     request.CheckOutDate, cancellationToken);
+        //
+        // var result = await reservationService.InsertAsync(reservation, cancellationToken);
+        // return result == null
+        //     ? Result<Reservation>.Failure(new Error("reservation failed"), 400)
+        //     : Result<Reservation>.Success(reservation, 201);
     }
 }

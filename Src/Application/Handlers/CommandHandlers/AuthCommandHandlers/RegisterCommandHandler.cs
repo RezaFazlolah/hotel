@@ -19,11 +19,8 @@ public class RegisterCommandHandler(IUserService userService)
         };
 
         if (!await userService.RoleExistsAsync(request.Role, ct))
-            return Result<User>.Failure(new Error("role not found"), 400);
+            return Result<User>.Failure(new Error("role not found"));
         
-        var result = await userService.InsertAsync(user, request.Password, ct);
-        return result == null
-            ? Result<User>.Failure(new Error("user registed failed"), 400)
-            : Result<User>.Success(result, 201);
+        return await userService.InsertAsync(user, request.Password, ct);
     }
 }

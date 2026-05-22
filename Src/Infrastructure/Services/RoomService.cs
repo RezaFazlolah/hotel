@@ -1,6 +1,7 @@
 using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Infrastructure.Services;
@@ -8,40 +9,38 @@ namespace Infrastructure.Services;
 public class RoomService(AppDbContext context, IHotelService hotelService)
     : BaseService<Guid, Room>(context), IRoomService
 {
-    public async Task<ICollection<Reservation>> GetReservationsAsync(Guid roomId, CancellationToken ct)
+    public async Task<Result<ICollection<Reservation>>> GetReservationsAsync(Guid roomId, CancellationToken ct)
         => await GetReservationsAsync([roomId], ct);
 
-    public async Task<ICollection<Reservation>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct)
+    public async Task<Result<ICollection<Reservation>>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct)
         // implement with ReservationService's GetReservations() with proper filter instead of this
-        => await context.Reservations.Where(r => roomsId.Contains(r.RoomId)).ToListAsync(ct);
+        => Result<ICollection<Reservation>>.Success(await context.Reservations.Where(r => roomsId.Contains(r.RoomId)).ToListAsync(ct));
 
-    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, CancellationToken ct)
+    public async Task<Result<bool>> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, CancellationToken ct)
         // implement with ReservationService's Exists() with proper filter instead of this
-        => await context.Reservations.AnyAsync(r =>
+        => Result<bool>.Success(await context.Reservations.AnyAsync(r =>
             r.RoomId == roomId && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate) &&
-            r.Status != ReservationStatus.Cancelled, ct);
+            r.Status != ReservationStatus.Cancelled, ct));
 
-    public async Task<bool> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, Guid guestId,
+    public async Task<Result<bool>> IsReservedAsync(Guid roomId, DateTimeOffset checkInDate, DateTimeOffset checkOutDate, Guid guestId,
         CancellationToken ct)
         // implement with ReservationService's Exists() with proper filter instead of this
-        => await context.Reservations.AnyAsync(r =>
+        => Result<bool>.Success(await context.Reservations.AnyAsync(r =>
             r.RoomId == roomId && !(r.CheckOutDate < checkInDate ||
                                     checkOutDate < r.CheckInDate && r.Status != ReservationStatus.Cancelled) &&
-            r.GuestId != guestId, ct);
+            r.GuestId != guestId, ct));
 
-    public override async Task<Room?> InsertAsync(Room entity, CancellationToken cancellationToken)
-        => await hotelService.RoomNumberExistsAsync(entity.Number, entity.HotelId, cancellationToken)
-            ? null
-            : await base.InsertAsync(entity, cancellationToken);
+    public override async Task<Result<Room>> InsertAsync(Room room, CancellationToken cancellationToken)
+        => (await hotelService.RoomNumberExistsAsync(room.Number, room.HotelId, cancellationToken)).Value
+            ? Result<Room>.Failure(new Error($"room number {room.Number} already exists"))
+            : await base.InsertAsync(room, cancellationToken);
 
-    public override async Task<Room?> UpdateAsync(Room entity, CancellationToken cancellationToken)
+    public override async Task<Result<Room>> UpdateAsync(Room room, CancellationToken cancellationToken)
     {
-        var isRoomNumberUnique =
-            !await hotelService.RoomNumberExistsAsync(entity.Number, entity.HotelId, cancellationToken);
-        if (!isRoomNumberUnique)
-            return null;
+        if ((await hotelService.RoomNumberExistsAsync(room.Number, room.HotelId, cancellationToken)).Value)
+            return Result<Room>.Failure(new Error($"room number {room.Number} already exists"));
 
-        return await base.UpdateAsync(entity, cancellationToken);
+        return await base.UpdateAsync(room, cancellationToken);
     }
 
     protected override IQueryable<Room> CustomContext()

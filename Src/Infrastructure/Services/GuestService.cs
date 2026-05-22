@@ -3,6 +3,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SharedKernel.Common;
 
 namespace Infrastructure.Services;
 
@@ -13,7 +14,7 @@ public class GuestService(
     IConfiguration configuration)
     : UserService(context, userManager, roleManager), IGuestService
 {
-    public override async Task<ICollection<Reservation>> GetReservationsAsync(Guid guestId, CancellationToken ct)
+    public override async Task<Result<ICollection<Reservation>>> GetReservationsAsync(Guid guestId, CancellationToken ct)
         // implement with ReservationService's GetReservations() with proper filter instead of this
         => throw new NotImplementedException();
 }

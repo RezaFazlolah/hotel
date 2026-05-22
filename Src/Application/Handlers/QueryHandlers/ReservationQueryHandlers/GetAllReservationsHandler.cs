@@ -18,19 +18,15 @@ public class GetAllReservationsHandler(
     public async Task<Result<ICollection<Reservation>>> Handle(GetAllReservationsQuery request,
         CancellationToken ct)
     {
-        var userId = currentUserService.CurrentUserId;
-        var roles = await userService.GetRolesAsync(userId, ct);
-        ICollection<Reservation> reservations;
+        var userId = currentUserService.Id;
+        var roles = (await userService.GetRolesAsync(userId, ct)).Value;
 
         if (roles.Contains(UserRole.Admin))
-            reservations = await adminService.GetReservationsAsync(userId, ct);
-        else if (roles.Contains(UserRole.Manager))
-            reservations = await managerService.GetReservationsAsync(userId, ct);
-        else if (roles.Contains(UserRole.Guest))
-            reservations = await guestService.GetReservationsAsync(userId, ct);
-        else
-            return Result<ICollection<Reservation>>.Failure(new Error("user role is not supported"), 400);
-
-        return Result<ICollection<Reservation>>.Success(reservations);
+            return await adminService.GetReservationsAsync(userId, ct);
+        if (roles.Contains(UserRole.Manager))
+            return await managerService.GetReservationsAsync(userId, ct);
+        if (roles.Contains(UserRole.Guest))
+            return await guestService.GetReservationsAsync(userId, ct);
+        return Result<ICollection<Reservation>>.Failure(new Error("user role not supported"));
     }
 }

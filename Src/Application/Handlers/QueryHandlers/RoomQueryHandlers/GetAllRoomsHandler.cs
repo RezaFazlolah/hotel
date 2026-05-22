@@ -11,8 +11,7 @@ public class GetAllRoomsHandler(IRoomService roomService)
 {
     public async Task<Result<ICollection<Room>>> Handle(GetAllRoomsQuery request,
         CancellationToken cancellationToken)
-    {
-        var rooms = await roomService.GetAllAsync(
+        => await roomService.GetAllAsync(
             cancellationToken,
             filterOn: request.FilterOn,
             filterQuery: request.FilterQuery,
@@ -20,7 +19,4 @@ public class GetAllRoomsHandler(IRoomService roomService)
             isAscending: request.IsAscending,
             pageNumber: request.PageNumber,
             pageSize: request.PageSize);
-
-        return Result<ICollection<Room>>.Success(rooms);
-    }
 }

@@ -4,27 +4,26 @@ using AutoMapper;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Application.Handlers.CommandHandlers.RoomCommandHandlers;
 
 public class InsertRoomHandler(IRoomService roomService, IHotelService hotelService, IMapper mapper)
     : IRequestHandler<InsertRoomCommand, Result<Room>>
 {
-    public async Task<Result<Room>> Handle(InsertRoomCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Room>> Handle(InsertRoomCommand request, CancellationToken ct)
     {
-        var errors = new List<Error>();
-        if (await hotelService.RoomNumberExistsAsync(request.Number, request.HotelId, cancellationToken))
-            errors.Add(new Error($"room {request.Number} already exists"));
-        if (await hotelService.GetByIdAsync(request.HotelId, cancellationToken) == null)
-            errors.Add(new Error($"hotel {request.HotelId} not found"));
-        if (errors.Count > 0)
-            return Result<Room>.Failure(errors, 404);
+        if (!await hotelService.ExistsAsync(request.HotelId, ct))
+            return Result<Room>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found"));
+        
+        var roomNumberExistResult = await hotelService.RoomNumberExistsAsync(request.Number, request.HotelId, ct);
+        if(!roomNumberExistResult.Succeeded)
+            Result<Room>.Failure(roomNumberExistResult.Errors);
+        if (roomNumberExistResult.Value)
+            Result<Room>.Failure(new Error($"insert room failed. room number {request.Number}"), ResultCode.NotFound);
+
 
         var room = mapper.Map<Room>(request);
-        var result = await roomService.InsertAsync(room, cancellationToken);
-
-        return result == null
-            ? Result<Room>.Failure(new Error($"insert room failed"), 400)
-            : Result<Room>.Success(result, 201);
+        return await roomService.InsertAsync(room, ct);
     }
 }

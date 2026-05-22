@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Application.Handlers.CommandHandlers.RoomCommandHandlers;
 
@@ -13,20 +14,16 @@ public class UpdateRoomHandler(IRoomService roomService, IHotelService hotelServ
     public async Task<Result<Room>> Handle(UpdateRoomCommand request, CancellationToken cancellationToken)
     {
         var errors = new List<Error>();
-        var room = await roomService.GetByIdAsync(request.Id, cancellationToken);
-        if (room == null)
+        var roomResult = await roomService.GetByIdAsync(request.Id, cancellationToken);
+        if (!roomResult.Succeeded)
             errors.Add(new Error($"room {request.Id} not found"));
         if (request.HotelId != null &&
             await hotelService.GetByIdAsync(request.HotelId.Value, cancellationToken) == null)
             errors.Add(new Error($"hotel {request.HotelId} not found"));
         if (errors.Count > 0)
-            return Result<Room>.Failure(errors, 404);
-
+            return Result<Room>.Failure(errors, ResultCode.NotFound);
+        var room = roomResult.Value;
         mapper.Map(request, room);
-        var updatedRoom = await roomService.UpdateAsync(room, cancellationToken);
-
-        return updatedRoom == null
-            ? Result<Room>.Failure(new Error("update room failed"), 400)
-            : Result<Room>.Success(updatedRoom);
+        return  await roomService.UpdateAsync(room, cancellationToken);
     }
 }

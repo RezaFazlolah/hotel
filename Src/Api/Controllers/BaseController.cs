@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Api.Controllers;
 
@@ -12,20 +13,19 @@ public class BaseController() : ControllerBase
 {
     protected IActionResult HandleResult<T>(Result<T> result)
     {
-        if (result.IsSuccess)
+        if (result.Succeeded)
+            return result.Code switch
+            {
+                ResultCode.Created => Created("", result.Value),
+                _ => Ok(result.Value),
+            };
+
+        return result.Code switch
         {
-            if (result.Code == 201)
-                return Created("", result.Value);
-            return Ok(result.Value);
-        }
-        else
-        {
-            if (result.Code == 401)
-                return Unauthorized(result.Errors);
-            if (result.Code == 404)
-                return NotFound(result.Errors);
-            return BadRequest(result.Errors);
-        }
+            ResultCode.Unauthorized => Unauthorized(ErrorsToString(result.Errors)),
+            ResultCode.NotFound=> NotFound(ErrorsToString(result.Errors)),
+            _=> BadRequest(ErrorsToString(result.Errors)),
+        };
     }
 
     private string ErrorsToString(IEnumerable<Error> errors)

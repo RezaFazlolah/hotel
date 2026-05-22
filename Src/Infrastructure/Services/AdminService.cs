@@ -4,6 +4,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SharedKernel.Common;
 
 namespace Infrastructure.Services;
 
@@ -14,7 +15,7 @@ public class AdminService(
     IConfiguration configuration)
     : UserService(context, userManager, roleManager), IAdminService
 {
-    public override async Task<ICollection<Reservation>> GetReservationsAsync(Guid adminId, CancellationToken ct)
+    public override async Task<Result<ICollection<Reservation>>> GetReservationsAsync(Guid adminId, CancellationToken ct)
         // implement with ReservationService's GetReservations() with proper filter instead of this
         => throw new NotImplementedException();
 }

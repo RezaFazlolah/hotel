@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Common;
+using SharedKernel.Constants;
 
 namespace Api.Controllers;
 
@@ -31,7 +32,7 @@ public class RoomsController(IMediator mediator, IMapper mapper) : BaseControlle
     }
 
     [HttpPost]
-    // [Authorize(Roles = UserRoleNames.Admin)]
+    // [Authorize(Roles = $"{UserRoleNames.Admin},{UserRoleNames.Manager}")]
     public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommandDto request,
         CancellationToken cancellationToken)
     {

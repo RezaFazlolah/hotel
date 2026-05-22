@@ -35,7 +35,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasOne(r => r.Hotel)
             .WithMany(h => h.Rooms)
             .HasForeignKey(r => r.HotelId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Reservation>()
             .HasOne(r => r.Room)

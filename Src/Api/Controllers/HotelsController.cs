@@ -11,23 +11,23 @@ using SharedKernel.Constants;
 
 namespace Api.Controllers;
 
-// [Authorize]
+[Authorize]
 public class HotelsController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllHotelsQuery request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var result = await mediator.Send(request, cancellationToken);
+        var result = await mediator.Send(request, ct);
         var resultDto = mapper.Map<Result<ICollection<HotelDto>>>(result);
         return HandleResult(resultDto);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
     {
-        var query = new GetHotelByIdQuery() { HotelId = id };
-        var result = await mediator.Send(query, cancellationToken);
+        var query = new GetHotelByIdQuery { HotelId = id };
+        var result = await mediator.Send(query, ct);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return HandleResult(resultDto);
     }
@@ -35,10 +35,10 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     [HttpPost]
     [Authorize(Roles = UserRoleNames.Admin)]
     public async Task<IActionResult> InsertAsync([FromBody] InsertHotelCommandDto request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var command = mapper.Map<InsertHotelCommand>(request);
-        var result = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(command, ct);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return HandleResult(resultDto);
     }
@@ -46,21 +46,21 @@ public class HotelsController(IMediator mediator, IMapper mapper) : BaseControll
     [HttpPut("{id:guid}")]
     // [Authorize(Roles = UserRoleNames.Admin)]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateHotelCommandDto request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var command = mapper.Map<UpdateHotelCommand>(request);
         command.Id = id;
-        var result = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(command, ct);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return HandleResult(resultDto);
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = UserRoleNames.Admin)]
-    public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    [Authorize(Roles = $"{UserRoleNames.Admin}, {UserRoleNames.Manager}")]
+    public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken ct)
     {
         var command = new DeleteHotelCommand { HotelId = id };
-        var result = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(command, ct);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return HandleResult(resultDto);
     }
