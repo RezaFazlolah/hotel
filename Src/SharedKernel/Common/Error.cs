@@ -9,14 +9,14 @@ public class Error(string message, ErrorCode code = ErrorCode.Default, Error? in
     public Error? InnerError { get; init; } = innerError;
     
     public override string ToString()
-        => $"{Code.ToString()}: {Message}{Environment.NewLine}{InnerError?.ToString(1) ?? string.Empty}";
+        => $"{Code.ToString()}: {Message}{InnerError?.ToString(1) ?? string.Empty}";
 
     private string ToString(int tab)
     // this method is only used for properly indenting inner error
     {
-        var result=string.Empty;
+        var result=Environment.NewLine;
         for(var i = 0; i < tab; i++)
             result += "\t";
-        return result + $"{Code.ToString()}: {Message}{Environment.NewLine}{InnerError?.ToString(tab + 1) ?? string.Empty}";
+        return result + $"{Code.ToString()}: {Message}{InnerError?.ToString(tab + 1) ?? string.Empty}";
     }
 }
