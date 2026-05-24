@@ -35,7 +35,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
         return HandleResult(result);
     }
 
-    [Authorize(Roles = UserRoleNames.Admin)]
+    [Authorize(Roles = UserRoleName.Admin)]
     [HttpPost("registerByAdmin")]
     public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminCommandDto request,
         CancellationToken cancellationToken)

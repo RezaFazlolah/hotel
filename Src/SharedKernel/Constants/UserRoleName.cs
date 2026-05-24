@@ -2,7 +2,7 @@ using SharedKernel.Enums;
 
 namespace SharedKernel.Constants;
 
-public static class UserRoleNames
+public static class UserRoleName
 {
     public const string Guest = nameof(UserRole.Guest);
     public const string Manager = nameof(UserRole.Manager);

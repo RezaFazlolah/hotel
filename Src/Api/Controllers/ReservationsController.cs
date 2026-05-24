@@ -37,7 +37,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
     }
 
     [HttpPost]
-    [Authorize(Roles = UserRoleNames.Guest)]
+    [Authorize(Roles = UserRoleName.Guest)]
     public async Task<IActionResult> InsertAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -48,7 +48,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = UserRoleNames.Guest)]
+    [Authorize(Roles = UserRoleName.Guest)]
     public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -59,7 +59,7 @@ public class ReservationsController(IMediator mediator, IMapper mapper, IConfigu
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = UserRoleNames.Admin)]
+    // [Authorize(Roles = UserRoleName.Admin)]
     public async Task<IActionResult> CancelAsync(Guid id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CancelReservationCommand() { ReservationId = id }, cancellationToken);

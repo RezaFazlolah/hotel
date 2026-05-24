@@ -14,7 +14,7 @@ public class InsertHotelHandler(IHotelService hotelService, IUserService userSer
 {
     public async Task<Result<Hotel>> Handle(InsertHotelCommand request, CancellationToken ct)
     {
-        // QUESTION: only admin can insert hotel, user role is checked at endpoint with [Authorize(Roles=UserRoleNames.Admin)], do i need to check it here too?
+        // QUESTION: only admin can insert hotel, user role is checked at endpoint with [Authorize(Roles=UserRoleName.Admin)], do i need to check it here too?
         
         var hotel = mapper.Map<Hotel>(request);
         return await hotelService.InsertAsync(hotel, ct);
