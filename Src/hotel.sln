@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Draft", "Draft", "{169ADB1F
 		..\Test.cs = ..\Test.cs
 		..\ReadMe.md = ..\ReadMe.md
 		..\Todo.txt = ..\Todo.txt
+		..\Comments.txt = ..\Comments.txt
 	EndProjectSection
 EndProject
 Global
