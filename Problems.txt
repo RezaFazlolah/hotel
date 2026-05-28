@@ -1,3 +1,7 @@
+[] SharedKernel
+    [] ToPagedResultAsync() references Microsoft.EntityFrameworkCore, but SharedKernel must not reference anything
+    [] 
+    
 =========================================================================================
 [] Domain
     [] Enums/RoomType.cs & UserRole.cs
@@ -13,6 +17,11 @@
             {}
         }
 
+
+=========================================================================================
+[] Application
+    [] 
+    
 =========================================================================================
 [] Infrastructure
     []  AppDbContext.cs
@@ -28,11 +37,6 @@
             .HasIndex(r => new { r.HotelId, r.Number })
             .IsUnique();
         [] 
-
-=========================================================================================
-[] Application
-    [] 
-
 =========================================================================================
 [] Api
     [] endpoint response

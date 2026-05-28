@@ -15,7 +15,7 @@ public class TestController : BaseController
         Console.WriteLine(error1);
         Console.WriteLine(error2);
         Console.WriteLine(error3);
-        
+        _ = 3 + 5;
         throw new NotImplementedException();
     }
 }

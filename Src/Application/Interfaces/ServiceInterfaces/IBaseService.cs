@@ -1,13 +1,14 @@
 using SharedKernel.Common;
+using SharedKernel.Filtering;
+using SharedKernel.Paging;
+using SharedKernel.Sorting;
 
 namespace Application.Interfaces.ServiceInterfaces;
 
 public interface IBaseService<in TId, TEntity>
 {
-    Task<Result<ICollection<TEntity>>> GetAllAsync(CancellationToken cancellationToken, string? filterOn = null,
-        string? filterQuery = null,
-        string? orderBy = null, bool isAscending = true,
-        int pageNumber = 1, int pageSize = int.MaxValue);
+    Task<Result<PagedResult<TEntity>>> GetAllAsync(PaginationParameters paginationParameters,
+        CancellationToken cancellationToken);
 
     Task<Result<TEntity>> GetByIdAsync(TId id, CancellationToken cancellationToken);
     Task<Result<TEntity>> InsertAsync(TEntity entity, CancellationToken cancellationToken);

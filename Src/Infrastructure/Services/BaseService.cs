@@ -1,9 +1,12 @@
 using Application.Interfaces.ServiceInterfaces;
 using Domain.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
+using SharedKernel.Extensions;
+using SharedKernel.Filtering;
+using SharedKernel.Paging;
+using SharedKernel.Sorting;
 
 namespace Infrastructure.Services;
 
@@ -12,22 +15,13 @@ public abstract class BaseService<TId, TEntity>(AppDbContext context)
     where TId : IEquatable<TId>, new()
     where TEntity : class, IBaseModel<TId>
 {
-    public virtual async Task<Result<ICollection<TEntity>>> GetAllAsync(
-        CancellationToken ct,
-        string? filterOn = null, string? filterQuery = null,
-        string? orderBy = null, bool isAscending = true,
-        int pageNumber = 1, int pageSize = int.MaxValue)
+    public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(PaginationParameters paginationParameters,
+        CancellationToken ct)
     {
         var query = CustomContext();
-
-        // filtering
-        query = CustomFilter(query, filterOn, filterQuery);
-        // sorting
-        query = CustomSort(query, orderBy, isAscending);
-        // pagination
-        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
-        return Result<ICollection<TEntity>>.Success(await query.ToListAsync(ct));
+        // query = Filter(query, filterParameters);
+        // query = Sort(query, sortParameters);
+        return Result<PagedResult<TEntity>>.Success(await query.ToPagedResultAsync(paginationParameters, ct));
     }
 
     public virtual async Task<Result<TEntity>> GetByIdAsync(TId id, CancellationToken ct)
@@ -65,7 +59,7 @@ public abstract class BaseService<TId, TEntity>(AppDbContext context)
         var result = await GetByIdAsync(id, ct);
         if (!result.Succeeded)
             return result;
-            
+
         var entity = result.Value;
         context.Set<TEntity>().Remove(entity);
         await context.SaveChangesAsync(ct);
@@ -80,14 +74,19 @@ public abstract class BaseService<TId, TEntity>(AppDbContext context)
         //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found"))
         // };
         => await context.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
-        // do i need to check for duplicated IDs in a separate service?
-        
+    // do i need to check for duplicated IDs in a separate service?
+
     protected abstract IQueryable<TEntity> CustomContext();
 
-    protected abstract IQueryable<TEntity> CustomFilter(IQueryable<TEntity> query, string? filterOn,
-        string? filterQuery);
+    // protected virtual IQueryable<TEntity> Filter(IQueryable<TEntity> query, BaseFilterParameters filterParameters)
+    // {
+    //     throw new NotImplementedException();
+    // }
 
-    protected abstract IQueryable<TEntity> CustomSort(IQueryable<TEntity> query, string? orderBy, bool isAscending);
-    
+    // protected virtual IQueryable<TEntity> Sort(IQueryable<TEntity> query, BaseSortParameters sortParameters)
+    // {
+    //     throw new NotImplementedException();
+    // }
+
     public virtual string EntityName => typeof(TEntity).Name;
 }

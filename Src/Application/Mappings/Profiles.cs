@@ -11,15 +11,15 @@ public class Profiles : Profile
     public Profiles()
     {
         // hotel
-        CreateMap<InsertHotelCommand, Hotel>();
-        CreateMap<UpdateHotelCommand, Hotel>();
+        CreateMap<InsertHotel, Hotel>();
+        CreateMap<UpdateHotel, Hotel>();
 
         // room
-        CreateMap<InsertRoomCommand, Room>();
-        CreateMap<UpdateRoomCommand, Room>();
+        CreateMap<InsertRoom, Room>();
+        CreateMap<UpdateRoom, Room>();
 
         // reservation
-        CreateMap<InsertReservationCommand, Reservation>();
-        CreateMap<UpdateReservationCommand, Reservation>();
+        CreateMap<InsertReservation, Reservation>();
+        CreateMap<UpdateReservation, Reservation>();
     }
 }

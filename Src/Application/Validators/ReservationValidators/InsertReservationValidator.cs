@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators.ReservationValidators;
 
-public class InsertReservationValidator : AbstractValidator<InsertReservationCommand>
+public class InsertReservationValidator : AbstractValidator<InsertReservation>
 {
     public InsertReservationValidator()
     {

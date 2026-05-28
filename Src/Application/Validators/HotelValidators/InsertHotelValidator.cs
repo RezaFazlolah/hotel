@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators.HotelValidators;
 
-public class InsertHotelValidator : AbstractValidator<InsertHotelCommand>
+public class InsertHotelValidator : AbstractValidator<InsertHotel>
 {
     public InsertHotelValidator()
     {

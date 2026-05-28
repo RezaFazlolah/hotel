@@ -22,7 +22,7 @@ public class ReservationService(AppDbContext context, IRoomService roomService)
     public async Task<Result<Reservation>> CancelAsync(Guid reservationId, CancellationToken ct)
     {
         var result = await GetByIdAsync(reservationId, ct);
-        if(!result.Succeeded)
+        if (!result.Succeeded)
             return result;
         var reservation = result.Value;
         reservation.Status = ReservationStatus.Cancelled;
@@ -34,28 +34,4 @@ public class ReservationService(AppDbContext context, IRoomService roomService)
         => context.Reservations
             .Include(r => r.Room)
             .Include(r => r.Guest);
-
-    protected override IQueryable<Reservation> CustomFilter(IQueryable<Reservation> query, string? filterOn,
-        string? filterQuery)
-    {
-        if (filterOn.Equals("GuestId", StringComparison.OrdinalIgnoreCase))
-            query = query.Where(r => r.GuestId.ToString().Equals(filterQuery));
-
-        return query;
-    }
-
-    protected override IQueryable<Reservation> CustomSort(IQueryable<Reservation> query, string? orderBy,
-        bool isAscending)
-    {
-        if (!string.IsNullOrWhiteSpace(orderBy))
-        {
-            // sort by reservation total price
-            if (orderBy.Equals("TotalPrice", StringComparison.OrdinalIgnoreCase))
-                query = isAscending
-                    ? query.OrderBy(r => r.TotalPrice)
-                    : query.OrderByDescending(r => r.TotalPrice);
-        }
-
-        return query;
-    }
 }
