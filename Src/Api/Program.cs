@@ -5,11 +5,11 @@ using Api.Services;
 using Application;
 using Application.Behaviors;
 using Application.Interfaces;
-using Application.Interfaces.ServiceInterfaces;
+using Application.Interfaces.Repositories;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure;
-using Infrastructure.Services;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -85,15 +85,15 @@ builder.Services.AddAuthentication(options =>
 // HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<IHotelService, HotelService>();
-builder.Services.AddScoped<IRoomService, RoomService>();
-builder.Services.AddScoped<IReservationService, ReservationService>();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IGuestService, GuestService>();
-builder.Services.AddScoped<IManagerService, ManagerService>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<ICurrentUserRepository, CurrentUserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGuestRepository, GuestRepository>();
+builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
+builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 var app = builder.Build();
 

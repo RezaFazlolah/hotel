@@ -1,12 +1,12 @@
-using Application.Commands.AuthCommands;
-using Application.Interfaces.ServiceInterfaces;
+using Application.Interfaces.Repositories;
+using Application.Requests.AuthRequests;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 
 namespace Application.Handlers.AuthHandlers;
 
-public class RegisterHandler(IUserService userService)
+public class RegisterHandler(IUserRepository userRepository)
     : IRequestHandler<Register, Result<User>>
 {
     public async Task<Result<User>> Handle(Register request, CancellationToken ct)
@@ -17,9 +17,9 @@ public class RegisterHandler(IUserService userService)
             UserName = request.PhoneNumber
         };
 
-        if (!await userService.RoleExistsAsync(request.Role, ct))
+        if (!await userRepository.RoleExistsAsync(request.Role, ct))
             return Result<User>.Failure(new Error("role not found"));
-        
-        return await userService.InsertAsync(user, request.Password, ct);
+
+        return await userRepository.InsertAsync(user, request.Password, ct);
     }
 }

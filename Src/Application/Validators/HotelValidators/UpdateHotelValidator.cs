@@ -1,4 +1,4 @@
-using Application.Commands.HotelCommands;
+using Application.Requests.HotelRequests;
 using FluentValidation;
 
 namespace Application.Validators.HotelValidators;

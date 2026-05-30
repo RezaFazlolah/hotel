@@ -4,5 +4,5 @@ namespace Api.DTOs.ReservationDtos;
 
 public class GetAllReservationsDto
 {
-    public PaginationParameters PaginationParameters { get; set; }
+    public PaginationParameters PaginationParameters { get; set; } = new();
 }

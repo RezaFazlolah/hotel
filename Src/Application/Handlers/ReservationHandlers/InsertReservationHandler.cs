@@ -1,5 +1,5 @@
-using Application.Commands.ReservationCommands;
-using Application.Interfaces.ServiceInterfaces;
+using Application.Interfaces.Repositories;
+using Application.Requests.ReservationRequests;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -8,10 +8,10 @@ using SharedKernel.Common;
 namespace Application.Handlers.ReservationHandlers;
 
 public class InsertReservationHandler(
-    IReservationService reservationService,
-    IRoomService roomService,
-    ICurrentUserService currentUserService,
-    IUserService userService,
+    IReservationRepository reservationRepository,
+    IRoomRepository roomRepository,
+    ICurrentUserRepository currentUserRepository,
+    IUserRepository userRepository,
     IMapper mapper)
     : IRequestHandler<InsertReservation, Result<Reservation>>
 {
@@ -21,16 +21,16 @@ public class InsertReservationHandler(
         throw new NotImplementedException();
 
         // var errors = new List<Error>();
-        // if (!await roomService.ExistsAsync(request.RoomId, cancellationToken))
+        // if (!await roomRepository.ExistsAsync(request.RoomId, cancellationToken))
         //     errors.Add(new Error($"room {request.RoomId} not found"));
-        // if (await roomService.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
+        // if (await roomRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
         //         cancellationToken))
         //     errors.Add(new Error($"room {request.RoomId} is reserved"));
         // if (errors.Count > 0)
         //     return Result<Reservation>.Failure(errors, 400);
         //
-        // var currentUserId = currentUserService.Id;
-        // var roles = await userService.GetRolesAsync(currentUserId, cancellationToken);
+        // var currentUserId = currentUserRepository.Id;
+        // var roles = await userRepository.GetRolesAsync(currentUserId, cancellationToken);
         //
         // if (roles.Contains(UserRole.Admin))
         //     // check errors
@@ -48,10 +48,10 @@ public class InsertReservationHandler(
         //     return Result<Reservation>.Failure(new Error("user role not supported"), 403);
         //
         // var reservation = mapper.Map<Reservation>(request);
-        // reservation.TotalPrice = await reservationService.CalculateTotalPriceAsync(request.RoomId, request.CheckInDate,
+        // reservation.TotalPrice = await reservationRepository.CalculateTotalPriceAsync(request.RoomId, request.CheckInDate,
         //     request.CheckOutDate, cancellationToken);
         //
-        // var result = await reservationService.InsertAsync(reservation, cancellationToken);
+        // var result = await reservationRepository.InsertAsync(reservation, cancellationToken);
         // return result == null
         //     ? Result<Reservation>.Failure(new Error("reservation failed"), 400)
         //     : Result<Reservation>.Success(reservation, 201);

@@ -1,6 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -23,8 +20,8 @@ public class BaseController() : ControllerBase
         return result.Code switch
         {
             ResultCode.Unauthorized => Unauthorized(ErrorsToString(result.Errors)),
-            ResultCode.NotFound=> NotFound(ErrorsToString(result.Errors)),
-            _=> BadRequest(ErrorsToString(result.Errors)),
+            ResultCode.NotFound => NotFound(ErrorsToString(result.Errors)),
+            _ => BadRequest(ErrorsToString(result.Errors)),
         };
     }
 

@@ -1,4 +1,4 @@
-using Application.Commands.RoomCommands;
+using Application.Requests.RoomRequests;
 using FluentValidation;
 
 namespace Application.Validators.RoomValidators;

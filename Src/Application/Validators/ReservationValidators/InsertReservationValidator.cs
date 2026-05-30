@@ -1,4 +1,4 @@
-using Application.Commands.ReservationCommands;
+using Application.Requests.ReservationRequests;
 using FluentValidation;
 
 namespace Application.Validators.ReservationValidators;

@@ -1,6 +1,6 @@
-using Application.Commands.HotelCommands;
-using Application.Commands.ReservationCommands;
-using Application.Commands.RoomCommands;
+using Application.Requests.HotelRequests;
+using Application.Requests.ReservationRequests;
+using Application.Requests.RoomRequests;
 using AutoMapper;
 using Domain.Models;
 

@@ -1,11 +1,10 @@
 using SharedKernel.Filtering;
+using SharedKernel.Paging;
 
 namespace Api.DTOs.HotelDtos;
 
 public class GetAllHotelsDto
 {
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
-
-    public HotelFilterParameters FilterParameters { get; set; }
+    public PaginationParameters PaginationParameters { get; set; } = new();
+    // public HotelFilterParameters FilterParameters { get; set; }
 }

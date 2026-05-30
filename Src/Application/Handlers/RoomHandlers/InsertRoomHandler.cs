@@ -1,5 +1,5 @@
-using Application.Commands.RoomCommands;
-using Application.Interfaces.ServiceInterfaces;
+using Application.Interfaces.Repositories;
+using Application.Requests.RoomRequests;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -8,22 +8,22 @@ using SharedKernel.Enums;
 
 namespace Application.Handlers.RoomHandlers;
 
-public class InsertRoomHandler(IRoomService roomService, IHotelService hotelService, IMapper mapper)
+public class InsertRoomHandler(IRoomRepository roomRepository, IHotelRepository hotelRepository, IMapper mapper)
     : IRequestHandler<InsertRoom, Result<Room>>
 {
     public async Task<Result<Room>> Handle(InsertRoom request, CancellationToken ct)
     {
-        if (!await hotelService.ExistsAsync(request.HotelId, ct))
+        if (!await hotelRepository.ExistsAsync(request.HotelId, ct))
             return Result<Room>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found"));
-        
-        var roomNumberExistResult = await hotelService.RoomNumberExistsAsync(request.Number, request.HotelId, ct);
-        if(!roomNumberExistResult.Succeeded)
+
+        var roomNumberExistResult = await hotelRepository.RoomNumberExistsAsync(request.Number, request.HotelId, ct);
+        if (!roomNumberExistResult.Succeeded)
             Result<Room>.Failure(roomNumberExistResult.Errors);
         if (roomNumberExistResult.Value)
             Result<Room>.Failure(new Error($"insert room failed. room number {request.Number}"), ResultCode.NotFound);
 
 
         var room = mapper.Map<Room>(request);
-        return await roomService.InsertAsync(room, ct);
+        return await roomRepository.InsertAsync(room, ct);
     }
 }

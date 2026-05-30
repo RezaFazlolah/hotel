@@ -4,5 +4,5 @@ namespace Api.DTOs.RoomDtos;
 
 public class GetAllRoomsDto
 {
-    public PaginationParameters PaginationParameters { get; set; }
+    public PaginationParameters PaginationParameters { get; set; } = new();
 }

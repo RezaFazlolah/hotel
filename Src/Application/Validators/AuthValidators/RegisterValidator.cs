@@ -1,4 +1,4 @@
-using Application.Commands.AuthCommands;
+using Application.Requests.AuthRequests;
 using FluentValidation;
 
 namespace Application.Validators.AuthValidators;
@@ -9,7 +9,8 @@ public class RegisterValidator : AbstractValidator<Register>
     {
         RuleFor(x => x.PhoneNumber)
             .NotEmpty().WithMessage("PhoneNumber is required")
-            .Matches(@"^\+?[1-9]\d{9,14}$").WithMessage("PhoneNumber format is invalid. Use international format, e.g. +989123456789");
+            .Matches(@"^\+?[1-9]\d{9,14}$")
+            .WithMessage("PhoneNumber format is invalid. Use international format, e.g. +989123456789");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required")

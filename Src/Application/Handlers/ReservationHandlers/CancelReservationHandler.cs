@@ -1,5 +1,5 @@
-using Application.Commands.ReservationCommands;
-using Application.Interfaces.ServiceInterfaces;
+using Application.Interfaces.Repositories;
+using Application.Requests.ReservationRequests;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -9,16 +9,17 @@ using SharedKernel.Enums;
 namespace Application.Handlers.ReservationHandlers;
 
 public class CancelReservationHandler(
-    IReservationService reservationService,
+    IReservationRepository reservationRepository,
     IMapper mapper,
-    ICurrentUserService currentUserService)
+    ICurrentUserRepository currentUserRepository)
     : IRequestHandler<CancelReservation, Result<Reservation>>
 {
     public async Task<Result<Reservation>> Handle(CancelReservation request, CancellationToken cancellationToken)
     {
-        if (!await reservationService.ExistsAsync(request.ReservationId, cancellationToken))
-            return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), ResultCode.NotFound);
+        if (!await reservationRepository.ExistsAsync(request.ReservationId, cancellationToken))
+            return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"),
+                ResultCode.NotFound);
 
-        return await reservationService.CancelAsync(request.ReservationId, cancellationToken);
+        return await reservationRepository.CancelAsync(request.ReservationId, cancellationToken);
     }
 }
