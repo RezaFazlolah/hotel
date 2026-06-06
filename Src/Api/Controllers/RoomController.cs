@@ -10,7 +10,7 @@ using SharedKernel.Paging;
 
 namespace Api.Controllers;
 
-// [Authorize]
+[Authorize]
 public class RoomController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
