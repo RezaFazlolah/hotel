@@ -26,7 +26,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
     {
-        var request = new GetRoomById() { RoomId = id };
+        var request = new GetRoomById { RoomId = id };
         var result = await mediator.Send(request, ct);
         var resultDto = mapper.Map<Result<RoomDto>>(result);
         return HandleResult(resultDto);

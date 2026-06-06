@@ -8,6 +8,6 @@ namespace Application.Handlers.RoomHandlers;
 
 public class GetRoomByIdHandler(IRoomRepository roomRepository) : IRequestHandler<GetRoomById, Result<Room>>
 {
-    public async Task<Result<Room>> Handle(GetRoomById request, CancellationToken cancellationToken)
-        => await roomRepository.GetByIdAsync(request.RoomId, cancellationToken);
+    public async Task<Result<Room>> Handle(GetRoomById request, CancellationToken ct)
+        => await roomRepository.GetByIdAsync(request.RoomId, ct);
 }

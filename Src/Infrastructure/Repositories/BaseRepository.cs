@@ -26,13 +26,13 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
         {
             var result = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
             if (result is null)
-                return Result<TEntity>.Failure(new Error($"{EntityName} with id {id} not found", ErrorCode.NotFound),
+                return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
                     ResultCode.NotFound);
             return Result<TEntity>.Success(result);
         }
         catch
         {
-            return Result<TEntity>.Failure(new Error($"more than one {EntityName}s with id {id} found"));
+            return Result<TEntity>.Failure(new Error($"more than one {EntityName}s with ID {id} found"));
         }
     }
 
