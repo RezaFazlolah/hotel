@@ -5,6 +5,6 @@ namespace Application.Interfaces.Repositories;
 
 public interface ICurrentUserRepository
 {
-    Guid Id { get; }
+    Result<Guid> Id { get; }
     Task<Result<IEnumerable<UserRole>>> GetRolesAsync(CancellationToken ct);
 }

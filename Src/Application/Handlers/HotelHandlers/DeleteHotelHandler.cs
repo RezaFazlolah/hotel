@@ -24,7 +24,7 @@ public class DeleteHotelHandler(
             return await hotelRepository.DeleteAsync(request.HotelId, ct);
         if (roles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserRepository.Id;
+            var managerId = currentUserRepository.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<Hotel>.Failure(

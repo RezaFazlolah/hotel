@@ -47,10 +47,11 @@ public class UserRepository(
 
     public virtual async Task<Result<IEnumerable<UserRole>>> GetRolesAsync(Guid userId, CancellationToken ct)
     {
-        var result = await GetByIdAsync(userId, ct);
-        if (!result.Succeeded)
-            return Result<IEnumerable<UserRole>>.Failure(result.Errors);
-        return await GetRolesAsync(result.Value, ct);
+        var userResult = await GetByIdAsync(userId, ct);
+        if (!userResult.Succeeded)
+            return Result<IEnumerable<UserRole>>.Failure(userResult.Errors);
+        var user = userResult.Value;
+        return await GetRolesAsync(user, ct);
     }
 
     public virtual Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid userId,

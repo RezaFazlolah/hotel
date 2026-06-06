@@ -19,7 +19,8 @@ public class UpdateHotelHandler(
     {
         var currentUserRolesResult = await currentUserRepository.GetRolesAsync(ct);
         if (!currentUserRolesResult.Succeeded)
-            return Result<Hotel>.Failure(currentUserRolesResult.Errors);
+            return Result<Hotel>.Failure(
+                currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
 
         var currentUserRoles = currentUserRolesResult.Value;
         var updatedHotel = mapper.Map<Hotel>(request);
@@ -28,14 +29,15 @@ public class UpdateHotelHandler(
             return await hotelRepository.UpdateAsync(updatedHotel, ct);
         if (currentUserRoles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserRepository.Id;
+            var managerId = currentUserRepository.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<Hotel>.Failure(hotelIdResult.Errors);
             var hotelId = hotelIdResult.Value;
             if (hotelId != request.Id)
                 return Result<Hotel>.Failure(
-                    new Error($"update hotel failed. manager {managerId} is not hotel {hotelId}'s manager.",
+                    new Error(
+                        $"update hotel {request.Id} failed. manager {managerId} is not hotel {hotelId}'s manager.",
                         ErrorCode.Forbidden), ResultCode.Forbidden);
             return await hotelRepository.UpdateAsync(updatedHotel, ct);
         }

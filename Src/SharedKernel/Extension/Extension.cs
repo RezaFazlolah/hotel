@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Paging;
 
-namespace SharedKernel.Extensions;
+namespace SharedKernel.Extension;
 
 public static class Extension
 {

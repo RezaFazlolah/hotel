@@ -3,7 +3,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Extensions;
+using SharedKernel.Extension;
 using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;

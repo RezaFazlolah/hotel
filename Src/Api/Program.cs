@@ -6,6 +6,8 @@ using Application;
 using Application.Behaviors;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Service;
+using Domain.Interface;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure;
@@ -94,6 +96,9 @@ builder.Services.AddScoped<IGuestRepository, GuestRepository>();
 builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<IGuestService, GuestService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
 

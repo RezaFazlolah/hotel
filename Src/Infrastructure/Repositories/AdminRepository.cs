@@ -3,7 +3,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using SharedKernel.Common;
-using SharedKernel.Extensions;
+using SharedKernel.Extension;
 using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;

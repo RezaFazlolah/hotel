@@ -35,8 +35,9 @@ public class Profiles : Profile
         CreateMap<GetAllHotelsDto, GetAllHotels>();
 
         // room
-        CreateMap<Room, RoomDto>()
-            .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
+        CreateMap<Room, RoomDto>();
+            // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
+        CreateMap<Result<Room>, Result<RoomDto>>();
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();

@@ -10,9 +10,17 @@ namespace Api.Services;
 public class CurrentUserRepository(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
     : ICurrentUserRepository
 {
-    public Guid Id =>
-        Guid.Parse(httpContextAccessor?.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub));
+    public Result<Guid> Id =>
+        Guid.TryParse(httpContextAccessor?.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub),
+            out var currentUserId)
+            ? Result<Guid>.Success(currentUserId)
+            : Result<Guid>.Failure(new Error("current user ID parse failed."));
 
     public async Task<Result<IEnumerable<UserRole>>> GetRolesAsync(CancellationToken ct)
-        => await userRepository.GetRolesAsync(Id, ct);
+    {
+        if (!Id.Succeeded)
+            return Result<IEnumerable<UserRole>>.Failure(
+                Id.Errors.Prepend(new Error("get current user's roles failed.")));
+        return await userRepository.GetRolesAsync(Id.Value, ct);
+    }
 }

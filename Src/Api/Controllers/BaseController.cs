@@ -20,6 +20,7 @@ public class BaseController() : ControllerBase
         return result.Code switch
         {
             ResultCode.Unauthorized => Unauthorized(ErrorsToString(result.Errors)),
+            ResultCode.Forbidden => Forbid(ErrorsToString(result.Errors)),
             ResultCode.NotFound => NotFound(ErrorsToString(result.Errors)),
             _ => BadRequest(ErrorsToString(result.Errors)),
         };
