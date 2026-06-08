@@ -27,11 +27,10 @@ public class InsertRoomHandler(
 
         if (userRoles.Contains(UserRole.Admin))
         {
-            var hotelExists = await hotelRepository.ExistsAsync(request.HotelId, ct);
-            if (!hotelExists)
+            if (!await hotelRepository.ExistsAsync(request.HotelId, ct))
                 return Result<Room>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found."));
         }
-        if (userRoles.Contains(UserRole.Manager))
+        else if (userRoles.Contains(UserRole.Manager))
         {
             var hotelIdResult = await managerRepository.GetHotelIdAsync(userId, ct);
             if (!hotelIdResult.Succeeded)
@@ -41,9 +40,8 @@ public class InsertRoomHandler(
             if (request.HotelId != hotelId)
                 return Result<Room>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found."));
         }
-
-        if (userRoles.Contains(UserRole.Guest))
-            return Result<Room>.Failure(new Error("insert room failed. ", ErrorCode.Forbidden), ResultCode.Forbidden);
+        else
+            return Result<Room>.Failure(new Error("insert room failed. unauthorized access.", ErrorCode.Forbidden), ResultCode.Forbidden);
 
         var roomNumberExistsResult =
             await hotelRepository.RoomNumberExistsAsync(request.Number, request.HotelId, ct);
