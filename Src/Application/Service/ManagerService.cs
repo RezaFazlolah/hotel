@@ -52,4 +52,20 @@ public class ManagerService(
 
         return Result<PagedResult<Reservation>>.Success(reservations.ToPagedResult(paginationParameters));
     }
+
+    public async Task<Result<IEnumerable<Guid>>> GetAllRoomsAsync(Guid managerId, CancellationToken ct)
+    {
+        var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+        if (!hotelIdResult.Succeeded)
+            return Result<IEnumerable<Guid>>.Failure(hotelIdResult.Errors);
+        var hotelId = hotelIdResult.Value;
+
+        if (hotelId is null)
+            return Result<IEnumerable<Guid>>.Success([]);
+        var roomsIdResult = await hotelRepository.GetRoomsIdAsync(hotelId.Value, ct);
+        if (!roomsIdResult.Succeeded)
+            return Result<IEnumerable<Guid>>.Failure(roomsIdResult.Errors);
+        var roomsId = roomsIdResult.Value;
+        return Result<IEnumerable<Guid>>.Success(roomsId);
+    }
 }

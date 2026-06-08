@@ -55,8 +55,8 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
         var result = await GetByIdAsync(id, ct);
         if (!result.Succeeded)
             return result;
-
         var entity = result.Value;
+        
         context.Set<TEntity>().Remove(entity);
         await context.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Deleted);

@@ -9,15 +9,10 @@ public class Reservation
     public required DateTimeOffset CheckInDate { get; set; }
     public required DateTimeOffset CheckOutDate { get; set; }
     public decimal TotalPrice { get; set; }
-
     public ReservationStatus Status { get; set; }
 
-    // foreign key
     public required Guid GuestId { get; set; }
-
     public required Guid RoomId { get; set; }
-
-    // navigation property
     public Guest? Guest { get; set; }
     public Room? Room { get; set; }
 }
