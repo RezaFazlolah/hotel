@@ -12,6 +12,8 @@
 /Test.cs
 *.txt
 bin\\Debug/
+/session*.md
+/Agents.md
 
 # dotenv files
 .env

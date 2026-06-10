@@ -36,7 +36,7 @@ public class DeleteRoomHandler(
         }
         else if (callerRoles.Contains(UserRole.Manager))
         {
-            var roomsIdResult = await managerService.GetAllRoomsAsync(callerId, ct);
+            var roomsIdResult = await managerService.GetAllRoomsIdAsync(callerId, ct);
             if (!roomsIdResult.Succeeded)
                 return Result<Room>.Failure(roomsIdResult.Errors);
             var roomsId = roomsIdResult.Value;

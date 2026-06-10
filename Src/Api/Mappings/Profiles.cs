@@ -36,13 +36,14 @@ public class Profiles : Profile
 
         // room
         CreateMap<Room, RoomDto>();
-            // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
+        // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
         CreateMap<Result<Room>, Result<RoomDto>>();
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
         CreateMap<InsertRoomDto, InsertRoom>();
-        CreateMap<UpdateRoomDto, UpdateRoom>();
+        CreateMap<UpdateRoomDto, UpdateRoom>().ReverseMap();
+        CreateMap<UpdateRoom, Room>().ReverseMap();
         CreateMap<GetAllRoomsDto, GetAllRooms>();
 
         // reservation

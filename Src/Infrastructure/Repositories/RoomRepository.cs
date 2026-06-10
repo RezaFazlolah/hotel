@@ -41,8 +41,23 @@ public class RoomRepository(AppDbContext context, IHotelRepository hotelReposito
 
     public override async Task<Result<Room>> UpdateAsync(Room room, CancellationToken cancellationToken)
     {
-        if ((await hotelRepository.RoomNumberExistsAsync(room.Number, room.HotelId, cancellationToken)).Value)
-            return Result<Room>.Failure(new Error($"room number {room.Number} already exists"));
+        var existingRoomResult = await GetByIdAsync(room.Id, cancellationToken);
+        if (!existingRoomResult.Succeeded)
+            return Result<Room>.Failure(existingRoomResult.Errors.Prepend(new Error($"update room {room.Id} failed.")));
+        var existingRoom = existingRoomResult.Value;
+
+        if (room.Number != existingRoom.Number)
+        {
+            var roomNumberExistsResult =
+                await hotelRepository.RoomNumberExistsAsync(room.Number, room.HotelId, cancellationToken);
+            if (!roomNumberExistsResult.Succeeded)
+                return Result<Room>.Failure(
+                    roomNumberExistsResult.Errors.Prepend(new Error($"update room {room.Id} failed.")));
+            var roomNumberExists = roomNumberExistsResult.Value;
+            if (roomNumberExists)
+                return Result<Room>.Failure(
+                    new Error($"update room {room.Id} failed. room number {room.Number} already exists."));
+        }
 
         return await base.UpdateAsync(room, cancellationToken);
     }

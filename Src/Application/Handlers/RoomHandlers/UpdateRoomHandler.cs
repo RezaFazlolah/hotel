@@ -1,29 +1,54 @@
 using Application.Interfaces.Repositories;
 using Application.Requests.RoomRequests;
 using AutoMapper;
+using Domain.Interface;
 using Domain.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Application.Handlers.RoomHandlers;
 
-public class UpdateRoomHandler(IRoomRepository roomRepository, IHotelRepository hotelRepository, IMapper mapper)
+public class UpdateRoomHandler(
+    IRoomRepository roomRepository,
+    ICurrentUserRepository currentUserRepository,
+    IManagerService managerService,
+    IMapper mapper)
     : IRequestHandler<UpdateRoom, Result<Room>>
 {
-    public async Task<Result<Room>> Handle(UpdateRoom request, CancellationToken cancellationToken)
+    public async Task<Result<Room>> Handle(UpdateRoom request, CancellationToken ct)
     {
-        var errors = new List<Error>();
-        var roomResult = await roomRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (!roomResult.Succeeded)
-            errors.Add(new Error($"room {request.Id} not found"));
-        if (request.HotelId != null &&
-            await hotelRepository.GetByIdAsync(request.HotelId.Value, cancellationToken) == null)
-            errors.Add(new Error($"hotel {request.HotelId} not found"));
-        if (errors.Count > 0)
-            return Result<Room>.Failure(errors, ResultCode.NotFound);
-        var room = roomResult.Value;
-        mapper.Map(request, room);
-        return await roomRepository.UpdateAsync(room, cancellationToken);
+        var callerIdResult = currentUserRepository.Id;
+        if (!callerIdResult.Succeeded)
+            return Result<Room>.Failure(callerIdResult.Errors);
+        var callerId = callerIdResult.Value;
+
+        var callerRolesResult = await currentUserRepository.GetRolesAsync(ct);
+        if (!callerRolesResult.Succeeded)
+            return Result<Room>.Failure(callerRolesResult.Errors);
+        var callerRoles = callerRolesResult.Value;
+
+        if (callerRoles.Contains(UserRole.Admin))
+        {
+            if (!await roomRepository.ExistsAsync(request.Id, ct))
+                return Result<Room>.Failure(new Error($"update room {request.Id} failed. room not found."));
+        }
+        else if (callerRoles.Contains(UserRole.Manager))
+        {
+            var roomsIdResult = await managerService.GetAllRoomsIdAsync(callerId, ct);
+            if (!roomsIdResult.Succeeded)
+                return Result<Room>.Failure(roomsIdResult.Errors);
+            var roomsId = roomsIdResult.Value;
+            if (!roomsId.Contains(request.Id))
+                return Result<Room>.Failure(new Error($"update room {request.Id} failed. room not found."));
+        }
+        else
+            return Result<Room>.Failure(new Error($"update room {request.Id} failed. unauthorized access."));
+
+        var updatedRoom = mapper.Map<Room>(request);
+
+        var result = await roomRepository.UpdateAsync(updatedRoom, ct);
+        return result;
     }
 }

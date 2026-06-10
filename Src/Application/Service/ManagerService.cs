@@ -53,7 +53,7 @@ public class ManagerService(
         return Result<PagedResult<Reservation>>.Success(reservations.ToPagedResult(paginationParameters));
     }
 
-    public async Task<Result<IEnumerable<Guid>>> GetAllRoomsAsync(Guid managerId, CancellationToken ct)
+    public async Task<Result<IEnumerable<Guid>>> GetAllRoomsIdAsync(Guid managerId, CancellationToken ct)
     {
         var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
         if (!hotelIdResult.Succeeded)
