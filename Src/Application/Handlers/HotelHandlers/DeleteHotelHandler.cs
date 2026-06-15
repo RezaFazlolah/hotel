@@ -9,13 +9,13 @@ namespace Application.Handlers.HotelHandlers;
 
 public class DeleteHotelHandler(
     IHotelRepository hotelRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IManagerRepository managerRepository)
     : IRequestHandler<DeleteHotel, Result<Hotel>>
 {
     public async Task<Result<Hotel>> Handle(DeleteHotel request, CancellationToken ct)
     {
-        var rolesResult = await currentUserRepository.GetRolesAsync(ct);
+        var rolesResult = await currentUserService.GetRolesAsync(ct);
         if (!rolesResult.Succeeded)
             return Result<Hotel>.Failure(rolesResult.Errors);
         var roles = rolesResult.Value;
@@ -24,7 +24,7 @@ public class DeleteHotelHandler(
             return await hotelRepository.DeleteAsync(request.HotelId, ct);
         if (roles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserRepository.Id.Value;
+            var managerId = currentUserService.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<Hotel>.Failure(

@@ -9,7 +9,7 @@ namespace Application.Handlers.ReservationHandlers;
 
 public class UpdateReservationHandler(
     IReservationRepository reservationRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IRoomRepository roomRepository,
     IMapper mapper)
     : IRequestHandler<UpdateReservation, Result<Reservation>>
@@ -25,7 +25,7 @@ public class UpdateReservationHandler(
         //
         // var errors = new List<Error>();
         // if (await roomRepository.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
-        //         currentUserRepository.Id, cancellationToken))
+        //         currentUserService.Id, cancellationToken))
         //     errors.Add(new Error($"room {reservation.RoomId} is reserved"));
         // if (errors.Count > 0)
         //     return Result<Reservation>.Failure(errors, 404);

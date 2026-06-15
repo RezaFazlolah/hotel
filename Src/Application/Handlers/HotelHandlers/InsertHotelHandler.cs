@@ -10,7 +10,7 @@ namespace Application.Handlers.HotelHandlers;
 public class InsertHotelHandler(
     IHotelRepository hotelRepository,
     IUserRepository userRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IMapper mapper)
     : IRequestHandler<InsertHotel, Result<Hotel>>
 {

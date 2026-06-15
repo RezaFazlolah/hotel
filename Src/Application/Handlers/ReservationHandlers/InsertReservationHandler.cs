@@ -10,7 +10,7 @@ namespace Application.Handlers.ReservationHandlers;
 public class InsertReservationHandler(
     IReservationRepository reservationRepository,
     IRoomRepository roomRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IUserRepository userRepository,
     IMapper mapper)
     : IRequestHandler<InsertReservation, Result<Reservation>>
@@ -29,7 +29,7 @@ public class InsertReservationHandler(
         // if (errors.Count > 0)
         //     return Result<Reservation>.Failure(errors, 400);
         //
-        // var currentUserId = currentUserRepository.Id;
+        // var currentUserId = currentUserService.Id;
         // var roles = await userRepository.GetRolesAsync(currentUserId, cancellationToken);
         //
         // if (roles.Contains(UserRole.Admin))

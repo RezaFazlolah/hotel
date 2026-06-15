@@ -12,18 +12,18 @@ namespace Application.Handlers.RoomHandlers;
 public class InsertRoomHandler(
     IRoomRepository roomRepository,
     IHotelRepository hotelRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IManagerRepository managerRepository,
     IMapper mapper)
     : IRequestHandler<InsertRoom, Result<Room>>
 {
     public async Task<Result<Room>> Handle(InsertRoom request, CancellationToken ct)
     {
-        var userRolesResult = await currentUserRepository.GetRolesAsync(ct);
+        var userRolesResult = await currentUserService.GetRolesAsync(ct);
         if (!userRolesResult.Succeeded)
             return Result<Room>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed.")));
         var userRoles = userRolesResult.Value;
-        var userId = currentUserRepository.Id.Value;
+        var userId = currentUserService.Id.Value;
 
         if (userRoles.Contains(UserRole.Admin))
         {
@@ -41,14 +41,15 @@ public class InsertRoomHandler(
                 return Result<Room>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found."));
         }
         else
-            return Result<Room>.Failure(new Error("insert room failed. unauthorized access.", ErrorCode.Forbidden), ResultCode.Forbidden);
+            return Result<Room>.Failure(new Error("insert room failed. unauthorized access.", ErrorCode.Forbidden),
+                ResultCode.Forbidden);
 
         var roomNumberExistsResult =
             await hotelRepository.RoomNumberExistsAsync(request.Number, request.HotelId, ct);
         if (!roomNumberExistsResult.Succeeded)
             return Result<Room>.Failure(roomNumberExistsResult.Errors.Prepend(new Error($"insert room failed.")));
         var roomNumberExists = roomNumberExistsResult.Value;
-        
+
         return roomNumberExists
             ? Result<Room>.Failure(new Error(
                 $"insert room failed. hotel {request.HotelId} already has room number {request.Number}."))

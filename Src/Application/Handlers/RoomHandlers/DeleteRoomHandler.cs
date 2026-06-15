@@ -12,17 +12,17 @@ namespace Application.Handlers.RoomHandlers;
 public class DeleteRoomHandler(
     IRoomRepository roomRepository,
     IManagerService managerService,
-    ICurrentUserRepository currentUserRepository)
+    ICurrentUserService currentUserService)
     : IRequestHandler<DeleteRoom, Result<Room>>
 {
     public async Task<Result<Room>> Handle(DeleteRoom request, CancellationToken ct)
     {
-        var callerIdResult = currentUserRepository.Id;
+        var callerIdResult = currentUserService.Id;
         if (!callerIdResult.Succeeded)
             return Result<Room>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;
 
-        var callerRolesResult = await currentUserRepository.GetRolesAsync(ct);
+        var callerRolesResult = await currentUserService.GetRolesAsync(ct);
         if (!callerRolesResult.Succeeded)
             return Result<Room>.Failure(
                 callerRolesResult.Errors.Prepend(new Error($"delete room {request.RoomId} failed.")));

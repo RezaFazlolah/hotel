@@ -7,8 +7,8 @@ using SharedKernel.Enums;
 
 namespace Api.Services;
 
-public class CurrentUserRepository(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
-    : ICurrentUserRepository
+public class CurrentUserService(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+    : ICurrentUserService
 {
     public Result<Guid> Id =>
         Guid.TryParse(httpContextAccessor?.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub),

@@ -10,14 +10,14 @@ namespace Application.Handlers.HotelHandlers;
 
 public class UpdateHotelHandler(
     IHotelRepository hotelRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IManagerRepository managerRepository,
     IMapper mapper)
     : IRequestHandler<UpdateHotel, Result<Hotel>>
 {
     public async Task<Result<Hotel>> Handle(UpdateHotel request, CancellationToken ct)
     {
-        var currentUserRolesResult = await currentUserRepository.GetRolesAsync(ct);
+        var currentUserRolesResult = await currentUserService.GetRolesAsync(ct);
         if (!currentUserRolesResult.Succeeded)
             return Result<Hotel>.Failure(
                 currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
@@ -29,7 +29,7 @@ public class UpdateHotelHandler(
             return await hotelRepository.UpdateAsync(updatedHotel, ct);
         if (currentUserRoles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserRepository.Id.Value;
+            var managerId = currentUserService.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<Hotel>.Failure(hotelIdResult.Errors);

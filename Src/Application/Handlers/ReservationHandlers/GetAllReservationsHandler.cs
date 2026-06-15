@@ -10,7 +10,7 @@ using SharedKernel.Paging;
 namespace Application.Handlers.ReservationHandlers;
 
 public class GetAllReservationsHandler(
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IGuestRepository guestRepository,
     IManagerRepository managerRepository,
     IAdminRepository adminRepository,
@@ -23,12 +23,12 @@ public class GetAllReservationsHandler(
     public async Task<Result<PagedResult<Reservation>>> Handle(GetAllReservations request,
         CancellationToken ct)
     {
-        var rolesResult = (await currentUserRepository.GetRolesAsync(ct));
+        var rolesResult = (await currentUserService.GetRolesAsync(ct));
         if (!rolesResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 rolesResult.Errors.Prepend(new Error("get all reservations failed.")));
         var roles = rolesResult.Value;
-        var userId = currentUserRepository.Id.Value;
+        var userId = currentUserService.Id.Value;
 
         if (roles.Contains(UserRole.Admin))
             return await adminService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);

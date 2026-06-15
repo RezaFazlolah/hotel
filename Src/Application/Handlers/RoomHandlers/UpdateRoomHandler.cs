@@ -12,19 +12,19 @@ namespace Application.Handlers.RoomHandlers;
 
 public class UpdateRoomHandler(
     IRoomRepository roomRepository,
-    ICurrentUserRepository currentUserRepository,
+    ICurrentUserService currentUserService,
     IManagerService managerService,
     IMapper mapper)
     : IRequestHandler<UpdateRoom, Result<Room>>
 {
     public async Task<Result<Room>> Handle(UpdateRoom request, CancellationToken ct)
     {
-        var callerIdResult = currentUserRepository.Id;
+        var callerIdResult = currentUserService.Id;
         if (!callerIdResult.Succeeded)
             return Result<Room>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;
 
-        var callerRolesResult = await currentUserRepository.GetRolesAsync(ct);
+        var callerRolesResult = await currentUserService.GetRolesAsync(ct);
         if (!callerRolesResult.Succeeded)
             return Result<Room>.Failure(callerRolesResult.Errors);
         var callerRoles = callerRolesResult.Value;

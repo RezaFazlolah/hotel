@@ -11,7 +11,7 @@ namespace Application.Handlers.ReservationHandlers;
 public class CancelReservationHandler(
     IReservationRepository reservationRepository,
     IMapper mapper,
-    ICurrentUserRepository currentUserRepository)
+    ICurrentUserService currentUserService)
     : IRequestHandler<CancelReservation, Result<Reservation>>
 {
     public async Task<Result<Reservation>> Handle(CancelReservation request, CancellationToken cancellationToken)
