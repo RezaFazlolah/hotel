@@ -1,9 +1,9 @@
-using Application.Requests.AuthRequests;
+using Application.Auth.Commands;
 using FluentValidation;
 
 namespace Application.Validators.AuthValidators;
 
-public class LoginValidator : AbstractValidator<Login>
+public class LoginValidator : AbstractValidator<LoginCommand>
 {
     public LoginValidator()
     {

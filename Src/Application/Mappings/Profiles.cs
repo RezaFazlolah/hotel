@@ -1,6 +1,6 @@
-using Application.Requests.HotelRequests;
-using Application.Requests.ReservationRequests;
-using Application.Requests.RoomRequests;
+using Application.Hotels.Commands;
+using Application.Reservations.Commands;
+using Application.Rooms.Commands;
 using AutoMapper;
 using Domain.Models;
 
@@ -11,15 +11,15 @@ public class Profiles : Profile
     public Profiles()
     {
         // hotel
-        CreateMap<InsertHotel, Hotel>();
-        CreateMap<UpdateHotel, Hotel>();
+        CreateMap<InsertHotelCommand, Hotel>();
+        CreateMap<UpdateHotelCommand, Hotel>();
 
         // room
-        CreateMap<InsertRoom, Room>();
-        CreateMap<UpdateRoom, Room>();
+        CreateMap<InsertRoomCommand, Room>();
+        CreateMap<UpdateRoomCommand, Room>();
 
         // reservation
-        CreateMap<InsertReservation, Reservation>();
-        CreateMap<UpdateReservation, Reservation>();
+        CreateMap<InsertReservationCommand, Reservation>();
+        CreateMap<UpdateReservationCommand, Reservation>();
     }
 }

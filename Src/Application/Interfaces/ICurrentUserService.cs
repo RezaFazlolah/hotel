@@ -1,7 +1,7 @@
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
-namespace Application.Interfaces.Repositories;
+namespace Application.Interfaces;
 
 public interface ICurrentUserService
 {

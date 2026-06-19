@@ -1,5 +1,5 @@
 using Api.DTOs.AuthDtos;
-using Application.Requests.AuthRequests;
+using Application.Auth.Commands;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +14,10 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
 {
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto request,
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommandDto request,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<Register>(request);
-        command.Role = UserRole.Guest;
+        var command = mapper.Map<RegisterCommand>(request) with {Role = UserRole.Guest};
         var result = await mediator.Send(command, cancellationToken);
         var resultDto = mapper.Map<Result<UserDto>>(result);
         return HandleResult(resultDto);
@@ -26,19 +25,19 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginDto request, CancellationToken cancellationToken)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginCommandDto request, CancellationToken cancellationToken)
     {
-        var command = mapper.Map<Login>(request);
+        var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
 
     [Authorize(Roles = UserRoleName.Admin)]
     [HttpPost("registerByAdmin")]
-    public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminDto request,
+    public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminCommandDto request,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<Register>(request);
+        var command = mapper.Map<RegisterCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         var resultDto = mapper.Map<Result<UserDto>>(result);
         return HandleResult(resultDto);

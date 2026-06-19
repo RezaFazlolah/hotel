@@ -1,5 +1,6 @@
 using Api.DTOs.RoomDtos;
-using Application.Requests.RoomRequests;
+using Application.Rooms.Commands;
+using Application.Rooms.Queries;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +15,10 @@ namespace Api.Controllers;
 public class RoomController(IMediator mediator, IMapper mapper) : BaseController()
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync([FromQuery] GetAllRoomsDto request,
+    public async Task<IActionResult> GetAllAsync([FromQuery] GetAllRoomsQueryDto request,
         CancellationToken ct)
     {
-        var query = mapper.Map<GetAllRooms>(request);
+        var query = mapper.Map<GetAllRoomsQuery>(request);
         var result = await mediator.Send(query, ct);
         var resultDto = mapper.Map<Result<PagedResult<RoomDto>>>(result);
         return HandleResult(resultDto);
@@ -26,7 +27,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
     {
-        var request = new GetRoomById { RoomId = id };
+        var request = new GetRoomByIdQuery { RoomId = id };
         var result = await mediator.Send(request, ct);
         var resultDto = mapper.Map<Result<RoomDto>>(result);
         return HandleResult(resultDto);
@@ -34,10 +35,10 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
 
     [HttpPost]
     [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
-    public async Task<IActionResult> InsertAsync([FromBody] InsertRoomDto request,
+    public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<InsertRoom>(request);
+        var command = mapper.Map<InsertRoomCommand>(request);
         var result = await mediator.Send(command, ct);
         var resultDto = mapper.Map<Result<RoomDto>>(result);
         return HandleResult(resultDto);
@@ -45,10 +46,10 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomDto request,
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateRoom>(request);
+        var command = mapper.Map<UpdateRoomCommand>(request);
         command.Id = id;
         var result = await mediator.Send(command, ct);
         var resultDto = mapper.Map<Result<RoomDto>>(result);
@@ -59,7 +60,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken ct)
     {
-        var request = new DeleteRoom { RoomId = id };
+        var request = new DeleteRoomCommand { RoomId = id };
         var result = await mediator.Send(request, ct);
         var resultDto = mapper.Map<Result<RoomDto>>(result);
         return HandleResult(resultDto);

@@ -1,5 +1,6 @@
 using System.Text;
 using Api.Services;
+using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;

@@ -2,10 +2,13 @@ using Api.DTOs.AuthDtos;
 using Api.DTOs.HotelDtos;
 using Api.DTOs.ReservationDtos;
 using Api.DTOs.RoomDtos;
-using Application.Requests.AuthRequests;
-using Application.Requests.HotelRequests;
-using Application.Requests.ReservationRequests;
-using Application.Requests.RoomRequests;
+using Application.Auth.Commands;
+using Application.Hotels.Commands;
+using Application.Hotels.Queries;
+using Application.Reservations.Commands;
+using Application.Reservations.Queries;
+using Application.Rooms.Commands;
+using Application.Rooms.Queries;
 using AutoMapper;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,9 +22,9 @@ public class Profiles : Profile
     public Profiles()
     {
         // auth
-        CreateMap<LoginDto, Login>();
-        CreateMap<RegisterDto, Register>();
-        CreateMap<RegisterByAdminDto, Register>();
+        CreateMap<LoginCommandDto, LoginCommand>();
+        CreateMap<RegisterCommandDto, RegisterCommand>();
+        CreateMap<RegisterByAdminCommandDto, RegisterCommand>();
         CreateMap<User, UserDto>();
         CreateMap<Result<User>, Result<UserDto>>();
 
@@ -30,9 +33,9 @@ public class Profiles : Profile
         CreateMap<PagedResult<Hotel>, PagedResult<HotelDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Hotel>>, Result<PagedResult<HotelDto>>>();
-        CreateMap<InsertHotelDto, InsertHotel>();
-        CreateMap<UpdateHotelDto, UpdateHotel>();
-        CreateMap<GetAllHotelsDto, GetAllHotels>();
+        CreateMap<InsertHotelCommandDto, InsertHotelCommand>();
+        CreateMap<UpdateHotelCommandDto, UpdateHotelCommand>();
+        CreateMap<GetAllHotelsQueryDto, GetAllHotelsQuery>();
 
         // room
         CreateMap<Room, RoomDto>();
@@ -41,10 +44,10 @@ public class Profiles : Profile
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
-        CreateMap<InsertRoomDto, InsertRoom>();
-        CreateMap<UpdateRoomDto, UpdateRoom>().ReverseMap();
-        CreateMap<UpdateRoom, Room>().ReverseMap();
-        CreateMap<GetAllRoomsDto, GetAllRooms>();
+        CreateMap<InsertRoomCommandDto, InsertRoomCommand>();
+        CreateMap<UpdateRoomCommandDto, UpdateRoomCommand>().ReverseMap();
+        CreateMap<UpdateRoomCommand, Room>().ReverseMap();
+        CreateMap<GetAllRoomsQueryDto, GetAllRoomsQuery>();
 
         // reservation
         CreateMap<Reservation, ReservationDto>()
@@ -52,8 +55,8 @@ public class Profiles : Profile
         CreateMap<PagedResult<Reservation>, PagedResult<ReservationDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Reservation>>, Result<PagedResult<ReservationDto>>>();
-        CreateMap<InsertReservationDto, InsertReservation>();
-        CreateMap<UpdateReservationDto, UpdateReservation>();
-        CreateMap<GetAllReservationsDto, GetAllReservations>();
+        CreateMap<InsertReservationCommandDto, InsertReservationCommand>();
+        CreateMap<UpdateReservationCommandDto, UpdateReservationCommand>();
+        CreateMap<GetAllReservationsQueryDto, GetAllReservationsQuery>();
     }
 }

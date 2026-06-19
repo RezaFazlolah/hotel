@@ -1,9 +1,9 @@
-using Application.Requests.RoomRequests;
+using Application.Rooms.Commands;
 using FluentValidation;
 
 namespace Application.Validators.RoomValidators;
 
-public class InsertRoomValidator : AbstractValidator<InsertRoom>
+public class InsertRoomValidator : AbstractValidator<InsertRoomCommand>
 {
     public InsertRoomValidator()
     {
