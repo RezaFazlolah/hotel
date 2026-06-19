@@ -2,6 +2,7 @@ using System.Text;
 using Api.Services;
 using Application.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Configuration;
 
@@ -26,33 +27,34 @@ public static class DependencyInjection
 
         services.AddControllers();
 
-        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-        var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>() ??
-                          throw new InvalidOperationException("JwtSettings is null.");
-        
+        services.AddOptions<JwtSettings>()
+            .Bind(configuration.GetSection("JwtSettings"))
+            .ValidateOnStart();
+
         // auth
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(options =>
+            .AddJwtBearer();
+
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IOptions<JwtSettings>>((options, jwtOptions) =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtSettings.Issuer,
-                        ValidAudience = jwtSettings.Audience,
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
-                    };
-                    options.MapInboundClaims = false;
-                }
-            );
-        
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Value.Issuer,
+                    ValidAudience = jwtOptions.Value.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key))
+                };
+                options.MapInboundClaims = false;
+            });
+
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
