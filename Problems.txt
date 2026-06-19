@@ -1,5 +1,5 @@
 [] SharedKernel
-    [] ToPagedResultAsync() references Microsoft.EntityFrameworkCore, but SharedKernel must not reference anything
+    [] ToPagedResultAsync() references Microsoft.EntityFrameworkCore, but SharedKernel.csproj must not reference anything
     [] 
     
 =========================================================================================

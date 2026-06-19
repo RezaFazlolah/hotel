@@ -5,15 +5,16 @@ using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
+using SharedKernel.Configuration;
 
 namespace Infrastructure.Repositories;
 
 public class TokenRepository(
-    IConfiguration configuration,
-    UserManager<User> userManager,
-    RoleManager<Role> roleManager)
+    IOptions<JwtSettings> jwtOptions,
+    UserManager<User> userManager)
     : ITokenRepository
 {
     public async Task<Result<string>> GenerateJwt(User user)
@@ -27,17 +28,17 @@ public class TokenRepository(
         };
 
         var roles = await userManager.GetRolesAsync(user);
-        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+        var rolesAsClaims = roles.Select(r => new Claim(ClaimTypes.Role, r));
+        claims.AddRange(rolesAsClaims);
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-        var expirationDuration = configuration["Jwt:DurationInMinutes"] ??
-                                 throw new InvalidOperationException("Jwt:DurationInMinutes is missing");
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key));
+        var expirationInMinutes = jwtOptions.Value.DurationInMinutes;
 
         var token = new JwtSecurityToken(
-            issuer: configuration["Jwt:Issuer"],
-            audience: configuration["Jwt:Audience"],
+            issuer: jwtOptions.Value.Issuer,
+            audience: jwtOptions.Value.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(int.Parse(expirationDuration)),
+            expires: DateTime.UtcNow.AddMinutes(expirationInMinutes),
             signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256));
 
         var result = new JwtSecurityTokenHandler().WriteToken(token);

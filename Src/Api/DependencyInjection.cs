@@ -3,12 +3,13 @@ using Api.Services;
 using Application.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SharedKernel.Configuration;
 
 namespace Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApiServicess(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         // scalar
         services.AddOpenApi();
@@ -25,6 +26,10 @@ public static class DependencyInjection
 
         services.AddControllers();
 
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>() ??
+                          throw new InvalidOperationException("JwtSettings is null.");
+        
         // auth
         services.AddAuthentication(options =>
             {
@@ -39,15 +44,15 @@ public static class DependencyInjection
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = configuration["Jwt:Issuer"],
-                        ValidAudience = configuration["Jwt:Audience"],
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidAudience = jwtSettings.Audience,
                         IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                     };
                     options.MapInboundClaims = false;
                 }
             );
-
+        
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;

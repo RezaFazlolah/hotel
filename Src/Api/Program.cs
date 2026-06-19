@@ -4,13 +4,14 @@ using Application;
 using Domain;
 using Infrastructure;
 using Scalar.AspNetCore;
+using SharedKernel.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDomainServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddApiServicess(builder.Configuration);
+builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
