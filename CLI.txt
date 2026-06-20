@@ -1,5 +1,0 @@
-dotnet ef migrations add <migrationName> --project Infrastructure/Infrastructure.csproj --startup-project Api/Api.csproj
-
-dotnet ef database update --project Infrastructure/Infrastructure.csproj --startup-project Api/Api.csproj
-
-dotnet ef database drop --project Infrastructure/Infrastructure.csproj --startup-project Api/Api.csproj --force
