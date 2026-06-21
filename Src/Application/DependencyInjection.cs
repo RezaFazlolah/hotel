@@ -1,5 +1,5 @@
 using Application.Behaviors;
-using Application.Service;
+using Application.Services;
 using Domain.Interface;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;

@@ -13,8 +13,7 @@ public class GuestRepository(
     AppDbContext context,
     IReservationRepository reservationRepository,
     UserManager<User> userManager,
-    RoleManager<Role> roleManager,
-    IConfiguration configuration)
+    RoleManager<Role> roleManager)
     : UserRepository(context, userManager, roleManager), IGuestRepository
 {
     public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid guestId,

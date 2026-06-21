@@ -4,7 +4,7 @@ using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paging;
 
-namespace Application.Service;
+namespace Application.Services;
 
 public class AdminService(IReservationRepository reservationRepository)
     : UserService, IAdminService

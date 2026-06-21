@@ -9,13 +9,9 @@ using SharedKernel.Paging;
 namespace Infrastructure.Repositories;
 
 public class ManagerRepository(
-    IHotelRepository hotelRepository,
-    IRoomRepository roomRepository,
-    IReservationRepository reservationRepository,
     AppDbContext context,
     UserManager<User> userManager,
-    RoleManager<Role> roleManager,
-    IConfiguration configuration)
+    RoleManager<Role> roleManager)
     : UserRepository(context, userManager, roleManager), IManagerRepository
 {
     // public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid managerId,

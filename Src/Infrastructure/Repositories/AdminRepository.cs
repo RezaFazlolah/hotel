@@ -12,8 +12,7 @@ public class AdminRepository(
     AppDbContext context,
     IReservationRepository reservationRepository,
     UserManager<User> userManager,
-    RoleManager<Role> roleManager,
-    IConfiguration configuration)
+    RoleManager<Role> roleManager)
     : UserRepository(context, userManager, roleManager), IAdminRepository
 {
     public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid adminId,

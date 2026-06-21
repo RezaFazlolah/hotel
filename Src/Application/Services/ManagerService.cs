@@ -5,7 +5,7 @@ using SharedKernel.Common;
 using SharedKernel.Extension;
 using SharedKernel.Paging;
 
-namespace Application.Service;
+namespace Application.Services;
 
 public class ManagerService(
     IManagerRepository managerRepository,

@@ -1,7 +1,7 @@
 using Application.Reservations.Commands;
 using FluentValidation;
 
-namespace Application.Validators.ReservationValidators;
+namespace Application.Reservations.Validators;
 
 public class InsertReservationValidator : AbstractValidator<InsertReservationCommand>
 {

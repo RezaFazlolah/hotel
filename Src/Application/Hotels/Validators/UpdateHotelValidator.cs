@@ -1,7 +1,7 @@
 using Application.Hotels.Commands;
 using FluentValidation;
 
-namespace Application.Validators.HotelValidators;
+namespace Application.Hotels.Validators;
 
 public class UpdateHotelValidator : AbstractValidator<UpdateHotelCommand>
 {
