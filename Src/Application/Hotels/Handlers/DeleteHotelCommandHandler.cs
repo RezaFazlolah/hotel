@@ -1,6 +1,7 @@
 using Application.Hotels.Commands;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
@@ -16,7 +17,7 @@ public class DeleteHotelCommandHandler(
 {
     public async Task<Result<Hotel>> Handle(DeleteHotelCommand request, CancellationToken ct)
     {
-        var rolesResult = await currentUserService.GetRolesAsync(ct);
+        var rolesResult = currentUserService.Roles;
         if (!rolesResult.Succeeded)
             return Result<Hotel>.Failure(rolesResult.Errors);
         var roles = rolesResult.Value;

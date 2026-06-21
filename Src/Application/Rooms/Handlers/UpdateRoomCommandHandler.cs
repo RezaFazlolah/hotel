@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Rooms.Commands;
 using AutoMapper;
 using Domain.Interface;
@@ -24,7 +25,7 @@ public class UpdateRoomCommandHandler(
             return Result<Room>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;
 
-        var callerRolesResult = await currentUserService.GetRolesAsync(ct);
+        var callerRolesResult = currentUserService.Roles;
         if (!callerRolesResult.Succeeded)
             return Result<Room>.Failure(callerRolesResult.Errors);
         var callerRoles = callerRolesResult.Value;

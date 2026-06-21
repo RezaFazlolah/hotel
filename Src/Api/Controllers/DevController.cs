@@ -4,8 +4,8 @@ namespace Api.Controllers;
 
 public class DevController : BaseController
 {
-    [HttpGet("guid/{number:int}")]
-    public async Task<IActionResult> GenerateGuidAsync([FromQuery] int count, CancellationToken ct)
+    [HttpPost("guid")]
+    public async Task<IActionResult> GenerateGuidAsync([FromBody] int count = 1)
     {
         var result = new List<Guid>();
         for (var i = 0; i < count; i++)

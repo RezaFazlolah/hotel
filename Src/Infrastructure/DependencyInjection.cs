@@ -18,7 +18,6 @@ public static class DependencyInjection
             // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             options.UseSqlite(configuration.GetConnectionString("SqliteConnection")));
 
-
         // identity
         services.AddIdentityCore<User>(options =>
             {

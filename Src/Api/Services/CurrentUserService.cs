@@ -2,6 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
+using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
@@ -16,11 +18,37 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor, IUserR
             ? Result<Guid>.Success(currentUserId)
             : Result<Guid>.Failure(new Error("current user ID parse failed."));
 
-    public async Task<Result<IEnumerable<UserRole>>> GetRolesAsync(CancellationToken ct)
+    // public async Task<Result<IEnumerable<UserRole>>> GetRolesAsync(CancellationToken ct)
+    // {
+    //     if (!Id.Succeeded)
+    //         return Result<IEnumerable<UserRole>>.Failure(
+    //             Id.Errors.Prepend(new Error("get current user's roles failed.")));
+    //     return await userRepository.GetRolesAsync(Id.Value, ct);
+    // }
+
+    public Result<User> User
     {
-        if (!Id.Succeeded)
-            return Result<IEnumerable<UserRole>>.Failure(
-                Id.Errors.Prepend(new Error("get current user's roles failed.")));
-        return await userRepository.GetRolesAsync(Id.Value, ct);
+        get
+        {
+            var currentUserIdResult = Id;
+            if (!currentUserIdResult.Succeeded)
+                return Result<User>.Failure(currentUserIdResult.Errors);
+            var currentUserId = currentUserIdResult.Value;
+
+            return userRepository.GetByIdAsync(currentUserId, CancellationToken.None).Result;
+        }
+    }
+
+    public Result<IEnumerable<UserRole>> Roles
+    {
+        get
+        {
+            var currentUserIdResult = Id;
+            if (!currentUserIdResult.Succeeded)
+                return Result<IEnumerable<UserRole>>.Failure(currentUserIdResult.Errors);
+            var currentUserId = currentUserIdResult.Value;
+
+            return userRepository.GetRolesAsync(currentUserId, CancellationToken.None).Result;
+        }
     }
 }

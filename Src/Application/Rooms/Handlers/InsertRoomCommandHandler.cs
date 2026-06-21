@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Rooms.Commands;
 using AutoMapper;
 using Domain.Models;
@@ -19,7 +20,7 @@ public class InsertRoomCommandHandler(
 {
     public async Task<Result<Room>> Handle(InsertRoomCommand request, CancellationToken ct)
     {
-        var userRolesResult = await currentUserService.GetRolesAsync(ct);
+        var userRolesResult = currentUserService.Roles;
         if (!userRolesResult.Succeeded)
             return Result<Room>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed.")));
         var userRoles = userRolesResult.Value;

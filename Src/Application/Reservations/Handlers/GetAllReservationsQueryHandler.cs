@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Reservations.Queries;
 using Domain.Interface;
 using Domain.Models;
@@ -24,7 +25,7 @@ public class GetAllReservationsQueryHandler(
     public async Task<Result<PagedResult<Reservation>>> Handle(GetAllReservationsQuery request,
         CancellationToken ct)
     {
-        var rolesResult = (await currentUserService.GetRolesAsync(ct));
+        var rolesResult = currentUserService.Roles;
         if (!rolesResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 rolesResult.Errors.Prepend(new Error("get all reservations failed.")));

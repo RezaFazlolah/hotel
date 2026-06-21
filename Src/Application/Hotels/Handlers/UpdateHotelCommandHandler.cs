@@ -1,6 +1,7 @@
 using Application.Hotels.Commands;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -18,7 +19,7 @@ public class UpdateHotelCommandHandler(
 {
     public async Task<Result<Hotel>> Handle(UpdateHotelCommand request, CancellationToken ct)
     {
-        var currentUserRolesResult = await currentUserService.GetRolesAsync(ct);
+        var currentUserRolesResult = currentUserService.Roles;
         if (!currentUserRolesResult.Succeeded)
             return Result<Hotel>.Failure(
                 currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));

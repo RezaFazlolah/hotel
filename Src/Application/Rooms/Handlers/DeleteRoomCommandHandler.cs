@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Application.Rooms.Commands;
 using Domain.Interface;
 using Domain.Models;
@@ -22,7 +23,7 @@ public class DeleteRoomCommandHandler(
             return Result<Room>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;
 
-        var callerRolesResult = await currentUserService.GetRolesAsync(ct);
+        var callerRolesResult = currentUserService.Roles;
         if (!callerRolesResult.Succeeded)
             return Result<Room>.Failure(
                 callerRolesResult.Errors.Prepend(new Error($"delete room {request.RoomId} failed.")));
