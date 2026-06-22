@@ -1,8 +1,8 @@
 using SharedKernel.Paging;
 
-namespace Api.DTOs.RoomDtos;
+namespace Api.Dtos.ReservationDtos;
 
-public class GetAllRoomsQueryDto
+public class GetAllReservationsQueryDto
 {
     public PaginationParameters PaginationParameters { get; set; } = new();
 }

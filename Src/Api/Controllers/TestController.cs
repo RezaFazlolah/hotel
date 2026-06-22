@@ -3,7 +3,8 @@ using SharedKernel.Common;
 
 namespace Api.Controllers;
 
-public class TestController : BaseController
+public class TestController
+    : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> Test()

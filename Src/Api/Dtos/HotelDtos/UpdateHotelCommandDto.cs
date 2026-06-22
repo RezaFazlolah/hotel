@@ -1,4 +1,4 @@
-namespace Api.DTOs.HotelDtos;
+namespace Api.Dtos.HotelDtos;
 
 public class UpdateHotelCommandDto
 {

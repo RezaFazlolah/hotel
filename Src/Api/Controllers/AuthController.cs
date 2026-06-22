@@ -1,5 +1,6 @@
-using Api.DTOs.AuthDtos;
+using Api.Dtos.AuthDtos;
 using Application.Auth.Commands;
+using Application.Dtos.Auth;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,8 @@ using SharedKernel.Enums;
 
 namespace Api.Controllers;
 
-public class AuthController(IMediator mediator, IMapper mapper) : BaseController()
+public class AuthController(IMediator mediator, IMapper mapper)
+    : BaseController()
 {
     [AllowAnonymous]
     [HttpPost("register")]
@@ -19,8 +21,7 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
     {
         var command = mapper.Map<RegisterCommand>(request) with {Role = UserRole.Guest};
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<UserDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [AllowAnonymous]
@@ -39,7 +40,6 @@ public class AuthController(IMediator mediator, IMapper mapper) : BaseController
     {
         var command = mapper.Map<RegisterCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<UserDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 }

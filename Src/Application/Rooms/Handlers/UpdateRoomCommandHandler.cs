@@ -1,3 +1,4 @@
+using Application.Dtos.RoomDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -16,40 +17,40 @@ public class UpdateRoomCommandHandler(
     ICurrentUserService currentUserService,
     IManagerService managerService,
     IMapper mapper)
-    : IRequestHandler<UpdateRoomCommand, Result<Room>>
+    : IRequestHandler<UpdateRoomCommand, Result<RoomDto>>
 {
-    public async Task<Result<Room>> Handle(UpdateRoomCommand request, CancellationToken ct)
+    public async Task<Result<RoomDto>> Handle(UpdateRoomCommand request, CancellationToken ct)
     {
         var callerIdResult = currentUserService.Id;
         if (!callerIdResult.Succeeded)
-            return Result<Room>.Failure(callerIdResult.Errors);
+            return Result<RoomDto>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;
 
         var callerRolesResult = currentUserService.Roles;
         if (!callerRolesResult.Succeeded)
-            return Result<Room>.Failure(callerRolesResult.Errors);
+            return Result<RoomDto>.Failure(callerRolesResult.Errors);
         var callerRoles = callerRolesResult.Value;
 
         if (callerRoles.Contains(UserRole.Admin))
         {
             if (!await roomRepository.ExistsAsync(request.Id, ct))
-                return Result<Room>.Failure(new Error($"update room {request.Id} failed. room not found."));
+                return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. room not found."));
         }
         else if (callerRoles.Contains(UserRole.Manager))
         {
             var roomsIdResult = await managerService.GetAllRoomsIdAsync(callerId, ct);
             if (!roomsIdResult.Succeeded)
-                return Result<Room>.Failure(roomsIdResult.Errors);
+                return Result<RoomDto>.Failure(roomsIdResult.Errors);
             var roomsId = roomsIdResult.Value;
             if (!roomsId.Contains(request.Id))
-                return Result<Room>.Failure(new Error($"update room {request.Id} failed. room not found."));
+                return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. room not found."));
         }
         else
-            return Result<Room>.Failure(new Error($"update room {request.Id} failed. unauthorized access."));
+            return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. unauthorized access."));
 
         var updatedRoom = mapper.Map<Room>(request);
 
         var result = await roomRepository.UpdateAsync(updatedRoom, ct);
-        return result;
+        return mapper.Map<Result<RoomDto>>(result);
     }
 }

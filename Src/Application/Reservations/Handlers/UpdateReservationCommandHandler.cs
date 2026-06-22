@@ -1,3 +1,4 @@
+using Application.Dtos.ReservationDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -14,9 +15,9 @@ public class UpdateReservationCommandHandler(
     ICurrentUserService currentUserService,
     IRoomRepository roomRepository,
     IMapper mapper)
-    : IRequestHandler<UpdateReservationCommand, Result<Reservation>>
+    : IRequestHandler<UpdateReservationCommand, Result<ReservationDto>>
 {
-    public async Task<Result<Reservation>> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ReservationDto>> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
 

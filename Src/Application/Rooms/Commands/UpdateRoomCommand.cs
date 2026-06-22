@@ -1,3 +1,4 @@
+using Application.Dtos.RoomDtos;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -5,7 +6,7 @@ using SharedKernel.Enums;
 namespace Application.Rooms.Commands;
 
 public class UpdateRoomCommand
-    : IRequest<Result<Domain.Models.Room>>
+    : IRequest<Result<RoomDto>>
 {
     public required Guid Id { get; set; }
     public int Number { get; set; }

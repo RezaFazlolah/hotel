@@ -1,6 +1,6 @@
 using SharedKernel.Enums;
 
-namespace Api.DTOs.RoomDtos;
+namespace Api.Dtos.RoomDtos;
 
 public class InsertRoomCommandDto
 {

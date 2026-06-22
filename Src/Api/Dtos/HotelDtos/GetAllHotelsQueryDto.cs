@@ -1,7 +1,6 @@
-using SharedKernel.Filtering;
 using SharedKernel.Paging;
 
-namespace Api.DTOs.HotelDtos;
+namespace Api.Dtos.HotelDtos;
 
 public class GetAllHotelsQueryDto
 {

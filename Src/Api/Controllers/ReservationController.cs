@@ -1,19 +1,19 @@
-using Api.DTOs.ReservationDtos;
+using Api.Dtos.ReservationDtos;
+using Application.Dtos.ReservationDtos;
 using Application.Reservations.Commands;
 using Application.Reservations.Queries;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel;
 using SharedKernel.Common;
 using SharedKernel.Constants;
-using SharedKernel.Paging;
 
 namespace Api.Controllers;
 
 // [Authorize]
-public class ReservationController(IMediator mediator, IMapper mapper, IConfiguration configuration) : BaseController()
+public class ReservationController(IMediator mediator, IMapper mapper)
+    : BaseController()
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllReservationsQueryDto request,
@@ -21,8 +21,7 @@ public class ReservationController(IMediator mediator, IMapper mapper, IConfigur
     {
         var query = mapper.Map<GetAllReservationsQuery>(request);
         var result = await mediator.Send(query, cancellationToken);
-        var resultDto = mapper.Map<Result<PagedResult<ReservationDto>>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpGet("{id:guid}")]
@@ -35,8 +34,7 @@ public class ReservationController(IMediator mediator, IMapper mapper, IConfigur
         //
         // var request = new GetReservationByIdQuery() { GuestId = guestId, ReservationId = id };
         // var result = await mediator.Send(request, cancellationToken);
-        // var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        // return HandleResult(resultDto);
+        // return HandleResult(result);
     }
 
     [HttpPost]
@@ -46,8 +44,7 @@ public class ReservationController(IMediator mediator, IMapper mapper, IConfigur
     {
         var command = mapper.Map<InsertReservationCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpPut("{id:guid}")]
@@ -57,15 +54,15 @@ public class ReservationController(IMediator mediator, IMapper mapper, IConfigur
     {
         var command = mapper.Map<UpdateReservationCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpDelete("{id:guid}")]
-    // [Authorize(Roles = UserRoleName.Admin)]
+    [Authorize(Roles = UserRoleName.Admin)]
     public async Task<IActionResult> CancelAsync(Guid id, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new CancelReservationCommand(id) { ReservationId = id }, cancellationToken);
+        var command = new CancelReservationCommand(id) { ReservationId = id };
+        var result = await mediator.Send(command, cancellationToken);
         var resultDto = mapper.Map<Result<ReservationDto>>(result);
         return HandleResult(resultDto);
     }

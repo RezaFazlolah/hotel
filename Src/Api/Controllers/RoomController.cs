@@ -1,4 +1,4 @@
-using Api.DTOs.RoomDtos;
+using Api.Dtos.RoomDtos;
 using Application.Rooms.Commands;
 using Application.Rooms.Queries;
 using AutoMapper;
@@ -12,7 +12,8 @@ using SharedKernel.Paging;
 namespace Api.Controllers;
 
 [Authorize]
-public class RoomController(IMediator mediator, IMapper mapper) : BaseController()
+public class RoomController(IMediator mediator, IMapper mapper)
+    : BaseController()
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync([FromQuery] GetAllRoomsQueryDto request,
@@ -20,8 +21,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     {
         var query = mapper.Map<GetAllRoomsQuery>(request);
         var result = await mediator.Send(query, ct);
-        var resultDto = mapper.Map<Result<PagedResult<RoomDto>>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpGet("{id:guid}")]
@@ -29,8 +29,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     {
         var request = new GetRoomByIdQuery { RoomId = id };
         var result = await mediator.Send(request, ct);
-        var resultDto = mapper.Map<Result<RoomDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpPost]
@@ -40,8 +39,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     {
         var command = mapper.Map<InsertRoomCommand>(request);
         var result = await mediator.Send(command, ct);
-        var resultDto = mapper.Map<Result<RoomDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpPut("{id:guid}")]
@@ -52,8 +50,7 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
         var command = mapper.Map<UpdateRoomCommand>(request);
         command.Id = id;
         var result = await mediator.Send(command, ct);
-        var resultDto = mapper.Map<Result<RoomDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 
     [HttpDelete("{id:guid}")]
@@ -62,7 +59,6 @@ public class RoomController(IMediator mediator, IMapper mapper) : BaseController
     {
         var request = new DeleteRoomCommand { RoomId = id };
         var result = await mediator.Send(request, ct);
-        var resultDto = mapper.Map<Result<RoomDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 }

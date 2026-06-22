@@ -1,3 +1,4 @@
+using Application.Dtos.RoomDtos;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -5,7 +6,7 @@ using SharedKernel.Enums;
 namespace Application.Rooms.Commands;
 
 public class InsertRoomCommand
-    : IRequest<Result<Domain.Models.Room>>
+    : IRequest<Result<RoomDto>>
 {
     public required int Number { get; set; }
     public RoomType Type { get; set; }

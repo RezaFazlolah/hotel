@@ -1,7 +1,6 @@
-using Api.DTOs.HotelDtos;
 using SharedKernel.Enums;
 
-namespace Api.DTOs.RoomDtos;
+namespace Application.Dtos.RoomDtos;
 
 public class RoomDto
 {
@@ -10,5 +9,5 @@ public class RoomDto
     public int Number { get; set; }
     public RoomType Type { get; set; }
     public decimal PricePerNight { get; set; }
-    // public HotelDto? HotelDto { get; set; }
+    // public HotelDto? Hotel { get; set; }
 }

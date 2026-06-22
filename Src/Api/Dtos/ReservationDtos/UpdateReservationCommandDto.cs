@@ -1,4 +1,4 @@
-namespace Api.DTOs.ReservationDtos;
+namespace Api.Dtos.ReservationDtos;
 
 public class UpdateReservationCommandDto
 {

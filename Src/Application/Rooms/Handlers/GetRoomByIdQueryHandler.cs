@@ -1,14 +1,18 @@
+using Application.Dtos.RoomDtos;
 using Application.Interfaces.Repositories;
 using Application.Rooms.Queries;
-using Domain.Models;
+using AutoMapper;
 using MediatR;
 using SharedKernel.Common;
 
 namespace Application.Rooms.Handlers;
 
-public class GetRoomByIdQueryHandler(IRoomRepository roomRepository)
-    : IRequestHandler<GetRoomByIdQuery, Result<Room>>
+public class GetRoomByIdQueryHandler(IRoomRepository roomRepository, IMapper mapper)
+    : IRequestHandler<GetRoomByIdQuery, Result<RoomDto>>
 {
-    public async Task<Result<Room>> Handle(GetRoomByIdQuery request, CancellationToken ct)
-        => await roomRepository.GetByIdAsync(request.RoomId, ct);
+    public async Task<Result<RoomDto>> Handle(GetRoomByIdQuery request, CancellationToken ct)
+    {
+        var result = await roomRepository.GetByIdAsync(request.RoomId, ct);
+        return mapper.Map<Result<RoomDto>>(result);
+    }
 }

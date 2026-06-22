@@ -1,3 +1,4 @@
+using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
@@ -14,19 +15,20 @@ public class InsertHotelCommandHandler(
     IHotelRepository hotelRepository,
     ICurrentUserService currentUserService,
     IMapper mapper)
-    : IRequestHandler<InsertHotelCommand, Result<Hotel>>
+    : IRequestHandler<InsertHotelCommand, Result<HotelDto>>
 {
-    public async Task<Result<Hotel>> Handle(InsertHotelCommand request, CancellationToken ct)
+    public async Task<Result<HotelDto>> Handle(InsertHotelCommand request, CancellationToken ct)
     {
         var currentUserRolesResult = currentUserService.Roles;
         if(!currentUserRolesResult.Succeeded)
-            return Result<Hotel>.Failure(currentUserRolesResult.Errors);
+            return Result<HotelDto>.Failure(currentUserRolesResult.Errors);
         var currentUserRoles = currentUserRolesResult.Value;
         
         if(!currentUserRoles.Contains(UserRole.Admin))
-            return Result<Hotel>.Failure(new Error("insert hotel failed. forbidden access.", ErrorCode.Forbidden), ResultCode.Forbidden);
+            return Result<HotelDto>.Failure(new Error("insert hotel failed. forbidden access.", ErrorCode.Forbidden), ResultCode.Forbidden);
         
         var hotel = mapper.Map<Hotel>(request);
-        return await hotelRepository.InsertAsync(hotel, ct);
+        var result =  await hotelRepository.InsertAsync(hotel, ct);
+        return mapper.Map<Result<HotelDto>>(result);
     }
 }

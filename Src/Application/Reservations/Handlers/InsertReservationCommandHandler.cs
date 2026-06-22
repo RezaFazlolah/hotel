@@ -1,3 +1,4 @@
+using Application.Dtos.ReservationDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -15,9 +16,9 @@ public class InsertReservationCommandHandler(
     ICurrentUserService currentUserService,
     IUserRepository userRepository,
     IMapper mapper)
-    : IRequestHandler<InsertReservationCommand, Result<Reservation>>
+    : IRequestHandler<InsertReservationCommand, Result<ReservationDto>>
 {
-    public async Task<Result<Reservation>> Handle(InsertReservationCommand request,
+    public async Task<Result<ReservationDto>> Handle(InsertReservationCommand request,
         CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

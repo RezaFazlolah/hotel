@@ -1,4 +1,4 @@
-namespace Api.DTOs.AuthDtos;
+namespace Application.Dtos.Auth;
 
 public class UserDto
 {

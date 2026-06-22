@@ -1,7 +1,9 @@
+using Application.Dtos.ReservationDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Queries;
+using AutoMapper;
 using Domain.Interface;
 using Domain.Models;
 using MediatR;
@@ -13,32 +15,40 @@ namespace Application.Reservations.Handlers;
 
 public class GetAllReservationsQueryHandler(
     ICurrentUserService currentUserService,
-    IGuestRepository guestRepository,
-    IManagerRepository managerRepository,
-    IAdminRepository adminRepository,
-    IReservationRepository reservationRepository,
     IAdminService adminService,
     IManagerService managerService,
-    IGuestService guestService)
-    : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<Reservation>>>
+    IGuestService guestService,
+    IMapper mapper)
+    : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<ReservationDto>>>
 {
-    public async Task<Result<PagedResult<Reservation>>> Handle(GetAllReservationsQuery request,
+    public async Task<Result<PagedResult<ReservationDto>>> Handle(GetAllReservationsQuery request,
         CancellationToken ct)
     {
         var rolesResult = currentUserService.Roles;
         if (!rolesResult.Succeeded)
-            return Result<PagedResult<Reservation>>.Failure(
+            return Result<PagedResult<ReservationDto>>.Failure(
                 rolesResult.Errors.Prepend(new Error("get all reservations failed.")));
         var roles = rolesResult.Value;
         var userId = currentUserService.Id.Value;
 
         if (roles.Contains(UserRole.Admin))
-            return await adminService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
-        if (roles.Contains(UserRole.Manager))
-            return await managerService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
-        if (roles.Contains(UserRole.Guest))
-            return await guestService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+        {
+            var result = await adminService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+            return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
+        }
 
-        return Result<PagedResult<Reservation>>.Failure(new Error("user role not supported"));
+        if (roles.Contains(UserRole.Manager))
+        {
+            var result = await managerService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+            return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
+        }
+
+        if (roles.Contains(UserRole.Guest))
+        {
+            var result = await guestService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+            return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
+        }
+
+        return Result<PagedResult<ReservationDto>>.Failure(new Error("user role not supported"));
     }
 }

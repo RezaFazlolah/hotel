@@ -1,6 +1,6 @@
 using SharedKernel.Enums;
 
-namespace Api.DTOs.AuthDtos;
+namespace Api.Dtos.AuthDtos;
 
 public class RegisterByAdminCommandDto
 {
