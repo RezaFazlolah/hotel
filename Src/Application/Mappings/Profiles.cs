@@ -1,10 +1,11 @@
-using Api.Dtos.HotelDtos;
-using Application.Dtos.Auth;
-using Application.Dtos.ReservationDtos;
-using Application.Dtos.RoomDtos;
+using Application.Auth.Commands;
+using Application.Auth.Dtos;
 using Application.Hotels.Commands;
+using Application.Hotels.Dtos;
 using Application.Reservations.Commands;
+using Application.Reservations.Dtos;
 using Application.Rooms.Commands;
+using Application.Rooms.Dtos;
 using AutoMapper;
 using Domain.Models;
 using SharedKernel.Common;
@@ -17,8 +18,10 @@ public class Profiles : Profile
     public Profiles()
     {
         // Auth
-        CreateMap<User, UserDto>();
-        CreateMap<Result<User>, Result<UserDto>>();
+        CreateMap<User, RegisteredUserDto>();
+        CreateMap<User, LoggedinUserDto>();
+        CreateMap<RegisterCommand, User>()
+            .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.PhoneNumber));
 
         // hotel
         CreateMap<Hotel, HotelDto>();

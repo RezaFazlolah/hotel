@@ -24,15 +24,15 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
     {
         try
         {
-            var result = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
-            if (result is null)
-                return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
+            var entity = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
+            if (entity is null)
+                return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found.", ErrorCode.NotFound),
                     ResultCode.NotFound);
-            return Result<TEntity>.Success(result);
+            return Result<TEntity>.Success(entity);
         }
         catch
         {
-            return Result<TEntity>.Failure(new Error($"more than one {EntityName}s with ID {id} found"));
+            return Result<TEntity>.Failure(new Error($"more than one {EntityName}s with ID {id} found."));
         }
     }
 
@@ -56,18 +56,18 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
         if (!result.Succeeded)
             return result;
         var entity = result.Value;
-        
+
         context.Set<TEntity>().Remove(entity);
         await context.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
     public virtual async Task<bool> ExistsAsync(TId id, CancellationToken ct)
-        // => (await CustomContext().CountAsync(e => e.Id.Equals(id), ct)) switch
+        // => (await CustomContext().CountAsync(e => e.UserId.Equals(id), ct)) switch
         // {
         //     0 => Result<bool>.Success(false),
         //     1 => Result<bool>.Success(true),
-        //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found"))
+        //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found."))
         // };
         => await context.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
     // do i need to check for duplicated IDs in a separate service?

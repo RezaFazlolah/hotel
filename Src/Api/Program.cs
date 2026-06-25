@@ -33,6 +33,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-await DbInitializer.SeedAsync(app.Services.CreateScope().ServiceProvider);
+await DbSeeder.SeedAsync(app.Services.CreateScope().ServiceProvider);
 
 app.Run();

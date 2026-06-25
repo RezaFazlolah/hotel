@@ -1,6 +1,5 @@
 using Api.Dtos.AuthDtos;
 using Application.Auth.Commands;
-using Application.Dtos.Auth;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,26 +15,30 @@ public class AuthController(IMediator mediator, IMapper mapper)
 {
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegisterCommandDto request,
+    public async Task<IActionResult> RegisterAsync(
+        [FromBody] RegisterCommandDto request, 
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<RegisterCommand>(request) with {Role = UserRole.Guest};
+        var command = new RegisterCommand(request.PhoneNumber, request.Password, request.FirstName, request.LastName, UserRole.Guest);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginCommandDto request, CancellationToken cancellationToken)
+    public async Task<IActionResult> LoginAsync(
+        [FromBody] LoginCommandDto request,
+        CancellationToken cancellationToken)
     {
         var command = mapper.Map<LoginCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
 
-    [Authorize(Roles = UserRoleName.Admin)]
+    [Authorize(Roles = UserRoleAsString.Admin)]
     [HttpPost("registerByAdmin")]
-    public async Task<IActionResult> RegisterByAdminAsyc([FromBody] RegisterByAdminCommandDto request,
+    public async Task<IActionResult> RegisterByAdminAsyc(
+        [FromBody] RegisterByAdminCommandDto request,
         CancellationToken cancellationToken)
     {
         var command = mapper.Map<RegisterCommand>(request);

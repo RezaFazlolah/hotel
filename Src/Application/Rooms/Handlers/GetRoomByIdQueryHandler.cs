@@ -1,5 +1,5 @@
-using Application.Dtos.RoomDtos;
 using Application.Interfaces.Repositories;
+using Application.Rooms.Dtos;
 using Application.Rooms.Queries;
 using AutoMapper;
 using MediatR;

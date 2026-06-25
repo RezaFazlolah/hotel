@@ -12,7 +12,7 @@ public class Error(string message, ErrorCode code = ErrorCode.Default, Error? in
         => $"{Code.ToString()}: {Message}{InnerError?.ToString(1) ?? string.Empty}";
 
     private string ToString(int tab)
-    // this method is only used for properly indenting inner error
+    // this method is only used for proper indentation of inner error
     {
         var result=Environment.NewLine;
         for(var i = 0; i < tab; i++)

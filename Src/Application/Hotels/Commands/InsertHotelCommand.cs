@@ -1,4 +1,4 @@
-using Api.Dtos.HotelDtos;
+using Application.Hotels.Dtos;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;

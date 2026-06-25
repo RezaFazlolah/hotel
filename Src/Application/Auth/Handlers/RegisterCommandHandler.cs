@@ -1,5 +1,5 @@
 using Application.Auth.Commands;
-using Application.Dtos.Auth;
+using Application.Auth.Dtos;
 using Application.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Models;
@@ -8,21 +8,44 @@ using SharedKernel.Common;
 
 namespace Application.Auth.Handlers;
 
-public class RegisterCommandHandler(IUserRepository userRepository, IMapper mapper)
-    : IRequestHandler<RegisterCommand, Result<UserDto>>
+public class RegisterCommandHandler(
+    IUserRepository userRepository,
+    IMapper mapper)
+    : IRequestHandler<RegisterCommand, Result<RegisteredUserDto>>
 {
-    public async Task<Result<UserDto>> Handle(RegisterCommand request, CancellationToken ct)
+    public async Task<Result<RegisteredUserDto>> Handle(RegisterCommand request, CancellationToken ct)
     {
-        var user = new User
-        {
-            PhoneNumber = request.PhoneNumber,
-            UserName = request.PhoneNumber
-        };
+        var registeringUser = mapper.Map<User>(request);
 
         if (!await userRepository.RoleExistsAsync(request.Role, ct))
-            return Result<UserDto>.Failure(new Error("role not found"));
+            return Result<RegisteredUserDto>.Failure(new Error($"register user {request.PhoneNumber} failed. role {request.Role} not found."));
 
-        var userResult = await userRepository.InsertAsync(user, request.Password, ct);
-        return mapper.Map<Result<UserDto>>(userResult);
+        var userRegisterResult = await userRepository.InsertAsync(registeringUser, request.Password, ct);
+        if(!userRegisterResult.Succeeded)
+            return Result<RegisteredUserDto>.Failure(userRegisterResult.Errors.Prepend(new Error($"register user {request.PhoneNumber} failed.")));
+        
+        var registeredUserResult = await userRepository.GetByPhoneNumberAsync(request.PhoneNumber, ct);
+        if(!registeredUserResult.Succeeded)
+            return Result<RegisteredUserDto>.Failure(registeredUserResult.Errors.Prepend(new Error($"register user {request.PhoneNumber} failed.")));
+        var registeredUser = registeredUserResult.Value;
+        
+        var addRoleResult = await userRepository.AddRoleAsync(registeredUser, request.Role, ct);
+        if (!addRoleResult.Succeeded)
+        {
+            // future: use atomic DB transactions. if role is not added to user, registered user will be deleted.
+            var userDeleteResult = await userRepository.DeleteAsync(registeredUser, ct);
+            
+            if (!userDeleteResult.Succeeded)
+            {
+                var errors = userDeleteResult.Errors.Select(e => e.ToString());
+                var errorsAsString = string.Join(". ", errors);
+                throw new Exception(
+                    $"RegisterCommandHandler: user was saved to DB, but adding role to user failed, so i tried deleting user from DB, but i got error(s): {errorsAsString}");
+            }
+            return Result<RegisteredUserDto>.Failure(addRoleResult.Errors.Prepend(new Error($"register user {request.PhoneNumber} failed.")));
+        }
+        
+        var registeredUserDto = mapper.Map<RegisteredUserDto>(registeredUser) with { Roles = [request.Role.ToString()] };
+        return Result<RegisteredUserDto>.Success(registeredUserDto);
     }
 }

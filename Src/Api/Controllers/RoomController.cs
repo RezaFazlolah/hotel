@@ -33,7 +33,7 @@ public class RoomController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPost]
-    [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
+    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
     public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommandDto request,
         CancellationToken ct)
     {
@@ -43,10 +43,11 @@ public class RoomController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
+    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomCommandDto request,
         CancellationToken ct)
     {
+        // future: i get error, its an EF Core tracking problem, fix it later when you read EF Core in details
         var command = mapper.Map<UpdateRoomCommand>(request);
         command.Id = id;
         var result = await mediator.Send(command, ct);
@@ -54,7 +55,7 @@ public class RoomController(IMediator mediator, IMapper mapper)
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
+    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken ct)
     {
         var request = new DeleteRoomCommand { RoomId = id };

@@ -1,6 +1,6 @@
 using Api.Dtos.ReservationDtos;
-using Application.Dtos.ReservationDtos;
 using Application.Reservations.Commands;
+using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
 using AutoMapper;
 using MediatR;
@@ -11,7 +11,7 @@ using SharedKernel.Constants;
 
 namespace Api.Controllers;
 
-// [Authorize]
+[Authorize]
 public class ReservationController(IMediator mediator, IMapper mapper)
     : BaseController()
 {
@@ -38,7 +38,6 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPost]
-    [Authorize(Roles = UserRoleName.Guest)]
     public async Task<IActionResult> InsertAsync([FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -48,7 +47,6 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = UserRoleName.Guest)]
     public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
@@ -58,12 +56,10 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = UserRoleName.Admin)]
     public async Task<IActionResult> CancelAsync(Guid id, CancellationToken cancellationToken)
     {
         var command = new CancelReservationCommand(id) { ReservationId = id };
         var result = await mediator.Send(command, cancellationToken);
-        var resultDto = mapper.Map<Result<ReservationDto>>(result);
-        return HandleResult(resultDto);
+        return HandleResult(result);
     }
 }

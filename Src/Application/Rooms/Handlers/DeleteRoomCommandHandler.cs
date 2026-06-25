@@ -1,8 +1,8 @@
-using Application.Dtos.RoomDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Commands;
+using Application.Rooms.Dtos;
 using AutoMapper;
 using Domain.Interface;
 using Domain.Models;
@@ -21,7 +21,7 @@ public class DeleteRoomCommandHandler(
 {
     public async Task<Result<RoomDto>> Handle(DeleteRoomCommand request, CancellationToken ct)
     {
-        var callerIdResult = currentUserService.Id;
+        var callerIdResult = currentUserService.UserId;
         if (!callerIdResult.Succeeded)
             return Result<RoomDto>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;

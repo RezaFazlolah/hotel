@@ -1,4 +1,4 @@
-using Application.Dtos.RoomDtos;
+using Application.Rooms.Dtos;
 using MediatR;
 using SharedKernel.Common;
 

@@ -1,4 +1,4 @@
-using Api.Dtos.HotelDtos;
+using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
 using Application.Interfaces.Repositories;
 using AutoMapper;

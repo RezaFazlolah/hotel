@@ -1,7 +1,7 @@
-using Application.Dtos.ReservationDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
 using AutoMapper;
 using Domain.Interface;
@@ -29,7 +29,7 @@ public class GetAllReservationsQueryHandler(
             return Result<PagedResult<ReservationDto>>.Failure(
                 rolesResult.Errors.Prepend(new Error("get all reservations failed.")));
         var roles = rolesResult.Value;
-        var userId = currentUserService.Id.Value;
+        var userId = currentUserService.UserId.Value;
 
         if (roles.Contains(UserRole.Admin))
         {

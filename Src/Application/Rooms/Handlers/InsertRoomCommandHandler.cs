@@ -1,8 +1,8 @@
-using Application.Dtos.RoomDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Commands;
+using Application.Rooms.Dtos;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -25,7 +25,7 @@ public class InsertRoomCommandHandler(
         if (!userRolesResult.Succeeded)
             return Result<RoomDto>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed.")));
         var userRoles = userRolesResult.Value;
-        var userId = currentUserService.Id.Value;
+        var userId = currentUserService.UserId.Value;
 
         if (userRoles.Contains(UserRole.Admin))
         {

@@ -1,5 +1,5 @@
-using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
+using Application.Hotels.Dtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -33,13 +33,14 @@ public class DeleteHotelCommandHandler(
 
         if (roles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserService.Id.Value;
+            var managerId = currentUserService.UserId.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<HotelDto>.Failure(
                     hotelIdResult.Errors.Prepend(
                         new Error($"delete hotel {request.HotelId} failed."))); // use InnerError instead
             var hotelId = hotelIdResult.Value;
+            
             if (hotelId != request.HotelId)
                 return Result<HotelDto>.Failure(
                     new Error($"delete hotel {request.HotelId} failed.hotel {request.HotelId} not found."));

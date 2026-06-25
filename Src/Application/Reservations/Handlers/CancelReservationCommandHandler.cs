@@ -1,8 +1,8 @@
-using Application.Dtos.ReservationDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
+using Application.Reservations.Dtos;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -16,7 +16,8 @@ public class CancelReservationCommandHandler(
     IMapper mapper)
     : IRequestHandler<CancelReservationCommand, Result<ReservationDto>>
 {
-    public async Task<Result<ReservationDto>> Handle(CancelReservationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ReservationDto>> Handle(CancelReservationCommand request,
+        CancellationToken cancellationToken)
     {
         if (!await reservationRepository.ExistsAsync(request.ReservationId, cancellationToken))
             return Result<ReservationDto>.Failure(new Error($"reservation {request.ReservationId} not found"),

@@ -3,7 +3,6 @@ using Api.Dtos.HotelDtos;
 using Api.Dtos.ReservationDtos;
 using Api.Dtos.RoomDtos;
 using Application.Auth.Commands;
-using Application.Dtos.Auth;
 using Application.Hotels.Commands;
 using Application.Hotels.Queries;
 using Application.Reservations.Commands;

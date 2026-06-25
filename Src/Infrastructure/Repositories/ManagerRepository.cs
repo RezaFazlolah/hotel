@@ -48,6 +48,6 @@ public class ManagerRepository(
         return Result<Guid?>.Success(hotelId);
 
         // approach 2
-        // return (await context.Managers.SingleAsync(m => m.Id == managerId, ct)).HotelId;
+        // return (await context.Managers.SingleAsync(m => m.UserId == managerId, ct)).HotelId;
     }
 }

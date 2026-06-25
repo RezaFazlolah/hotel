@@ -1,4 +1,4 @@
-using Application.Dtos.ReservationDtos;
+using Application.Reservations.Dtos;
 using MediatR;
 using SharedKernel.Common;
 

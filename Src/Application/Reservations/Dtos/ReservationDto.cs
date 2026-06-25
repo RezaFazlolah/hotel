@@ -1,6 +1,6 @@
-using Application.Dtos.RoomDtos;
+using Application.Rooms.Dtos;
 
-namespace Application.Dtos.ReservationDtos;
+namespace Application.Reservations.Dtos;
 
 public class ReservationDto
 {

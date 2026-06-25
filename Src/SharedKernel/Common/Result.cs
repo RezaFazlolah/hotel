@@ -2,6 +2,25 @@ using SharedKernel.Enums;
 
 namespace SharedKernel.Common;
 
+public class Result
+{
+    public bool Succeeded { get; init; }
+    public IEnumerable<Error> Errors { get; init; } = [];
+    public string? Message { get; init; }
+    public ResultCode Code { get; init; }
+
+    public static Result Success(ResultCode resultCode = ResultCode.Default, string? message = null) =>
+        new() { Succeeded = true, Code = resultCode, Message = message };
+
+    public static Result Failure(IEnumerable<Error> errors, ResultCode resultCode = ResultCode.Default,
+        string? message = null) =>
+        new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
+
+    public static Result Failure(Error error, ResultCode resultCode = ResultCode.Default,
+        string? message = null)
+        => Failure([error], resultCode, message);
+}
+
 public class Result<T>
 {
     public bool Succeeded { get; init; }
@@ -12,9 +31,9 @@ public class Result<T>
 
     public static Result<T> Success(T value, ResultCode resultCode = ResultCode.Default, string? message=null) => new() { Succeeded = true, Value = value, Code = resultCode, Message = message };
 
-    public static Result<T> Failure(IEnumerable<Error> errors, ResultCode resultCode = Enums.ResultCode.Default, string? message = null) =>
+    public static Result<T> Failure(IEnumerable<Error> errors, ResultCode resultCode = ResultCode.Default, string? message = null) =>
         new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
 
-    public static Result<T> Failure(Error error, ResultCode resultCode = Enums.ResultCode.Default, string? message = null)
+    public static Result<T> Failure(Error error, ResultCode resultCode = ResultCode.Default, string? message = null)
         => Failure([error], resultCode, message);
 }

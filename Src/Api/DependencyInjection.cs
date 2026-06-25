@@ -1,13 +1,12 @@
 using System.Text;
 using Api.Services;
-using Application.Interfaces;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using SharedKernel.Configuration;
-
+    
 namespace Api;
 
 public static class DependencyInjection
@@ -19,8 +18,24 @@ public static class DependencyInjection
 
         // swagger
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter your JWT token here"
+            });
 
+            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+            {
+                [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+            });
+        });
+        
         // HttpContextAccessor
         services.AddHttpContextAccessor();
 

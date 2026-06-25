@@ -1,8 +1,8 @@
-using Application.Dtos.ReservationDtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
+using Application.Reservations.Dtos;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -17,7 +17,8 @@ public class UpdateReservationCommandHandler(
     IMapper mapper)
     : IRequestHandler<UpdateReservationCommand, Result<ReservationDto>>
 {
-    public async Task<Result<ReservationDto>> Handle(UpdateReservationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ReservationDto>> Handle(UpdateReservationCommand request,
+        CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
 
@@ -28,7 +29,7 @@ public class UpdateReservationCommandHandler(
         //
         // var errors = new List<Error>();
         // if (await roomRepository.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
-        //         currentUserService.Id, cancellationToken))
+        //         currentUserService.UserId, cancellationToken))
         //     errors.Add(new Error($"room {reservation.RoomId} is reserved"));
         // if (errors.Count > 0)
         //     return Result<Reservation>.Failure(errors, 404);

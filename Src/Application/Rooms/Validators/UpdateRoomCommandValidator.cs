@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Rooms.Validators;
 
-public class UpdateRoomValidator : AbstractValidator<UpdateRoomCommand>
+public class UpdateRoomCommandValidator : AbstractValidator<UpdateRoomCommand>
 {
-    public UpdateRoomValidator()
+    public UpdateRoomCommandValidator()
     {
         RuleFor(c => c.Number).GreaterThan(0).WithMessage("room Number must be positive");
         RuleFor(c => c.Type).IsInEnum().WithMessage("RoomType must be enum, 0 for Normal and 1 for Vip");

@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Reservations.Validators;
 
-public class UpdateReservationValidator : AbstractValidator<UpdateReservationCommand>
+public class UpdateReservationCommandValidator : AbstractValidator<UpdateReservationCommand>
 {
-    public UpdateReservationValidator()
+    public UpdateReservationCommandValidator()
     {
         RuleFor(c => c.CheckOutDate)
             .LessThanOrEqualTo(c => c.CheckInDate).WithMessage("CheckOutDate must be after CheckInDate");

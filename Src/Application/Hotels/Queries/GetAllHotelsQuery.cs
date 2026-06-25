@@ -1,4 +1,4 @@
-using Api.Dtos.HotelDtos;
+using Application.Hotels.Dtos;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Paging;

@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Hotels.Validators;
 
-public class UpdateHotelValidator : AbstractValidator<UpdateHotelCommand>
+public class UpdateHotelCommandValidator : AbstractValidator<UpdateHotelCommand>
 {
-    public UpdateHotelValidator()
+    public UpdateHotelCommandValidator()
     {
         RuleFor(c => c.Name).NotEmpty().WithMessage("Name is required");
         RuleFor(c => c.Address).NotEmpty().WithMessage("Address is required");

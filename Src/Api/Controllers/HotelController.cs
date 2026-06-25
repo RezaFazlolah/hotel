@@ -33,7 +33,7 @@ public class HotelController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPost]
-    [Authorize(Roles = UserRoleName.Admin)]
+    [Authorize(Roles = UserRoleAsString.Admin)]
     public async Task<IActionResult> InsertAsync([FromBody] InsertHotelCommandDto request,
         CancellationToken ct)
     {
@@ -43,7 +43,7 @@ public class HotelController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
+    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
     public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateHotelCommandDto request,
         CancellationToken ct)
     {
@@ -53,7 +53,7 @@ public class HotelController(IMediator mediator, IMapper mapper)
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleName.Admin}, {UserRoleName.Manager}")]
+    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken ct)
     {
         var command = new DeleteHotelCommand(id);
