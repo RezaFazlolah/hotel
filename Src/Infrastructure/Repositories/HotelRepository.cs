@@ -5,12 +5,12 @@ using SharedKernel.Common;
 
 namespace Infrastructure.Repositories;
 
-public class HotelRepository(AppDbContext context)
-    : BaseRepository<Guid, Hotel>(context), IHotelRepository
+public class HotelRepository(AppDbContext db)
+    : BaseRepository<Guid, Hotel>(db), IHotelRepository
 {
     public async Task<Result<ICollection<Room>>> GetRoomsAsync(Guid hotelId, CancellationToken ct)
         // implement with RoomRepository's GetRooms() with proper filter instead of this
-        => Result<ICollection<Room>>.Success(await context.Rooms.Where(r => r.HotelId == hotelId)
+        => Result<ICollection<Room>>.Success(await db.Rooms.Where(r => r.HotelId == hotelId)
             .ToListAsync(ct));
     // public async Task<Result<ICollection<Room>>> GetRoomsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
     //     // implement with RoomRepository's GetRooms() with proper filter instead of this
@@ -18,7 +18,7 @@ public class HotelRepository(AppDbContext context)
 
     public async Task<Result<ICollection<Guid>>> GetRoomsIdAsync(Guid hotelId, CancellationToken ct)
         // implement with RoomRepository's GetRoomsId() with proper filter instead of this
-        => Result<ICollection<Guid>>.Success(await context.Rooms.Where(r => r.HotelId == hotelId)
+        => Result<ICollection<Guid>>.Success(await db.Rooms.Where(r => r.HotelId == hotelId)
             .Select(r => r.Id).ToListAsync(ct));
 
     public async Task<Result<ICollection<Reservation>>> GetReservationsAsync(Guid hotelId,
@@ -26,7 +26,7 @@ public class HotelRepository(AppDbContext context)
         // implement with ReservationRepository's GetReservations() with proper filter instead of this
     {
         var roomsId = (await GetRoomsIdAsync(hotelId, ct)).Value;
-        return Result<ICollection<Reservation>>.Success(await context.Reservations.Where(r => roomsId.Contains(r.Id))
+        return Result<ICollection<Reservation>>.Success(await db.Reservations.Where(r => roomsId.Contains(r.Id))
             .ToListAsync(ct));
     }
 
@@ -36,13 +36,13 @@ public class HotelRepository(AppDbContext context)
         if (!await ExistsAsync(hotelId, cancellationToken))
             return Result<bool>.Failure(new Error($"hotel {hotelId} not found."));
 
-        var roomExists = await context.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber,
+        var roomExists = await db.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber,
             cancellationToken: cancellationToken);
         return Result<bool>.Success(roomExists);
     }
 
     protected override IQueryable<Hotel> CustomContext()
-        => context.Hotels
+        => db.Hotels
             .Include(h => h.Rooms)
             .Include(h => h.Managers);
 

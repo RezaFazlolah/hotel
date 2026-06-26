@@ -1,67 +1,67 @@
-@baseUrl = http://localhost:5008/api
-@json = application/json
-@jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYTQ4MGQxMi0wOTlhLTQzYjYtODVkYi1jODVhM2QyZmJiNzUiLCJwaG9uZV9udW1iZXIiOiIrOTg5MjE2MDczODUyIiwibmFtZSI6IiAiLCJqdGkiOiI5MGU2Nzk3Mi1kZWQ1LTQ1MGEtOWUyMi1hOGE0ODA0Y2QyYWQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHdWVzdCIsImV4cCI6MTc3Nzg0NDE2NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDA4IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MDA4In0.KbvpMPCHnyCLindubkCKuA_AT5CJjPxFxxGvkv-cLfE"
-
-### Auth
-### Login
-POST {{baseUrl}}/auth/login
-Content-Type: {{json}}
-
-{
-"PhoneNumber": "+989184129511",
-"Password": "1234"
-}
-
-### Register
-POST {{baseUrl}}/auth/register
-Accept: {{json}}
-Content-Type: {{json}}
-
-{
-    "PhoneNumber": "+989123456789",
-    "Password": "1234"
-}
-#### Hotel
-### GetAll
-GET {{baseUrl}}/hotels
-Authorization: Bearer {{jwt}}
-Accept: {{json}}
-Content-Type: {{json}}
-
-### GetById
-GET {{baseUrl}}/hotels/0c82e84d-cc14-4392-99cc-7a73f34efd91
-Authorization: Bearer {{jwt}}
-Accept: {{json}}
-Content-Type: {{json}}
-
-### Insert
-POST {{baseUrl}}/hotels
-Authorization: Bearer {{jwt}}
-Accept: {{json}}
-Content-Type: {{json}}
-
-{
-    "Name": "Spinas",
-    "Address": "Tehran",
-    "Rating": 4.2
-}
-
-### Update
-PUT {{baseUrl}}/hotels/0c82e84d-cc14-4392-99cc-7a73f34efd91
-Authorization: Bearer {{jwt}}
-Accept: {{json}}
-Content-Type: {{json}}
-
-{
-    "Name": "persian",
-    "Address": "Tehran",
-    "Rating": 4.2
-}
-
-### Delete
-DELETE {{baseUrl}}/hotels/4de8e896-a782-4625-8e26-0501211d8795
-Authorization: Bearer {{jwt}}
-Accept: {{json}}
-Content-Type: {{json}}
-
-###
+#@baseUrl = http://localhost:5008/api
+#@json = application/json
+#@jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYTQ4MGQxMi0wOTlhLTQzYjYtODVkYi1jODVhM2QyZmJiNzUiLCJwaG9uZV9udW1iZXIiOiIrOTg5MjE2MDczODUyIiwibmFtZSI6IiAiLCJqdGkiOiI5MGU2Nzk3Mi1kZWQ1LTQ1MGEtOWUyMi1hOGE0ODA0Y2QyYWQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHdWVzdCIsImV4cCI6MTc3Nzg0NDE2NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDA4IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MDA4In0.KbvpMPCHnyCLindubkCKuA_AT5CJjPxFxxGvkv-cLfE"
+#
+#### Auth
+#### Login
+#POST {{baseUrl}}/auth/login
+#Content-Type: {{json}}
+#
+#{
+#"PhoneNumber": "+989184129511",
+#"Password": "1234"
+#}
+#
+#### Register
+#POST {{baseUrl}}/auth/register
+#Accept: {{json}}
+#Content-Type: {{json}}
+#
+#{
+#    "PhoneNumber": "+989123456789",
+#    "Password": "1234"
+#}
+##### Hotel
+#### GetAll
+#GET {{baseUrl}}/hotels
+#Authorization: Bearer {{jwt}}
+#Accept: {{json}}
+#Content-Type: {{json}}
+#
+#### GetById
+#GET {{baseUrl}}/hotels/0c82e84d-cc14-4392-99cc-7a73f34efd91
+#Authorization: Bearer {{jwt}}
+#Accept: {{json}}
+#Content-Type: {{json}}
+#
+#### Insert
+#POST {{baseUrl}}/hotels
+#Authorization: Bearer {{jwt}}
+#Accept: {{json}}
+#Content-Type: {{json}}
+#
+#{
+#    "Name": "Spinas",
+#    "Address": "Tehran",
+#    "Rating": 4.2
+#}
+#
+#### Update
+#PUT {{baseUrl}}/hotels/0c82e84d-cc14-4392-99cc-7a73f34efd91
+#Authorization: Bearer {{jwt}}
+#Accept: {{json}}
+#Content-Type: {{json}}
+#
+#{
+#    "Name": "persian",
+#    "Address": "Tehran",
+#    "Rating": 4.2
+#}
+#
+#### Delete
+#DELETE {{baseUrl}}/hotels/4de8e896-a782-4625-8e26-0501211d8795
+#Authorization: Bearer {{jwt}}
+#Accept: {{json}}
+#Content-Type: {{json}}
+#
+####

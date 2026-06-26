@@ -9,10 +9,10 @@ using SharedKernel.Paging;
 namespace Infrastructure.Repositories;
 
 public class ManagerRepository(
-    AppDbContext context,
+    AppDbContext db,
     UserManager<User> userManager,
     RoleManager<Role> roleManager)
-    : UserRepository(context, userManager, roleManager), IManagerRepository
+    : UserRepository(db, userManager, roleManager), IManagerRepository
 {
     // public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid managerId,
     //     PaginationParameters paginationParameters, CancellationToken ct)
@@ -48,6 +48,6 @@ public class ManagerRepository(
         return Result<Guid?>.Success(hotelId);
 
         // approach 2
-        // return (await context.Managers.SingleAsync(m => m.UserId == managerId, ct)).HotelId;
+        // return (await db.Managers.SingleAsync(m => m.Id == managerId, ct)).HotelId;
     }
 }

@@ -17,7 +17,7 @@ public class Profiles : Profile
 {
     public Profiles()
     {
-        // Auth
+        // auth
         CreateMap<User, RegisteredUserDto>();
         CreateMap<User, LoggedinUserDto>();
         CreateMap<RegisterCommand, User>()
@@ -34,7 +34,7 @@ public class Profiles : Profile
 
         // room
         CreateMap<Room, RoomDto>();
-        // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
+            // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
         CreateMap<Result<Room>, Result<RoomDto>>();
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
@@ -43,10 +43,11 @@ public class Profiles : Profile
         CreateMap<UpdateRoomCommand, Room>();
 
         // reservation
-        CreateMap<Reservation, ReservationDto>()
-            .ForMember(dst => dst.RoomDto, opt => opt.MapFrom(src => src.Room));
-        CreateMap<PagedResult<Reservation>, PagedResult<ReservationDto>>()
-            .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
+        CreateMap<Reservation, ReservationDto>();
+            // .ForMember(dst => dst.RoomDto, opt => opt.MapFrom(src => src.Room));
+        CreateMap<Result<Reservation>, Result<ReservationDto>>();
+        CreateMap<PagedResult<Reservation>, PagedResult<ReservationDto>>();
+            // .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Reservation>>, Result<PagedResult<ReservationDto>>>();
         CreateMap<InsertReservationCommand, Reservation>();
         CreateMap<UpdateReservationCommand, Reservation>();

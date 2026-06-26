@@ -25,7 +25,7 @@ public class InsertRoomCommandHandler(
         if (!userRolesResult.Succeeded)
             return Result<RoomDto>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed.")));
         var userRoles = userRolesResult.Value;
-        var userId = currentUserService.UserId.Value;
+        var userId = currentUserService.Id.Value;
 
         if (userRoles.Contains(UserRole.Admin))
         {

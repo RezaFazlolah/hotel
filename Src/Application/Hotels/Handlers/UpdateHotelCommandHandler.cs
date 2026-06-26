@@ -36,7 +36,7 @@ public class UpdateHotelCommandHandler(
 
         if (currentUserRoles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserService.UserId.Value;
+            var managerId = currentUserService.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<HotelDto>.Failure(hotelIdResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));

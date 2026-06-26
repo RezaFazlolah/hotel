@@ -1,12 +1,13 @@
-using Application.Dtos.ReservationDtos;
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
+using Application.Reservations.Dtos;
 using AutoMapper;
+using Domain.Interface;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Application.Reservations.Handlers;
 
@@ -14,49 +15,67 @@ public class InsertReservationCommandHandler(
     IReservationRepository reservationRepository,
     IRoomRepository roomRepository,
     ICurrentUserService currentUserService,
-    IUserRepository userRepository,
+    IManagerService managerService,
+    IReservationService reservationService,
     IMapper mapper)
     : IRequestHandler<InsertReservationCommand, Result<ReservationDto>>
 {
-    public async Task<Result<ReservationDto>> Handle(InsertReservationCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<ReservationDto>> Handle(
+        InsertReservationCommand request,
+        CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var rootError = new Error($"insert reservation for guest {request.GuestId} and room {request.RoomId} failed.");
 
-        // var errors = new List<Error>();
-        // if (!await roomRepository.ExistsAsync(request.RoomId, cancellationToken))
-        //     errors.Add(new Error($"room {request.RoomId} not found"));
-        // if (await roomRepository.IsReservedAsync(request.RoomId, request.CheckInDate, request.CheckOutDate,
-        //         cancellationToken))
-        //     errors.Add(new Error($"room {request.RoomId} is reserved"));
-        // if (errors.Count > 0)
-        //     return Result<Reservation>.Failure(errors, 400);
-        //
-        // var currentUserId = currentUserService.Id;
-        // var roles = await userRepository.GetRolesAsync(currentUserId, cancellationToken);
-        //
-        // if (roles.Contains(UserRole.Admin))
-        //     // check errors
-        //     // insert reservation
-        //     _ = 3;
-        // else if (roles.Contains(UserRole.Manager))
-        //     // check errors
-        //     // insert reservation            
-        //     _ = 4; 
-        // else if (roles.Contains(UserRole.Guest))
-        //     // check errors
-        //     // insert reservation            
-        //     _ = 5; 
-        // else
-        //     return Result<Reservation>.Failure(new Error("user role not supported"), 403);
-        //
-        // var reservation = mapper.Map<Reservation>(request);
-        // reservation.TotalPrice = await reservationRepository.CalculateTotalPriceAsync(request.RoomId, request.CheckInDate,
-        //     request.CheckOutDate, cancellationToken);
-        //
-        // var result = await reservationRepository.InsertAsync(reservation, cancellationToken);
-        // return result == null
-        //     ? Result<Reservation>.Failure(new Error("reservation failed"), 400)
-        //     : Result<Reservation>.Success(reservation, 201);
+        var currentUserInfoResult = currentUserService.Info;
+        if (!currentUserInfoResult.Succeeded)
+            return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
+        
+        if (currentUserInfo.roles.Contains(UserRole.Guest) || currentUserInfo.roles.Contains(UserRole.Admin))
+        {
+            var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
+            if (!roomExists)
+                return Result<ReservationDto>.Failure([rootError, new Error($"room not found.")]);
+        }
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
+        {
+            var roomExists = await managerService.ManagesRoomsAsync(currentUserInfo.id, request.RoomId, ct);
+            if (!roomExists.Succeeded)
+                return Result<ReservationDto>.Failure(roomExists.Errors.Prepend(rootError));
+            var managesRoom = roomExists.Value;
+
+            if (!managesRoom)
+                return Result<ReservationDto>.Failure([rootError, new Error($"room not found.")]);
+        }
+        else
+        {
+            return Result<ReservationDto>.Failure([rootError, new Error("forbidden request.", ErrorCode.Forbidden)],
+                ResultCode.Forbidden);
+        }
+
+        var reservation = mapper.Map<Reservation>(request);
+        return await CreateReservation(reservation, rootError, ct);
+    }
+
+    private async Task<Result<ReservationDto>> CreateReservation(
+        Reservation reservation,
+        Error rootError,
+        CancellationToken ct)
+    {
+        var isReserved = await reservationRepository.IsReservedAsync(reservation.RoomId, reservation.CheckInDate, reservation.CheckOutDate,
+            ct);
+        if(isReserved)
+            return Result<ReservationDto>.Failure([rootError, new Error($"room is reserved.")]);
+
+        var totalPriceResult = await reservationService.CalculatePriceAsync(reservation, ct);
+        if (!totalPriceResult.Succeeded)
+            return Result<ReservationDto>.Failure(totalPriceResult.Errors.Prepend(rootError));
+        var totalPrice = totalPriceResult.Value;
+
+        reservation.TotalPrice = totalPrice;
+        reservation.Status = ReservationStatus.Confirmed;
+
+        var reservationCreateResult = await reservationRepository.InsertAsync(reservation, ct);
+        return mapper.Map<Result<ReservationDto>>(reservationCreateResult);
     }
 }

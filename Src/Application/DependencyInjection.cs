@@ -13,6 +13,8 @@ public static class DependencyInjection
         services.AddScoped<IGuestService, GuestService>();
         services.AddScoped<IManagerService, ManagerService>();
         services.AddScoped<IAdminService, AdminService>();
+        
+        services.AddScoped<IReservationService, ReservationService>();
 
         // Fluent Validation
         services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);

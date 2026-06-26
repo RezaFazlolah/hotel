@@ -11,6 +11,6 @@ public interface IManagerService
 
     Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid managerId,
         PaginationParameters paginationParameters, CancellationToken ct);
-
     Task<Result<IEnumerable<Guid>>> GetAllRoomsIdAsync(Guid managerId, CancellationToken ct);
+    Task<Result<bool>> ManagesRoomsAsync(Guid managerId, Guid roomId, CancellationToken ct);
 }

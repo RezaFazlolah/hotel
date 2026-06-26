@@ -21,7 +21,7 @@ public class ManagerService(
     //     var manager = (Manager)managerResult.Value;
     //     
     //     if(manager.HotelId is null)
-    //         return Result<IEnumerable<Guid>>.Failure(new Error($"manager {managerId} doesnt manage any hotels."));
+    //         return Result<IEnumerable<Guid>>.Failure(new Error($"manager {managerId} doesn't manage any hotels."));
     //         
     //     var roomsIdResult = await hotelRepository.GetRoomsIdAsync(manager.HotelId.Value, ct);
     //     return roomsIdResult.Succeeded
@@ -62,10 +62,23 @@ public class ManagerService(
 
         if (hotelId is null)
             return Result<IEnumerable<Guid>>.Success([]);
+        
         var roomsIdResult = await hotelRepository.GetRoomsIdAsync(hotelId.Value, ct);
         if (!roomsIdResult.Succeeded)
             return Result<IEnumerable<Guid>>.Failure(roomsIdResult.Errors);
         var roomsId = roomsIdResult.Value;
+        
         return Result<IEnumerable<Guid>>.Success(roomsId);
+    }
+
+    public async Task<Result<bool>> ManagesRoomsAsync(Guid managerId, Guid roomId, CancellationToken ct)
+    {
+        var roomsIdResult = await GetAllRoomsIdAsync(managerId, ct);
+        if (!roomsIdResult.Succeeded)
+            return Result<bool>.Failure(roomsIdResult.Errors);
+        var roomsId = roomsIdResult.Value;
+
+        var result = roomsId.Contains(roomId);
+        return Result<bool>.Success(result);
     }
 }

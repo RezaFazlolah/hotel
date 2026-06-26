@@ -6,18 +6,17 @@ using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public class ReservationRepository(AppDbContext context, IRoomRepository roomRepository)
-    : BaseRepository<Guid, Reservation>(context), IReservationRepository
+public class ReservationRepository(AppDbContext db, IRoomRepository roomRepository)
+    : BaseRepository<Guid, Reservation>(db), IReservationRepository
 {
-    public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
-        => await context.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
-            ct);
+    public override Task<Result<Reservation>> InsertAsync(Reservation entity, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
 
-    public async Task<Result<decimal>> CalculateTotalPriceAsync(Guid roomId, DateTimeOffset checkInDate,
-        DateTimeOffset checkOutDate,
-        CancellationToken ct)
-        => Result<decimal>.Success((int)(checkOutDate - checkInDate).TotalDays *
-                                   ((await roomRepository.GetByIdAsync(roomId, ct)).Value).PricePerNight);
+    public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
+        => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
+            ct);
 
     public async Task<Result<Reservation>> CancelAsync(Guid reservationId, CancellationToken ct)
     {
@@ -25,13 +24,42 @@ public class ReservationRepository(AppDbContext context, IRoomRepository roomRep
         if (!result.Succeeded)
             return result;
         var reservation = result.Value;
+
         reservation.Status = ReservationStatus.Cancelled;
-        await context.SaveChangesAsync(ct);
+        await db.SaveChangesAsync(ct);
         return Result<Reservation>.Success(reservation);
     }
 
     protected override IQueryable<Reservation> CustomContext()
-        => context.Reservations
+        => db.Reservations
             .Include(r => r.Room)
             .Include(r => r.Guest);
+
+    public async Task<bool> IsReservedAsync(
+        Guid roomId,
+        DateTimeOffset checkInDate,
+        DateTimeOffset checkOutDate,
+        CancellationToken ct)
+    {
+        var result = await db.Reservations.AnyAsync(r =>
+                    r.RoomId == roomId &&
+                    r.Status != ReservationStatus.Cancelled &&
+                    // !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
+                    r.CheckInDate < checkOutDate && checkInDate < r.CheckOutDate,
+                ct);
+        return result;
+    }
+
+    public async Task<bool> IsReservedAsync(
+        Guid roomId,
+        Guid guestId,
+        DateTimeOffset checkInDate,
+        DateTimeOffset checkOutDate,
+        CancellationToken ct)
+        => await db.Reservations.AnyAsync(r =>
+                (r.RoomId == roomId &&
+                 !(r.CheckOutDate < checkInDate ||
+                   checkOutDate < r.CheckInDate && r.Status != ReservationStatus.Cancelled) &&
+                 r.GuestId != guestId),
+            ct);
 }

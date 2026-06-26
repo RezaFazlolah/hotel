@@ -29,7 +29,7 @@ public class GetAllReservationsQueryHandler(
             return Result<PagedResult<ReservationDto>>.Failure(
                 rolesResult.Errors.Prepend(new Error("get all reservations failed.")));
         var roles = rolesResult.Value;
-        var userId = currentUserService.UserId.Value;
+        var userId = currentUserService.Id.Value;
 
         if (roles.Contains(UserRole.Admin))
         {

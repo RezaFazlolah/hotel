@@ -21,7 +21,7 @@ public class UpdateRoomCommandHandler(
 {
     public async Task<Result<RoomDto>> Handle(UpdateRoomCommand request, CancellationToken ct)
     {
-        var callerIdResult = currentUserService.UserId;
+        var callerIdResult = currentUserService.Id;
         if (!callerIdResult.Succeeded)
             return Result<RoomDto>.Failure(callerIdResult.Errors);
         var callerId = callerIdResult.Value;

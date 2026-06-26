@@ -8,7 +8,7 @@ using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;
 
-public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
+public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     : IBaseRepository<TId, TEntity>
     where TId : IEquatable<TId>, new()
     where TEntity : class, IBaseModel<TId>
@@ -38,15 +38,15 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
 
     public virtual async Task<Result<TEntity>> InsertAsync(TEntity entity, CancellationToken ct)
     {
-        await context.Set<TEntity>().AddAsync(entity, ct);
-        await context.SaveChangesAsync(ct);
+        await db.Set<TEntity>().AddAsync(entity, ct);
+        await db.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Created);
     }
 
     public virtual async Task<Result<TEntity>> UpdateAsync(TEntity entity, CancellationToken ct)
     {
-        context.Set<TEntity>().Update(entity);
-        await context.SaveChangesAsync(ct);
+        db.Set<TEntity>().Update(entity);
+        await db.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Updated);
     }
 
@@ -57,19 +57,19 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext context)
             return result;
         var entity = result.Value;
 
-        context.Set<TEntity>().Remove(entity);
-        await context.SaveChangesAsync(ct);
+        db.Set<TEntity>().Remove(entity);
+        await db.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
     public virtual async Task<bool> ExistsAsync(TId id, CancellationToken ct)
-        // => (await CustomContext().CountAsync(e => e.UserId.Equals(id), ct)) switch
+        // => (await CustomContext().CountAsync(e => e.Id.Equals(id), ct)) switch
         // {
         //     0 => Result<bool>.Success(false),
         //     1 => Result<bool>.Success(true),
         //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found."))
         // };
-        => await context.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
+        => await db.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
     // do i need to check for duplicated IDs in a separate service?
 
     protected abstract IQueryable<TEntity> CustomContext();

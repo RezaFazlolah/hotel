@@ -9,11 +9,11 @@ using SharedKernel.Paging;
 namespace Infrastructure.Repositories;
 
 public class AdminRepository(
-    AppDbContext context,
+    AppDbContext db,
     IReservationRepository reservationRepository,
     UserManager<User> userManager,
     RoleManager<Role> roleManager)
-    : UserRepository(context, userManager, roleManager), IAdminRepository
+    : UserRepository(db, userManager, roleManager), IAdminRepository
 {
     public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid adminId,
         PaginationParameters paginationParameters, CancellationToken ct)

@@ -29,7 +29,7 @@ public class UpdateReservationCommandHandler(
         //
         // var errors = new List<Error>();
         // if (await roomRepository.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
-        //         currentUserService.UserId, cancellationToken))
+        //         currentUserService.Id, cancellationToken))
         //     errors.Add(new Error($"room {reservation.RoomId} is reserved"));
         // if (errors.Count > 0)
         //     return Result<Reservation>.Failure(errors, 404);

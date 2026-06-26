@@ -9,10 +9,10 @@ using SharedKernel.Paging;
 namespace Infrastructure.Repositories;
 
 public class UserRepository(
-    AppDbContext context,
+    AppDbContext db,
     UserManager<User> userManager,
     RoleManager<Role> roleManager)
-    : BaseRepository<Guid, User>(context), IUserRepository
+    : BaseRepository<Guid, User>(db), IUserRepository
 {
     public virtual async Task<bool> ExistsAsync(string phoneNumber, CancellationToken ct)
         => await userManager.Users.AnyAsync(u => u.PhoneNumber == phoneNumber, ct);
