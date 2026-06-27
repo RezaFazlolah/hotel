@@ -9,11 +9,6 @@ namespace Infrastructure.Repositories;
 public class ReservationRepository(AppDbContext db, IRoomRepository roomRepository)
     : BaseRepository<Guid, Reservation>(db), IReservationRepository
 {
-    public override Task<Result<Reservation>> InsertAsync(Reservation entity, CancellationToken ct)
-    {
-        throw new NotImplementedException();
-    }
-
     public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
         => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
             ct);
@@ -44,8 +39,7 @@ public class ReservationRepository(AppDbContext db, IRoomRepository roomReposito
         var result = await db.Reservations.AnyAsync(r =>
                     r.RoomId == roomId &&
                     r.Status != ReservationStatus.Cancelled &&
-                    // !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
-                    r.CheckInDate < checkOutDate && checkInDate < r.CheckOutDate,
+                    !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
                 ct);
         return result;
     }

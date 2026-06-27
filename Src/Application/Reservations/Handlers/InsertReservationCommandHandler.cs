@@ -26,7 +26,7 @@ public class InsertReservationCommandHandler(
     {
         var rootError = new Error($"insert reservation for guest {request.GuestId} and room {request.RoomId} failed.");
 
-        var currentUserInfoResult = currentUserService.Info;
+        var currentUserInfoResult = await currentUserService.GetUserInfoAsync(ct);
         if (!currentUserInfoResult.Succeeded)
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

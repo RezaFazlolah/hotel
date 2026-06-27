@@ -13,49 +13,54 @@ public class DbSeeder()
     {
         var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
-        var context = serviceProvider.GetRequiredService<AppDbContext>();
+        var db = serviceProvider.GetRequiredService<AppDbContext>();
 
         // hotel
         var hotels = new List<Hotel>
         {
             new()
             {
-                Id = Guid.Parse("26d4ed41-66a0-4448-a031-84248db7b35c"), Name = "Parsian", Address = "Hamadan",
+                Name = "Parsian",
+                Address = "Hamadan",
                 Rating = 3.8m
             },
             new()
             {
-                Id = Guid.Parse("34a4ed41-66a0-4448-a031-84248db7b72f"), Name = "Spinas", Address = "Tehran",
+                Name = "Spinas",
+                Address = "Tehran",
                 Rating = 4.5m
             },
             new()
             {
-                Id = Guid.Parse("22593d93-73e2-485a-a680-ba272d8d6b8c"), Name = "Khatam", Address = "Isfahan",
+                Name = "Khatam",
+                Address = "Isfahan",
                 Rating = 4.9m
             },
         };
 
-        if (!context.Hotels.Any())
+        if (!db.Hotels.Any())
         {
-            await context.Hotels.AddRangeAsync(hotels);
-            await context.SaveChangesAsync();
+            await db.Hotels.AddRangeAsync(hotels);
+            await db.SaveChangesAsync();
         }
 
+
         // room
+        var hotelIds = await db.Hotels.Select(h => h.Id).ToListAsync();
         var rooms = new List<Room>
         {
-            new Room { Number = 101, Type = RoomType.Normal, PricePerNight = 100, HotelId = hotels[0].Id },
-            new Room { Number = 302, Type = RoomType.Vip, PricePerNight = 500, HotelId = hotels[0].Id },
-            new Room { Number = 101, Type = RoomType.Vip, PricePerNight = 200, HotelId = hotels[1].Id },
-            new Room { Number = 711, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotels[2].Id },
-            new Room { Number = 712, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotels[2].Id },
-            new Room { Number = 713, Type = RoomType.Vip, PricePerNight = 700, HotelId = hotels[2].Id },
+            new Room { Number = 101, Type = RoomType.Normal, PricePerNight = 100, HotelId = hotelIds[0]},
+            new Room { Number = 302, Type = RoomType.Vip, PricePerNight = 500, HotelId = hotelIds[0]},
+            new Room { Number = 101, Type = RoomType.Vip, PricePerNight = 200, HotelId = hotelIds[1]},
+            new Room { Number = 711, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotelIds[2]},
+            new Room { Number = 712, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotelIds[2]},
+            new Room { Number = 713, Type = RoomType.Vip, PricePerNight = 700, HotelId = hotelIds[2]},
         };
 
-        if (!context.Rooms.Any())
+        if (!db.Rooms.Any())
         {
-            await context.Rooms.AddRangeAsync(rooms);
-            await context.SaveChangesAsync();
+            await db.Rooms.AddRangeAsync(rooms);
+            await db.SaveChangesAsync();
         }
 
         // roles
@@ -66,10 +71,10 @@ public class DbSeeder()
         // users
         var users = new List<(User user, string role, string password)>
         {
-           (new Guest { FirstName = "guest1", UserName = "09184129511", PhoneNumber = "09184129511" },
+            (new Guest { FirstName = "guest1", UserName = "09184129511", PhoneNumber = "09184129511" },
                 UserRoleAsString.Guest, "1234"),
-           (new Guest { FirstName = "guest2", UserName = "09184129512", PhoneNumber = "09184129512" },
-               UserRoleAsString.Guest, "1234"),
+            (new Guest { FirstName = "guest2", UserName = "09184129512", PhoneNumber = "09184129512" },
+                UserRoleAsString.Guest, "1234"),
             (new Manager { FirstName = "manager1", UserName = "09184129521", PhoneNumber = "09184129521", HotelId = hotels[0].Id },
                 UserRoleAsString.Manager, "1234"),
             (new Manager { FirstName = "manager2", UserName = "09184129522", PhoneNumber = "09184129522", HotelId = hotels[2].Id },

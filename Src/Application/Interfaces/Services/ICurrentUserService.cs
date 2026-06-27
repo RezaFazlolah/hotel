@@ -7,7 +7,7 @@ namespace Application.Interfaces.Services;
 public interface ICurrentUserService
 {
     Result<Guid> Id { get; }
-    Result<User> User { get; }
     Result<IEnumerable<UserRole>> Roles { get; }
-    Result<(Guid id, User user, IEnumerable<UserRole> roles)> Info { get; }
+    Task<Result<User>> GetUserAsync(CancellationToken ct);
+    Task<Result<(Guid id, User user, IEnumerable<UserRole> roles)>> GetUserInfoAsync(CancellationToken ct);
 }

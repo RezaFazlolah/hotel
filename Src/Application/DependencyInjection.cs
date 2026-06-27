@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IReservationService, ReservationService>();
 
         // Fluent Validation
-        services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
+        services.AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>();
 
         // MediatR
         services.AddMediatR(cfg =>
