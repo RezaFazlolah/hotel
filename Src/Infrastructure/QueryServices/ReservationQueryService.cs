@@ -1,9 +1,9 @@
-using Application.Interfaces.Services.Query;
+using Application.Interfaces.QueryServices;
 using Application.Reservations.Dtos;
 using AutoMapper;
 using Domain.Models;
 
-namespace Infrastructure.Services.Query;
+namespace Infrastructure.QueryServices;
 
 public class ReservationQueryService(
     AppDbContext db,

@@ -1,7 +1,7 @@
 using Application.Interfaces;
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Interfaces.Services.Query;
 using Application.Rooms.Commands;
 using Application.Rooms.Dtos;
 using AutoMapper;

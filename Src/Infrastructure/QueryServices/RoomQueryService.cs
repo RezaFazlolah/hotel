@@ -1,11 +1,11 @@
-using Application.Interfaces.Services.Query;
+using Application.Interfaces.QueryServices;
 using Application.Rooms.Dtos;
 using AutoMapper;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 
-namespace Infrastructure.Services.Query;
+namespace Infrastructure.QueryServices;
 
 public class RoomQueryService(
     AppDbContext db,
@@ -13,7 +13,7 @@ public class RoomQueryService(
     : BaseQueryService<Room, RoomDto>(db, configurationProvider),
         IRoomQueryService
 {
-    public async Task<Result<ICollection<Guid>>> GetRoomsIdByHotelIdAsync(
+    public async Task<Result<ICollection<Guid>>> GetAllIdsByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct)
         => Result<ICollection<Guid>>.Success(
@@ -23,7 +23,7 @@ public class RoomQueryService(
                 .ToListAsync(ct)
         );
 
-    public async Task<Result<ICollection<Guid>>> GetRoomsIdByHotelIdsAsync(
+    public async Task<Result<ICollection<Guid>>> GetAllIdsByHotelIdsAsync(
         IEnumerable<Guid> hotelIds,
         CancellationToken ct)
         => Result<ICollection<Guid>>.Success(

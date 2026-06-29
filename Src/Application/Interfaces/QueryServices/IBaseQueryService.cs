@@ -2,7 +2,7 @@ using Domain.Interface;
 using SharedKernel.Common;
 using SharedKernel.Paging;
 
-namespace Application.Interfaces.Services.Query;
+namespace Application.Interfaces.QueryServices;
 
 public interface IBaseQueryService<TEntity, TDto>
     where TEntity : class, IEntity<Guid>

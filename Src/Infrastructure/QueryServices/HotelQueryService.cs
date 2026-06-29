@@ -1,9 +1,9 @@
 using Application.Hotels.Dtos;
-using Application.Interfaces.Services.Query;
+using Application.Interfaces.QueryServices;
 using AutoMapper;
 using Domain.Models;
 
-namespace Infrastructure.Services.Query;
+namespace Infrastructure.QueryServices;
 
 public class HotelQueryService(
     AppDbContext db,

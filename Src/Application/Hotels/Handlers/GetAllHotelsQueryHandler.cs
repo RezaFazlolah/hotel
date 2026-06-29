@@ -1,7 +1,7 @@
 using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
-using Application.Interfaces.Services.Query;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Paging;

@@ -13,17 +13,23 @@ using SharedKernel.Paging;
 
 namespace Application.Mappings;
 
-public class Profiles : Profile
+public class AuthProfiles
+    : Profile
 {
-    public Profiles()
+    public AuthProfiles()
     {
-        // auth
         CreateMap<User, RegisteredUserDto>();
         CreateMap<User, LoggedinUserDto>();
         CreateMap<RegisterCommand, User>()
             .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.PhoneNumber));
+    }
+}
 
-        // hotel
+public class HotelProfiles
+    : Profile
+{
+    public HotelProfiles()
+    {
         CreateMap<Hotel, HotelDto>();
         CreateMap<Result<Hotel>, Result<HotelDto>>();
         CreateMap<PagedResult<Hotel>, PagedResult<HotelDto>>()
@@ -31,23 +37,35 @@ public class Profiles : Profile
         CreateMap<Result<PagedResult<Hotel>>, Result<PagedResult<HotelDto>>>();
         CreateMap<InsertHotelCommand, Hotel>();
         CreateMap<UpdateHotelCommand, Hotel>();
+    }
+}
 
-        // room
+public class RoomProfiles
+    : Profile
+{
+    public RoomProfiles()
+    {
         CreateMap<Room, RoomDto>();
-            // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
+        // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
         CreateMap<Result<Room>, Result<RoomDto>>();
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
         CreateMap<InsertRoomCommand, Room>();
         CreateMap<UpdateRoomCommand, Room>();
+    }
+}
 
-        // reservation
+public class ReservationProfiles
+    : Profile
+{
+    public ReservationProfiles()
+    {
         CreateMap<Reservation, ReservationDto>();
-            // .ForMember(dst => dst.RoomDto, opt => opt.MapFrom(src => src.Room));
+        // .ForMember(dst => dst.RoomDto, opt => opt.MapFrom(src => src.Room));
         CreateMap<Result<Reservation>, Result<ReservationDto>>();
         CreateMap<PagedResult<Reservation>, PagedResult<ReservationDto>>();
-            // .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
+        // .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Reservation>>, Result<PagedResult<ReservationDto>>>();
         CreateMap<InsertReservationCommand, Reservation>();
         CreateMap<UpdateReservationCommand, Reservation>();

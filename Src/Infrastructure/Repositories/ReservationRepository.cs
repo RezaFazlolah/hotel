@@ -1,5 +1,5 @@
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
-using Application.Interfaces.Services.Query;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
@@ -33,21 +33,19 @@ public class ReservationRepository(
             .Include(r => r.Room)
             .Include(r => r.Guest);
 
-    public async Task<bool> IsReservedAsync(
+    public async Task<bool> IsRoomReservedAsync(
         Guid roomId,
         DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct)
-    {
-        var result = await db.Reservations.AnyAsync(r =>
-                r.RoomId == roomId &&
-                r.Status != ReservationStatus.Cancelled &&
-                !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
-            ct);
-        return result;
-    }
+        => await db.Reservations
+            .AnyAsync(r =>
+                    r.RoomId == roomId &&
+                    r.Status != ReservationStatus.Cancelled &&
+                    !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
+                ct);
 
-    public async Task<bool> IsReservedAsync(
+    public async Task<bool> IsRoomReservedAsync(
         Guid roomId,
         Guid guestId,
         DateTimeOffset checkInDate,
@@ -60,11 +58,11 @@ public class ReservationRepository(
                  r.GuestId != guestId),
             ct);
 
-    public async Task<Result<ICollection<Reservation>>> GetReservationsByHotelIdAsync(
+    public async Task<Result<ICollection<Reservation>>> GetAllByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct)
     {
-        var roomIdsResult = await roomQueryService.GetRoomsIdByHotelIdAsync(hotelId, ct);
+        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdAsync(hotelId, ct);
         if (!roomIdsResult.Succeeded)
             return Result<ICollection<Reservation>>.Failure(
                 roomIdsResult.Errors
@@ -78,11 +76,11 @@ public class ReservationRepository(
                 .ToListAsync(ct));
     }
 
-    public async Task<Result<ICollection<Reservation>>> GetReservationsByHotelIdsAsync(
+    public async Task<Result<ICollection<Reservation>>> GetAllByHotelIdsAsync(
         IEnumerable<Guid> hotelIds,
         CancellationToken ct)
     {
-        var roomIdsResult = await roomQueryService.GetRoomsIdByHotelIdsAsync(hotelIds, ct);
+        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdsAsync(hotelIds, ct);
         if (!roomIdsResult.Succeeded)
             return Result<ICollection<Reservation>>.Failure(
                 roomIdsResult.Errors
@@ -97,12 +95,12 @@ public class ReservationRepository(
         );
     }
 
-    public async Task<Result<ICollection<Reservation>>> GetReservationsByRoomIdAsync(
+    public async Task<Result<ICollection<Reservation>>> GetAllByRoomIdAsync(
         Guid roomId,
         CancellationToken ct)
-        => await GetReservationsByRoomIdsAsync([roomId], ct);
+        => await GetAllByRoomIdsAsync([roomId], ct);
 
-    public async Task<Result<ICollection<Reservation>>> GetReservationsByRoomIdsAsync(
+    public async Task<Result<ICollection<Reservation>>> GetAllByRoomIdsAsync(
         IEnumerable<Guid> roomsId,
         CancellationToken ct)
         => Result<ICollection<Reservation>>.Success(

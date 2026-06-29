@@ -1,5 +1,5 @@
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
-using Application.Interfaces.Services.Query;
 using Domain.Interface;
 using Domain.Models;
 using SharedKernel.Common;
@@ -41,12 +41,12 @@ public class ManagerService(
             return Result<PagedResult<Reservation>>.Success(new PagedResult<Reservation> { Data = [] });
         var hotelId = nullableHotelId.Value;
 
-        var roomsIdResult = await roomQueryService.GetRoomsIdByHotelIdAsync(hotelId, ct);
+        var roomsIdResult = await roomQueryService.GetAllIdsByHotelIdAsync(hotelId, ct);
         if (!roomsIdResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(roomsIdResult.Errors);
         var roomIds = roomsIdResult.Value;
 
-        var reservationsResult = await reservationRepository.GetReservationsByRoomIdsAsync(roomIds, ct);
+        var reservationsResult = await reservationRepository.GetAllByRoomIdsAsync(roomIds, ct);
         if (!reservationsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(reservationsResult.Errors);
         var reservations = reservationsResult.Value;
@@ -64,7 +64,7 @@ public class ManagerService(
         if (hotelId is null)
             return Result<IEnumerable<Guid>>.Success([]);
         
-        var roomIdsResult = await roomQueryService.GetRoomsIdByHotelIdAsync(hotelId.Value, ct);
+        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdAsync(hotelId.Value, ct);
         if (!roomIdsResult.Succeeded)
             return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
         var roomIds = roomIdsResult.Value;

@@ -1,8 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Interfaces.Services.Query;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Enums;

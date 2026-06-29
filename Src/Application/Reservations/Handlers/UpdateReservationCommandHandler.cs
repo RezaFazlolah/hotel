@@ -1,7 +1,7 @@
 using Application.Interfaces;
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Interfaces.Services.Query;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
@@ -29,7 +29,7 @@ public class UpdateReservationCommandHandler(
         // var reservation = await reservationRepository.GetByIdAsync(request.ReservationId, cancellationToken);
         //
         // var errors = new List<Error>();
-        // if (await roomRepository.IsReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
+        // if (await roomRepository.IsRoomReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
         //         currentUserService.Id, cancellationToken))
         //     errors.Add(new Error($"room {reservation.RoomId} is reserved"));
         // if (errors.Count > 0)

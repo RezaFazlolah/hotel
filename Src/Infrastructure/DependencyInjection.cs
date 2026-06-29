@@ -1,10 +1,10 @@
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Interfaces.Services.Query;
 using Domain.Models;
+using Infrastructure.QueryServices;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
-using Infrastructure.Services.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

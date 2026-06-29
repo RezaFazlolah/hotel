@@ -1,6 +1,6 @@
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Interfaces.Services.Query;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
@@ -63,7 +63,7 @@ public class InsertReservationCommandHandler(
         Error rootError,
         CancellationToken ct)
     {
-        var isReserved = await reservationRepository.IsReservedAsync(reservation.RoomId, reservation.CheckInDate,
+        var isReserved = await reservationRepository.IsRoomReservedAsync(reservation.RoomId, reservation.CheckInDate,
             reservation.CheckOutDate,
             ct);
         if (isReserved)

@@ -1,4 +1,4 @@
-using Application.Interfaces.Services.Query;
+using Application.Interfaces.QueryServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Interface;
@@ -7,7 +7,7 @@ using SharedKernel.Common;
 using SharedKernel.Extension;
 using SharedKernel.Paging;
 
-namespace Infrastructure.Services.Query;
+namespace Infrastructure.QueryServices;
 
 public abstract class BaseQueryService<TEntity, TDto>(
     AppDbContext db,

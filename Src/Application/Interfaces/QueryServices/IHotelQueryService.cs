@@ -1,7 +1,7 @@
 using Application.Hotels.Dtos;
 using Domain.Models;
 
-namespace Application.Interfaces.Services.Query;
+namespace Application.Interfaces.QueryServices;
 
 public interface IHotelQueryService
     : IBaseQueryService<Hotel, HotelDto>

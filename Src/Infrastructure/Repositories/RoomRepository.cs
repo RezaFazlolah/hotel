@@ -46,7 +46,7 @@ public class RoomRepository(AppDbContext db)
             .Include(r => r.Hotel)
             .Include(r => r.Reservations);
 
-    public async Task<Result<ICollection<Room>>> GetRoomsByHotelIdAsync(
+    public async Task<Result<ICollection<Room>>> GetAllByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct)
         => Result<ICollection<Room>>.Success(
