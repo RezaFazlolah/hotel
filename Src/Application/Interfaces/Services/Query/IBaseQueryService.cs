@@ -1,0 +1,19 @@
+using Domain.Interface;
+using SharedKernel.Common;
+using SharedKernel.Paging;
+
+namespace Application.Interfaces.Services.Query;
+
+public interface IBaseQueryService<TEntity, TDto>
+    where TEntity : class, IEntity<Guid>
+{
+    Task<Result<TDto>> GetByIdAsync(
+        Guid id,
+        CancellationToken ct);
+
+    Task<Result<PagedResult<TDto>>> GetAllAsync(
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
+
+    public string EntityName { get; }
+}

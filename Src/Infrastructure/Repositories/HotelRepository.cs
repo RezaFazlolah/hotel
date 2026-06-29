@@ -12,6 +12,7 @@ public class HotelRepository(AppDbContext db)
         // implement with RoomRepository's GetRooms() with proper filter instead of this
         => Result<ICollection<Room>>.Success(await db.Rooms.Where(r => r.HotelId == hotelId)
             .ToListAsync(ct));
+    
     // public async Task<Result<ICollection<Room>>> GetRoomsAsync(IEnumerable<Guid> hotelsId, CancellationToken ct)
     //     // implement with RoomRepository's GetRooms() with proper filter instead of this
     // => throw new NotImplementedException();

@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
@@ -30,7 +31,7 @@ public class InsertReservationCommandHandler(
         if (!currentUserInfoResult.Succeeded)
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
-        
+
         if (currentUserInfo.roles.Contains(UserRole.Guest) || currentUserInfo.roles.Contains(UserRole.Admin))
         {
             var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
@@ -62,9 +63,10 @@ public class InsertReservationCommandHandler(
         Error rootError,
         CancellationToken ct)
     {
-        var isReserved = await reservationRepository.IsReservedAsync(reservation.RoomId, reservation.CheckInDate, reservation.CheckOutDate,
+        var isReserved = await reservationRepository.IsReservedAsync(reservation.RoomId, reservation.CheckInDate,
+            reservation.CheckOutDate,
             ct);
-        if(isReserved)
+        if (isReserved)
             return Result<ReservationDto>.Failure([rootError, new Error($"room is reserved.")]);
 
         var totalPriceResult = await reservationService.CalculatePriceAsync(reservation, ct);

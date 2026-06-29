@@ -1,6 +1,6 @@
-namespace Domain.Models;
+namespace Domain.Interface;
 
-public interface IBaseModel<TId>
+public interface IEntity<TId>
     where TId : IEquatable<TId>, new()
 {
     public TId Id { get; set; }

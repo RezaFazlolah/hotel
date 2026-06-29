@@ -2,20 +2,20 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
 using SharedKernel.Configuration;
 
-namespace Infrastructure.Repositories;
+namespace Infrastructure.Services;
 
-public class TokenRepository(
+public class JwtService(
     IOptions<JwtSettings> jwtOptions,
     UserManager<User> userManager)
-    : ITokenRepository
+    : IJwtService
 {
     public async Task<Result<string>> GenerateJwt(User user)
     {

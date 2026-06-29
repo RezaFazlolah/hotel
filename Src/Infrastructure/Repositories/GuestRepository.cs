@@ -1,8 +1,6 @@
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SharedKernel.Common;
 using SharedKernel.Extension;
 using SharedKernel.Paging;
@@ -14,7 +12,8 @@ public class GuestRepository(
     IReservationRepository reservationRepository,
     UserManager<User> userManager,
     RoleManager<Role> roleManager)
-    : UserRepository(db, userManager, roleManager), IGuestRepository
+    : UserRepository(db, userManager, roleManager),
+        IGuestRepository
 {
     public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid guestId,
         PaginationParameters paginationParameters, CancellationToken ct)

@@ -16,7 +16,8 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     : BaseController()
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync([FromQuery] GetAllReservationsQueryDto request,
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] GetAllReservationsQueryDto request,
         CancellationToken cancellationToken)
     {
         var query = mapper.Map<GetAllReservationsQuery>(request);
@@ -25,7 +26,9 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByIdAsync(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
         // var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -38,7 +41,8 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPost]
-    public async Task<IActionResult> InsertAsync([FromBody] InsertReservationCommandDto request,
+    public async Task<IActionResult> InsertAsync(
+        [FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
         var command = mapper.Map<InsertReservationCommand>(request);
@@ -47,7 +51,9 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateReservationCommandDto request,
+    public async Task<IActionResult> UpdateAsync(
+        Guid id,
+        [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
         var command = mapper.Map<UpdateReservationCommand>(request);
@@ -56,7 +62,9 @@ public class ReservationController(IMediator mediator, IMapper mapper)
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> CancelAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> CancelAsync(
+        Guid id,
+        CancellationToken cancellationToken)
     {
         var command = new CancelReservationCommand(id) { ReservationId = id };
         var result = await mediator.Send(command, cancellationToken);

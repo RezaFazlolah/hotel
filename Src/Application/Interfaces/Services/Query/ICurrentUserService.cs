@@ -2,7 +2,7 @@ using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
-namespace Application.Interfaces.Services;
+namespace Application.Interfaces.Services.Query;
 
 public interface ICurrentUserService
 {

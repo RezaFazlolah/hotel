@@ -1,6 +1,10 @@
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using Domain.Models;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
+using Infrastructure.Services.Query;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,10 +39,17 @@ public static class DependencyInjection
         services.AddScoped<IGuestRepository, GuestRepository>();
         services.AddScoped<IManagerRepository, ManagerRepository>();
         services.AddScoped<IAdminRepository, AdminRepository>();
-        services.AddScoped<ITokenRepository, TokenRepository>();
+
+        services.AddScoped<IJwtService, JwtService>();
+
         services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<IHotelQueryService, HotelQueryService>();
+
         services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IRoomQueryService, RoomQueryService>();
+
         services.AddScoped<IReservationRepository, ReservationRepository>();
+        services.AddScoped<IReservationQueryService, ReservationQueryService>();
 
         return services;
     }

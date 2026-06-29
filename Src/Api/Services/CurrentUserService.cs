@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -37,7 +38,7 @@ public class CurrentUserService(
             // return userRepository.GetRolesAsync(currentUserId, CancellationToken.None).Result;
         }
     }
-    
+
     public async Task<Result<User>> GetUserAsync(CancellationToken ct)
     {
         var currentUserIdResult = Id;
@@ -50,21 +51,21 @@ public class CurrentUserService(
 
     public async Task<Result<(Guid id, User user, IEnumerable<UserRole> roles)>> GetUserInfoAsync(CancellationToken ct)
     {
-            var currentUserIdResult = this.Id;
-            if (!currentUserIdResult.Succeeded)
-                return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserIdResult.Errors);
-            var currentUserId = currentUserIdResult.Value;
+        var currentUserIdResult = this.Id;
+        if (!currentUserIdResult.Succeeded)
+            return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserIdResult.Errors);
+        var currentUserId = currentUserIdResult.Value;
 
-            var currentUserResult = await this.GetUserAsync(ct);
-            if (!currentUserResult.Succeeded)
-                return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserResult.Errors);
-            var currentUser = currentUserResult.Value;
+        var currentUserResult = await this.GetUserAsync(ct);
+        if (!currentUserResult.Succeeded)
+            return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserResult.Errors);
+        var currentUser = currentUserResult.Value;
 
-            var currentUserRolesResult = this.Roles;
-            if (!currentUserRolesResult.Succeeded)
-                return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserRolesResult.Errors);
-            var currentUserRoles = currentUserRolesResult.Value;
+        var currentUserRolesResult = this.Roles;
+        if (!currentUserRolesResult.Succeeded)
+            return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserRolesResult.Errors);
+        var currentUserRoles = currentUserRolesResult.Value;
 
-            return Result<(Guid, User, IEnumerable<UserRole>)>.Success((currentUserId, currentUser, currentUserRoles));
+        return Result<(Guid, User, IEnumerable<UserRole>)>.Success((currentUserId, currentUser, currentUserRoles));
     }
 }

@@ -45,10 +45,10 @@ public class ManagerService(
             return Result<PagedResult<Reservation>>.Failure(roomsIdResult.Errors);
         var roomsId = roomsIdResult.Value;
 
-        var reservatrionsResult = await roomRepository.GetReservationsAsync(roomsId, ct);
-        if (!reservatrionsResult.Succeeded)
-            return Result<PagedResult<Reservation>>.Failure(reservatrionsResult.Errors);
-        var reservations = reservatrionsResult.Value;
+        var reservationsResult = await roomRepository.GetReservationsAsync(roomsId, ct);
+        if (!reservationsResult.Succeeded)
+            return Result<PagedResult<Reservation>>.Failure(reservationsResult.Errors);
+        var reservations = reservationsResult.Value;
 
         return Result<PagedResult<Reservation>>.Success(reservations.ToPagedResult(paginationParameters));
     }

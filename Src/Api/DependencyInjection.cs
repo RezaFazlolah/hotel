@@ -1,12 +1,13 @@
 using System.Text;
 using Api.Services;
 using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using SharedKernel.Configuration;
-    
+
 namespace Api;
 
 public static class DependencyInjection
@@ -35,7 +36,7 @@ public static class DependencyInjection
                 [new OpenApiSecuritySchemeReference("Bearer", document)] = []
             });
         });
-        
+
         // HttpContextAccessor
         services.AddHttpContextAccessor();
 

@@ -1,3 +1,4 @@
+using Domain.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.Enums;
@@ -5,7 +6,7 @@ using SharedKernel.Enums;
 namespace Domain.Models;
 
 public class Room
-    : IBaseModel<Guid>
+    : IEntity<Guid>
 {
     public Guid Id { get; set; }
     public required int Number { get; set; }

@@ -6,7 +6,7 @@ using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public class ReservationRepository(AppDbContext db, IRoomRepository roomRepository)
+public class ReservationRepository(AppDbContext db)
     : BaseRepository<Guid, Reservation>(db), IReservationRepository
 {
     public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
@@ -37,10 +37,10 @@ public class ReservationRepository(AppDbContext db, IRoomRepository roomReposito
         CancellationToken ct)
     {
         var result = await db.Reservations.AnyAsync(r =>
-                    r.RoomId == roomId &&
-                    r.Status != ReservationStatus.Cancelled &&
-                    !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
-                ct);
+                r.RoomId == roomId &&
+                r.Status != ReservationStatus.Cancelled &&
+                !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
+            ct);
         return result;
     }
 

@@ -1,9 +1,10 @@
+using Domain.Interface;
 using SharedKernel.Enums;
 
 namespace Domain.Models;
 
 public class Reservation
-    : IBaseModel<Guid>
+    : IEntity<Guid>
 {
     public Guid Id { get; set; }
     public required Guid GuestId { get; set; }

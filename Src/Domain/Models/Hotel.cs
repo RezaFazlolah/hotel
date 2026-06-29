@@ -1,7 +1,9 @@
-﻿namespace Domain.Models;
+﻿using Domain.Interface;
+
+namespace Domain.Models;
 
 public class Hotel
-    : IBaseModel<Guid>
+    : IEntity<Guid>
 {
     public Guid Id { get; set; } = new();
     public required string Name { get; set; } = string.Empty;

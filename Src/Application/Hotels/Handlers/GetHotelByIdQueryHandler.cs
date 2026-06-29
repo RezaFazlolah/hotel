@@ -1,19 +1,15 @@
 using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
-using Application.Interfaces.Repositories;
-using AutoMapper;
-using Domain.Models;
+using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using MediatR;
 using SharedKernel.Common;
 
 namespace Application.Hotels.Handlers;
 
-public class GetHotelByIdQueryHandler(IHotelRepository hotelRepository, IMapper mapper)
+public class GetHotelByIdQueryHandler(IHotelQueryService hotelQueryService)
     : IRequestHandler<GetHotelByIdQuery, Result<HotelDto>>
 {
     public async Task<Result<HotelDto>> Handle(GetHotelByIdQuery request, CancellationToken ct)
-    {
-        var result = await hotelRepository.GetByIdAsync(request.HotelId, ct);
-        return mapper.Map<Result<HotelDto>>(result);
-    }
+        => await hotelQueryService.GetByIdAsync(request.HotelId, ct);
 }

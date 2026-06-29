@@ -3,6 +3,7 @@ using Application.Hotels.Dtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -25,6 +26,7 @@ public class DeleteHotelCommandHandler(
             return Result<HotelDto>.Failure(rolesResult.Errors);
         var roles = rolesResult.Value;
 
+        // future: there is warning in this file regarding IEnumerable, currently i dont know much about collection and iteration, after learning these, fix the warning.
         if (roles.Contains(UserRole.Admin))
         {
             var result = await hotelRepository.DeleteAsync(request.HotelId, ct);
@@ -40,7 +42,7 @@ public class DeleteHotelCommandHandler(
                     hotelIdResult.Errors.Prepend(
                         new Error($"delete hotel {request.HotelId} failed."))); // use InnerError instead
             var hotelId = hotelIdResult.Value;
-            
+
             if (hotelId != request.HotelId)
                 return Result<HotelDto>.Failure(
                     new Error($"delete hotel {request.HotelId} failed.hotel {request.HotelId} not found."));

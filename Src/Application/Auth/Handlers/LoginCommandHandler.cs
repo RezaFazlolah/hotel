@@ -1,6 +1,7 @@
 using Application.Auth.Commands;
 using Application.Auth.Dtos;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using AutoMapper;
 using MediatR;
 using SharedKernel.Common;
@@ -10,7 +11,7 @@ namespace Application.Auth.Handlers;
 
 public class LoginCommandHandler(
     IUserRepository userRepository,
-    ITokenRepository tokenRepository,
+    IJwtService jwtService,
     IMapper mapper)
     : IRequestHandler<LoginCommand, Result<LoggedinUserDto>>
 {
@@ -26,7 +27,7 @@ public class LoginCommandHandler(
         if (!isPasswordCorrect)
             return Result<LoggedinUserDto>.Failure(new Error($"user {request.PhoneNumber} login failed. incorrect password."));
 
-        var jwtResult = await tokenRepository.GenerateJwt(user);
+        var jwtResult = await jwtService.GenerateJwt(user);
         if (!jwtResult.Succeeded)
             return Result<LoggedinUserDto>.Failure(
                 jwtResult.Errors.Prepend(new Error($"user {request.PhoneNumber} login failed.")));

@@ -1,5 +1,5 @@
 using Application.Interfaces.Repositories;
-using Domain.Models;
+using Domain.Interface;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -11,16 +11,19 @@ namespace Infrastructure.Repositories;
 public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     : IBaseRepository<TId, TEntity>
     where TId : IEquatable<TId>, new()
-    where TEntity : class, IBaseModel<TId>
+    where TEntity : class, IEntity<TId>
 {
-    public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(PaginationParameters paginationParameters,
+    public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(
+        PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<TEntity>>.Success(await CustomContext().ToPagedResultAsync(paginationParameters, ct));
 
     public IQueryable<TEntity> GetAllAsQueryable()
         => CustomContext();
 
-    public virtual async Task<Result<TEntity>> GetByIdAsync(TId id, CancellationToken ct)
+    public virtual async Task<Result<TEntity>> GetByIdAsync(
+        TId id,
+        CancellationToken ct)
     {
         try
         {
@@ -36,21 +39,27 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         }
     }
 
-    public virtual async Task<Result<TEntity>> InsertAsync(TEntity entity, CancellationToken ct)
+    public virtual async Task<Result<TEntity>> InsertAsync(
+        TEntity entity,
+        CancellationToken ct)
     {
         await db.Set<TEntity>().AddAsync(entity, ct);
         await db.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Created);
     }
 
-    public virtual async Task<Result<TEntity>> UpdateAsync(TEntity entity, CancellationToken ct)
+    public virtual async Task<Result<TEntity>> UpdateAsync(
+        TEntity entity,
+        CancellationToken ct)
     {
         db.Set<TEntity>().Update(entity);
         await db.SaveChangesAsync(ct);
         return Result<TEntity>.Success(entity, ResultCode.Updated);
     }
 
-    public virtual async Task<Result<TEntity>> DeleteAsync(TId id, CancellationToken ct)
+    public virtual async Task<Result<TEntity>> DeleteAsync(
+        TId id,
+        CancellationToken ct)
     {
         var result = await GetByIdAsync(id, ct);
         if (!result.Succeeded)
@@ -62,7 +71,9 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
-    public virtual async Task<bool> ExistsAsync(TId id, CancellationToken ct)
+    public virtual async Task<bool> ExistsAsync(
+            TId id,
+            CancellationToken ct)
         // => (await CustomContext().CountAsync(e => e.Id.Equals(id), ct)) switch
         // {
         //     0 => Result<bool>.Success(false),

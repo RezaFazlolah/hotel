@@ -16,7 +16,8 @@ public class RoomController(IMediator mediator, IMapper mapper)
     : BaseController()
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync([FromQuery] GetAllRoomsQueryDto request,
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] GetAllRoomsQueryDto request,
         CancellationToken ct)
     {
         var query = mapper.Map<GetAllRoomsQuery>(request);
@@ -25,7 +26,9 @@ public class RoomController(IMediator mediator, IMapper mapper)
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetByIdAsync(
+        [FromRoute] Guid id,
+        CancellationToken ct)
     {
         var request = new GetRoomByIdQuery { RoomId = id };
         var result = await mediator.Send(request, ct);
@@ -34,7 +37,8 @@ public class RoomController(IMediator mediator, IMapper mapper)
 
     [HttpPost]
     [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
-    public async Task<IActionResult> InsertAsync([FromBody] InsertRoomCommandDto request,
+    public async Task<IActionResult> InsertAsync(
+        [FromBody] InsertRoomCommandDto request,
         CancellationToken ct)
     {
         var command = mapper.Map<InsertRoomCommand>(request);
@@ -44,7 +48,9 @@ public class RoomController(IMediator mediator, IMapper mapper)
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] UpdateRoomCommandDto request,
+    public async Task<IActionResult> UpdateAsync(
+        [FromRoute] Guid id,
+        [FromBody] UpdateRoomCommandDto request,
         CancellationToken ct)
     {
         // future: i get error, its an EF Core tracking problem, fix it later when you read EF Core in details
@@ -56,7 +62,9 @@ public class RoomController(IMediator mediator, IMapper mapper)
 
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
-    public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken ct)
+    public async Task<IActionResult> DeleteAsync(
+        [FromRoute] Guid id,
+        CancellationToken ct)
     {
         var request = new DeleteRoomCommand { RoomId = id };
         var result = await mediator.Send(request, ct);

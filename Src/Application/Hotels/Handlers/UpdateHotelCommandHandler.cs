@@ -3,6 +3,7 @@ using Application.Hotels.Dtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using AutoMapper;
 using Domain.Models;
 using MediatR;
@@ -25,7 +26,7 @@ public class UpdateHotelCommandHandler(
             return Result<HotelDto>.Failure(
                 currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
         var currentUserRoles = currentUserRolesResult.Value;
-        
+
         var updatedHotel = mapper.Map<Hotel>(request);
 
         if (currentUserRoles.Contains(UserRole.Admin))
@@ -39,9 +40,10 @@ public class UpdateHotelCommandHandler(
             var managerId = currentUserService.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
-                return Result<HotelDto>.Failure(hotelIdResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
+                return Result<HotelDto>.Failure(
+                    hotelIdResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
             var hotelId = hotelIdResult.Value;
-            
+
             if (hotelId != request.Id)
                 return Result<HotelDto>.Failure(
                     new Error(

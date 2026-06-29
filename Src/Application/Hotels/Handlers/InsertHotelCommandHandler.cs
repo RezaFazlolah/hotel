@@ -3,6 +3,7 @@ using Application.Hotels.Dtos;
 using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Interfaces.Services.Query;
 using AutoMapper;
 using Domain.Models;
 using MediatR;

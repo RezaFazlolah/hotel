@@ -1,9 +1,9 @@
 using Domain.Models;
 using SharedKernel.Common;
 
-namespace Application.Interfaces.Repositories;
+namespace Application.Interfaces.Services;
 
-public interface ITokenRepository
+public interface IJwtService
 {
     Task<Result<string>> GenerateJwt(User user);
 }
