@@ -48,7 +48,7 @@ public class InsertRoomCommandHandler(
                 ResultCode.Forbidden);
 
         var roomNumberExistsResult =
-            await hotelRepository.RoomNumberExistsAsync(request.Number, request.HotelId, ct);
+            await roomRepository.RoomNumberExistsAsync(request.HotelId, request.Number, ct);
         if (!roomNumberExistsResult.Succeeded)
             return Result<RoomDto>.Failure(roomNumberExistsResult.Errors.Prepend(new Error($"insert room failed.")));
         var roomNumberExists = roomNumberExistsResult.Value;

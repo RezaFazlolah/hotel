@@ -6,6 +6,12 @@ namespace Application.Interfaces.Repositories;
 public interface IRoomRepository
     : IBaseRepository<Guid, Room>
 {
-    Task<Result<ICollection<Reservation>>> GetReservationsAsync(Guid roomId, CancellationToken ct);
-    Task<Result<ICollection<Reservation>>> GetReservationsAsync(IEnumerable<Guid> roomsId, CancellationToken ct);
+    Task<Result<ICollection<Room>>> GetRoomsByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct);
+    
+    Task<Result<bool>> RoomNumberExistsAsync(
+        Guid hotelId,
+        int roomNumber,
+        CancellationToken ct);
 }

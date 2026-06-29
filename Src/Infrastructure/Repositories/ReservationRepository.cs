@@ -1,4 +1,5 @@
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services.Query;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
@@ -6,7 +7,9 @@ using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public class ReservationRepository(AppDbContext db)
+public class ReservationRepository(
+    AppDbContext db,
+    IRoomQueryService roomQueryService)
     : BaseRepository<Guid, Reservation>(db), IReservationRepository
 {
     public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
@@ -56,4 +59,55 @@ public class ReservationRepository(AppDbContext db)
                    checkOutDate < r.CheckInDate && r.Status != ReservationStatus.Cancelled) &&
                  r.GuestId != guestId),
             ct);
+
+    public async Task<Result<ICollection<Reservation>>> GetReservationsByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct)
+    {
+        var roomIdsResult = await roomQueryService.GetRoomsIdByHotelIdAsync(hotelId, ct);
+        if (!roomIdsResult.Succeeded)
+            return Result<ICollection<Reservation>>.Failure(
+                roomIdsResult.Errors
+                    .Prepend(new Error($"get reservations for hotel {hotelId} failed."))
+            );
+        var roomIds = roomIdsResult.Value;
+
+        return Result<ICollection<Reservation>>.Success(
+            await db.Reservations
+                .Where(r => roomIds.Contains(r.Id))
+                .ToListAsync(ct));
+    }
+
+    public async Task<Result<ICollection<Reservation>>> GetReservationsByHotelIdsAsync(
+        IEnumerable<Guid> hotelIds,
+        CancellationToken ct)
+    {
+        var roomIdsResult = await roomQueryService.GetRoomsIdByHotelIdsAsync(hotelIds, ct);
+        if (!roomIdsResult.Succeeded)
+            return Result<ICollection<Reservation>>.Failure(
+                roomIdsResult.Errors
+                    .Prepend(new Error($"get reservations for hotels {string.Join(", ", hotelIds)} failed."))
+            );
+        var roomIds = roomIdsResult.Value;
+
+        return Result<ICollection<Reservation>>.Success(
+            await db.Reservations
+                .Where(r => roomIds.Contains(r.Id))
+                .ToListAsync(ct)
+        );
+    }
+
+    public async Task<Result<ICollection<Reservation>>> GetReservationsByRoomIdAsync(
+        Guid roomId,
+        CancellationToken ct)
+        => await GetReservationsByRoomIdsAsync([roomId], ct);
+
+    public async Task<Result<ICollection<Reservation>>> GetReservationsByRoomIdsAsync(
+        IEnumerable<Guid> roomsId,
+        CancellationToken ct)
+        => Result<ICollection<Reservation>>.Success(
+            await db.Reservations
+                .Where(r => roomsId.Contains(r.RoomId))
+                .ToListAsync(ct)
+        );
 }

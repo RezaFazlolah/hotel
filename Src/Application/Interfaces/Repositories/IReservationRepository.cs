@@ -24,4 +24,20 @@ public interface IReservationRepository
         DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct);
+
+    Task<Result<ICollection<Reservation>>> GetReservationsByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct);
+
+    Task<Result<ICollection<Reservation>>> GetReservationsByHotelIdsAsync(
+        IEnumerable<Guid> hotelIds,
+        CancellationToken ct);
+    
+    Task<Result<ICollection<Reservation>>> GetReservationsByRoomIdAsync(
+        Guid roomId,
+        CancellationToken ct);
+
+    Task<Result<ICollection<Reservation>>> GetReservationsByRoomIdsAsync(
+        IEnumerable<Guid> roomIds,
+        CancellationToken ct);
 }

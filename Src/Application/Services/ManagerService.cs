@@ -1,4 +1,5 @@
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services.Query;
 using Domain.Interface;
 using Domain.Models;
 using SharedKernel.Common;
@@ -9,8 +10,8 @@ namespace Application.Services;
 
 public class ManagerService(
     IManagerRepository managerRepository,
-    IHotelRepository hotelRepository,
-    IRoomRepository roomRepository)
+    IReservationRepository reservationRepository,
+    IRoomQueryService roomQueryService)
     : UserService, IManagerService
 {
     // public async Task<Result<IEnumerable<Guid>>> GetRoomsIdAsync(Guid managerId, CancellationToken ct)
@@ -40,12 +41,12 @@ public class ManagerService(
             return Result<PagedResult<Reservation>>.Success(new PagedResult<Reservation> { Data = [] });
         var hotelId = nullableHotelId.Value;
 
-        var roomsIdResult = await hotelRepository.GetRoomsIdAsync(hotelId, ct);
+        var roomsIdResult = await roomQueryService.GetRoomsIdByHotelIdAsync(hotelId, ct);
         if (!roomsIdResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(roomsIdResult.Errors);
-        var roomsId = roomsIdResult.Value;
+        var roomIds = roomsIdResult.Value;
 
-        var reservationsResult = await roomRepository.GetReservationsAsync(roomsId, ct);
+        var reservationsResult = await reservationRepository.GetReservationsByRoomIdsAsync(roomIds, ct);
         if (!reservationsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(reservationsResult.Errors);
         var reservations = reservationsResult.Value;
@@ -63,12 +64,12 @@ public class ManagerService(
         if (hotelId is null)
             return Result<IEnumerable<Guid>>.Success([]);
         
-        var roomsIdResult = await hotelRepository.GetRoomsIdAsync(hotelId.Value, ct);
-        if (!roomsIdResult.Succeeded)
-            return Result<IEnumerable<Guid>>.Failure(roomsIdResult.Errors);
-        var roomsId = roomsIdResult.Value;
+        var roomIdsResult = await roomQueryService.GetRoomsIdByHotelIdAsync(hotelId.Value, ct);
+        if (!roomIdsResult.Succeeded)
+            return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
+        var roomIds = roomIdsResult.Value;
         
-        return Result<IEnumerable<Guid>>.Success(roomsId);
+        return Result<IEnumerable<Guid>>.Success(roomIds);
     }
 
     public async Task<Result<bool>> ManagesRoomsAsync(Guid managerId, Guid roomId, CancellationToken ct)
