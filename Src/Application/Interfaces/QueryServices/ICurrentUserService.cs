@@ -7,7 +7,7 @@ namespace Application.Interfaces.QueryServices;
 public interface ICurrentUserService
 {
     Result<Guid> Id { get; }
-    Result<IEnumerable<UserRole>> Roles { get; }
+    Result<IReadOnlyList<UserRole>> Roles { get; }
     Task<Result<User>> GetUserAsync(CancellationToken ct);
-    Task<Result<(Guid id, User user, IEnumerable<UserRole> roles)>> GetUserInfoAsync(CancellationToken ct);
+    Task<Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>> GetUserInfoAsync(CancellationToken ct);
 }

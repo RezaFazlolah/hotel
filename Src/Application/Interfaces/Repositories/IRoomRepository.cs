@@ -6,7 +6,7 @@ namespace Application.Interfaces.Repositories;
 public interface IRoomRepository
     : IBaseRepository<Guid, Room>
 {
-    Task<Result<ICollection<Room>>> GetAllByHotelIdAsync(
+    Task<Result<IReadOnlyList<Room>>> GetAllByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct);
     

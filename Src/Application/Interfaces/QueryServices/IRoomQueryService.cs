@@ -7,11 +7,11 @@ namespace Application.Interfaces.QueryServices;
 public interface IRoomQueryService
     : IBaseQueryService<Room, RoomDto>
 {
-    Task<Result<ICollection<Guid>>> GetAllIdsByHotelIdAsync(
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct);
 
-    Task<Result<ICollection<Guid>>> GetAllIdsByHotelIdsAsync(
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
         IEnumerable<Guid> hotelIds,
         CancellationToken ct);
 }

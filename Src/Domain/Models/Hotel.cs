@@ -12,6 +12,6 @@ public class Hotel
     public decimal Rating { get; set; }
 
     // navigation property
-    public ICollection<Room> Rooms { get; set; } = [];
-    public ICollection<Manager> Managers { get; set; } = [];
+    public IReadOnlyList<Room> Rooms { get; set; } = [];
+    public IReadOnlyList<Manager> Managers { get; set; } = [];
 }

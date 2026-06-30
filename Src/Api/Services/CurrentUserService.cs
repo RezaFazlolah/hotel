@@ -20,22 +20,18 @@ public class CurrentUserService(
             ? Result<Guid>.Success(currentUserId)
             : Result<Guid>.Failure(new Error("parsing current user ID failed."));
 
-    public Result<IEnumerable<UserRole>> Roles
+    public Result<IReadOnlyList<UserRole>> Roles
     {
         get
         {
-            var roles = httpContextAccessor.HttpContext?.User.FindAll(ClaimTypes.Role)
-                .Select(c => Enum.Parse<UserRole>(c.Value));
+            var roles = httpContextAccessor.HttpContext?.User
+                .FindAll(ClaimTypes.Role)
+                .Select(c => Enum.Parse<UserRole>(c.Value))
+                .ToList();
 
             return roles is null
-                ? Result<IEnumerable<UserRole>>.Failure(new Error("getting current user roles failed."))
-                : Result<IEnumerable<UserRole>>.Success(roles);
-            // var currentUserIdResult = this.Id;
-            // if (!currentUserIdResult.Succeeded)
-            //     return Result<IEnumerable<UserRole>>.Failure(currentUserIdResult.Errors.Prepend(new Error($"get current user roles failed.")));
-            // var currentUserId = currentUserIdResult.Value;
-            //
-            // return userRepository.GetRolesAsync(currentUserId, CancellationToken.None).Result;
+                ? Result<IReadOnlyList<UserRole>>.Failure(new Error("getting current user roles failed."))
+                : Result<IReadOnlyList<UserRole>>.Success(roles);
         }
     }
 
@@ -49,23 +45,24 @@ public class CurrentUserService(
         return await userRepository.GetByIdAsync(currentUserId, CancellationToken.None);
     }
 
-    public async Task<Result<(Guid id, User user, IEnumerable<UserRole> roles)>> GetUserInfoAsync(CancellationToken ct)
+    public async Task<Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>> GetUserInfoAsync(
+        CancellationToken ct)
     {
         var currentUserIdResult = this.Id;
         if (!currentUserIdResult.Succeeded)
-            return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserIdResult.Errors);
+            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserIdResult.Errors);
         var currentUserId = currentUserIdResult.Value;
 
         var currentUserResult = await this.GetUserAsync(ct);
         if (!currentUserResult.Succeeded)
-            return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserResult.Errors);
+            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserResult.Errors);
         var currentUser = currentUserResult.Value;
 
         var currentUserRolesResult = this.Roles;
         if (!currentUserRolesResult.Succeeded)
-            return Result<(Guid, User, IEnumerable<UserRole>)>.Failure(currentUserRolesResult.Errors);
+            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserRolesResult.Errors);
         var currentUserRoles = currentUserRolesResult.Value;
 
-        return Result<(Guid, User, IEnumerable<UserRole>)>.Success((currentUserId, currentUser, currentUserRoles));
+        return Result<(Guid, User, IReadOnlyList<UserRole>)>.Success((currentUserId, currentUser, currentUserRoles));
     }
 }

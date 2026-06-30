@@ -15,5 +15,5 @@ public class Room
 
     public required Guid HotelId { get; set; }
     public Hotel? Hotel { get; set; }
-    public ICollection<Reservation> Reservations { get; set; } = [];
+    public IReadOnlyList<Reservation> Reservations { get; set; } = [];
 }

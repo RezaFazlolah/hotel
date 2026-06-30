@@ -69,14 +69,14 @@ public class UserRepository(
     public virtual async Task<bool> RoleExistsAsync(UserRole role, CancellationToken ct)
         => await roleManager.RoleExistsAsync(role.ToString());
 
-    public virtual async Task<Result<IEnumerable<UserRole>>> GetRolesAsync(User user, CancellationToken ct)
-        => Result<IEnumerable<UserRole>>.Success((await userManager.GetRolesAsync(user)).Select(Enum.Parse<UserRole>));
+    public virtual async Task<Result<IReadOnlyList<UserRole>>> GetRolesAsync(User user, CancellationToken ct)
+        => Result<IReadOnlyList<UserRole>>.Success((await userManager.GetRolesAsync(user)).Select(Enum.Parse<UserRole>).ToList());
 
-    public virtual async Task<Result<IEnumerable<UserRole>>> GetRolesAsync(Guid userId, CancellationToken ct)
+    public virtual async Task<Result<IReadOnlyList<UserRole>>> GetRolesAsync(Guid userId, CancellationToken ct)
     {
         var userResult = await GetByIdAsync(userId, ct);
         if (!userResult.Succeeded)
-            return Result<IEnumerable<UserRole>>.Failure(userResult.Errors);
+            return Result<IReadOnlyList<UserRole>>.Failure(userResult.Errors);
         var user = userResult.Value;
         return await GetRolesAsync(user, ct);
     }

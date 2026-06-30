@@ -6,6 +6,7 @@ public class HotelDto
     public string Name { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
     public decimal Rating { get; set; }
-    // public ICollection<ManagerDto> Managers { get; set; } = [];
-    // public ICollection<RoomDto> Rooms { get; set; } = [];
+    
+    // public IReadOnlyList<ManagerDto> Managers { get; set; } = [];
+    // public IReadOnlyList<RoomDto> Rooms { get; set; } = [];
 }

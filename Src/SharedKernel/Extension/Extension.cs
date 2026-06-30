@@ -35,7 +35,8 @@ public static class Extension
     {
         var data = source
             .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
-            .Take(paginationParameters.PageSize);
+            .Take(paginationParameters.PageSize)
+            .ToList();
 
         var pageNumber = paginationParameters.PageNumber;
         var totalCount = source.Count();

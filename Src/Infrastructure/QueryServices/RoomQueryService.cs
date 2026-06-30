@@ -13,20 +13,20 @@ public class RoomQueryService(
     : BaseQueryService<Room, RoomDto>(db, configurationProvider),
         IRoomQueryService
 {
-    public async Task<Result<ICollection<Guid>>> GetAllIdsByHotelIdAsync(
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct)
-        => Result<ICollection<Guid>>.Success(
+        => Result<IReadOnlyList<Guid>>.Success(
             await db.Rooms
                 .Where(r => r.HotelId == hotelId)
                 .Select(r => r.Id)
                 .ToListAsync(ct)
         );
 
-    public async Task<Result<ICollection<Guid>>> GetAllIdsByHotelIdsAsync(
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
         IEnumerable<Guid> hotelIds,
         CancellationToken ct)
-        => Result<ICollection<Guid>>.Success(
+        => Result<IReadOnlyList<Guid>>.Success(
             await db.Rooms
                 .Where(r => hotelIds.Contains(r.HotelId))
                 .Select(r => r.Id)

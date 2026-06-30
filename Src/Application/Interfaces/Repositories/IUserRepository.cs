@@ -14,8 +14,8 @@ public interface IUserRepository
     Task<Result<User>> GetByPhoneNumberAsync(string phoneNumber, CancellationToken ct);
     Task<bool> CheckPassword(User user, string password);
     Task<bool> RoleExistsAsync(UserRole role, CancellationToken ct);
-    Task<Result<IEnumerable<UserRole>>> GetRolesAsync(User user, CancellationToken ct);
-    Task<Result<IEnumerable<UserRole>>> GetRolesAsync(Guid userId, CancellationToken ct);
+    Task<Result<IReadOnlyList<UserRole>>> GetRolesAsync(User user, CancellationToken ct);
+    Task<Result<IReadOnlyList<UserRole>>> GetRolesAsync(Guid userId, CancellationToken ct);
 
     Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid userId,
         PaginationParameters paginationParameters,
