@@ -1,1 +1,1 @@
-hotel management system using ASP.NET Core, EF Core, MediatR, AutoMapper, FluentValidation & PostgreSQL
+hotel management system using ASP.NET Core, EF Core, MediatR, CQRS, AutoMapper, FluentValidation & PostgreSQL
