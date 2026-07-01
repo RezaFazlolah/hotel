@@ -17,9 +17,6 @@ public class RegisterCommandHandler(
     {
         var registeringUser = mapper.Map<User>(request);
 
-        if (!await userRepository.RoleExistsAsync(request.Role, ct))
-            return Result<RegisteredUserDto>.Failure(new Error($"register user {request.PhoneNumber} failed. role {request.Role} not found."));
-
         var userRegisterResult = await userRepository.InsertAsync(registeringUser, request.Password, ct);
         if(!userRegisterResult.Succeeded)
             return Result<RegisteredUserDto>.Failure(userRegisterResult.Errors.Prepend(new Error($"register user {request.PhoneNumber} failed.")));

@@ -1,5 +1,6 @@
 using Domain.Models;
 using SharedKernel.Common;
+using SharedKernel.Paging;
 
 namespace Application.Interfaces.Repositories;
 
@@ -25,19 +26,33 @@ public interface IReservationRepository
         DateTimeOffset checkOutDate,
         CancellationToken ct);
 
-    Task<Result<IReadOnlyList<Reservation>>> GetAllByHotelIdAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByHotelIdAsync(
         Guid hotelId,
+        PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<IReadOnlyList<Reservation>>> GetAllByHotelIdsAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByHotelIdsAsync(
         IEnumerable<Guid> hotelIds,
-        CancellationToken ct);
-    
-    Task<Result<IReadOnlyList<Reservation>>> GetAllByRoomIdAsync(
-        Guid roomId,
+        PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<IReadOnlyList<Reservation>>> GetAllByRoomIdsAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByRoomIdAsync(
+        Guid roomId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
+
+    Task<Result<PagedResult<Reservation>>> GetAllByRoomIdsAsync(
         IEnumerable<Guid> roomIds,
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
+
+    Task<Result<PagedResult<Reservation>>> GetAllByGuestIdAsync(
+        Guid guestId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
+
+    Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
+        Guid managerId,
+        PaginationParameters paginationParameters,
         CancellationToken ct);
 }

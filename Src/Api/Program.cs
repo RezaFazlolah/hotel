@@ -25,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
     // Swagger
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
 }
 
 app.UseHttpsRedirection();

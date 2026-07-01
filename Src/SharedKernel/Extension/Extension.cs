@@ -5,8 +5,10 @@ namespace SharedKernel.Extension;
 
 public static class Extension
 {
-    public static async Task<PagedResult<T>> ToPagedResultAsync<T>(this IQueryable<T> source,
-        PaginationParameters paginationParameters, CancellationToken ct)
+    public static async Task<PagedResult<T>> ToPagedResultAsync<T>(
+        this IQueryable<T> source,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
     {
         var data = await source
             .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
@@ -30,7 +32,8 @@ public static class Extension
         return new PagedResult<T> { Data = data, Metadata = metaData };
     }
 
-    public static PagedResult<T> ToPagedResult<T>(this IEnumerable<T> source,
+    public static PagedResult<T> ToPagedResult<T>(
+        this IEnumerable<T> source,
         PaginationParameters paginationParameters)
     {
         var data = source

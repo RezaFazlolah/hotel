@@ -4,13 +4,16 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
+using SharedKernel.Extension;
+using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;
 
 public class ReservationRepository(
     AppDbContext db,
     IRoomQueryService roomQueryService)
-    : BaseRepository<Guid, Reservation>(db), IReservationRepository
+    : BaseRepository<Guid, Reservation>(db),
+        IReservationRepository
 {
     public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
         => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
@@ -58,54 +61,81 @@ public class ReservationRepository(
                  r.GuestId != guestId),
             ct);
 
-    public async Task<Result<IReadOnlyList<Reservation>>> GetAllByHotelIdAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelIdAsync(
         Guid hotelId,
+        PaginationParameters paginationParameters,
         CancellationToken ct)
     {
         var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdAsync(hotelId, ct);
         if (!roomIdsResult.Succeeded)
-            return Result<IReadOnlyList<Reservation>>.Failure(
+            return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
                     .Prepend(new Error($"get reservations for hotel {hotelId} failed."))
             );
         var roomIds = roomIdsResult.Value;
 
-        return Result<IReadOnlyList<Reservation>>.Success(
+        return Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomIds.Contains(r.Id))
-                .ToListAsync(ct));
-    }
-
-    public async Task<Result<IReadOnlyList<Reservation>>> GetAllByHotelIdsAsync(
-        IEnumerable<Guid> hotelIds,
-        CancellationToken ct)
-    {
-        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdsAsync(hotelIds, ct);
-        if (!roomIdsResult.Succeeded)
-            return Result<IReadOnlyList<Reservation>>.Failure(
-                roomIdsResult.Errors
-                    .Prepend(new Error($"get reservations for hotels {string.Join(", ", hotelIds)} failed."))
-            );
-        var roomIds = roomIdsResult.Value;
-
-        return Result<IReadOnlyList<Reservation>>.Success(
-            await db.Reservations
-                .Where(r => roomIds.Contains(r.Id))
-                .ToListAsync(ct)
+                .ToPagedResultAsync(paginationParameters, ct)
         );
     }
 
-    public async Task<Result<IReadOnlyList<Reservation>>> GetAllByRoomIdAsync(
-        Guid roomId,
+    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelIdsAsync(
+        IEnumerable<Guid> hotelIds,
+        PaginationParameters paginationParameters,
         CancellationToken ct)
-        => await GetAllByRoomIdsAsync([roomId], ct);
+    {
+        var hotelsIdAsList = hotelIds.ToList();
 
-    public async Task<Result<IReadOnlyList<Reservation>>> GetAllByRoomIdsAsync(
-        IEnumerable<Guid> roomsId,
+        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdsAsync(hotelsIdAsList, ct);
+        if (!roomIdsResult.Succeeded)
+            return Result<PagedResult<Reservation>>.Failure(
+                roomIdsResult.Errors
+                    .Prepend(new Error($"get reservations for hotels {string.Join(", ", hotelsIdAsList)} failed."))
+            );
+        var roomIds = roomIdsResult.Value;
+
+        return Result<PagedResult<Reservation>>.Success(
+            await db.Reservations
+                .Where(r => roomIds.Contains(r.Id))
+                .ToPagedResultAsync(paginationParameters, ct)
+        );
+    }
+
+    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomIdAsync(
+        Guid roomId,
+        PaginationParameters paginationParameters,
         CancellationToken ct)
-        => Result<IReadOnlyList<Reservation>>.Success(
+        => await GetAllByRoomIdsAsync([roomId], paginationParameters, ct);
+
+    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomIdsAsync(
+        IEnumerable<Guid> roomsId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+        => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomsId.Contains(r.RoomId))
-                .ToListAsync(ct)
+                .ToPagedResultAsync(paginationParameters, ct)
+        );
+
+    public async Task<Result<PagedResult<Reservation>>> GetAllByGuestIdAsync(
+        Guid guestId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+        => Result<PagedResult<Reservation>>.Success(
+            await db.Reservations
+                .Where(r => r.GuestId == guestId)
+                .ToPagedResultAsync(paginationParameters, ct)
+        );
+
+    public async Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
+        Guid managerId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+        => Result<PagedResult<Reservation>>.Success(
+            await db.Reservations
+                .Where(r => r.Room.Hotel.Managers.Select(m => m.Id).Contains(managerId))
+                .ToPagedResultAsync(paginationParameters, ct)
         );
 }

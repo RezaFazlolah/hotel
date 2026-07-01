@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure;
 
-public class RoomConfiguration : IEntityTypeConfiguration<Room>
+public class RoomConfiguration
+    : IEntityTypeConfiguration<Room>
 {
     public void Configure(EntityTypeBuilder<Room> builder)
     {
@@ -22,14 +23,16 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
     }
 }
 
-public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
+public class HotelConfiguration
+    : IEntityTypeConfiguration<Hotel>
 {
     public void Configure(EntityTypeBuilder<Hotel> builder)
     {
     }
 }
 
-public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
+public class ReservationConfiguration
+    : IEntityTypeConfiguration<Reservation>
 {
     public void Configure(EntityTypeBuilder<Reservation> builder)
     {
@@ -51,7 +54,8 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
     }
 }
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserConfiguration
+    : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
@@ -59,7 +63,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     }
 }
 
-public class GuestConfiguration : IEntityTypeConfiguration<Guest>
+public class GuestConfiguration
+    : IEntityTypeConfiguration<Guest>
 {
     public void Configure(EntityTypeBuilder<Guest> builder)
     {
@@ -67,7 +72,8 @@ public class GuestConfiguration : IEntityTypeConfiguration<Guest>
     }
 }
 
-public class ManagerConfiguration : IEntityTypeConfiguration<Manager>
+public class ManagerConfiguration
+    : IEntityTypeConfiguration<Manager>
 {
     public void Configure(EntityTypeBuilder<Manager> builder)
     {
@@ -80,7 +86,8 @@ public class ManagerConfiguration : IEntityTypeConfiguration<Manager>
     }
 }
 
-public class AdminConfiguration : IEntityTypeConfiguration<Admin>
+public class AdminConfiguration
+    : IEntityTypeConfiguration<Admin>
 {
     public void Configure(EntityTypeBuilder<Admin> builder)
     {

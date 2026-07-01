@@ -10,13 +10,9 @@ namespace Infrastructure.Repositories;
 
 public class AdminRepository(
     AppDbContext db,
-    IReservationRepository reservationRepository,
     UserManager<User> userManager,
     RoleManager<Role> roleManager)
-    : UserRepository(db, userManager, roleManager), IAdminRepository
+    : UserRepository(db, userManager),
+        IAdminRepository
 {
-    public override async Task<Result<PagedResult<Reservation>>> GetAllReservationsAsync(Guid adminId,
-        PaginationParameters paginationParameters, CancellationToken ct)
-        => Result<PagedResult<Reservation>>.Success(await reservationRepository.GetAllAsQueryable()
-           .ToPagedResultAsync(paginationParameters, ct));
 }
