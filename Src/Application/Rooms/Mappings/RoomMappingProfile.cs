@@ -5,7 +5,7 @@ using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paging;
 
-namespace Application.Mappings;
+namespace Application.Rooms.Mappings;
 
 public class RoomMappingProfile
     : Profile

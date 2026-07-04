@@ -1,10 +1,10 @@
+using Application.Extensions;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Extension;
 using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;
@@ -77,7 +77,7 @@ public class ReservationRepository(
         return Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomIds.Contains(r.Id))
-                .ToPagedResultAsync(paginationParameters, ct)
+                .PaginateAsync(paginationParameters, ct)
         );
     }
 
@@ -99,7 +99,7 @@ public class ReservationRepository(
         return Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomIds.Contains(r.Id))
-                .ToPagedResultAsync(paginationParameters, ct)
+                .PaginateAsync(paginationParameters, ct)
         );
     }
 
@@ -116,7 +116,7 @@ public class ReservationRepository(
         => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomsId.Contains(r.RoomId))
-                .ToPagedResultAsync(paginationParameters, ct)
+                .PaginateAsync(paginationParameters, ct)
         );
 
     public async Task<Result<PagedResult<Reservation>>> GetAllByGuestIdAsync(
@@ -126,7 +126,7 @@ public class ReservationRepository(
         => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => r.GuestId == guestId)
-                .ToPagedResultAsync(paginationParameters, ct)
+                .PaginateAsync(paginationParameters, ct)
         );
 
     public async Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
@@ -136,6 +136,6 @@ public class ReservationRepository(
         => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => r.Room.Hotel.Managers.Select(m => m.Id).Contains(managerId))
-                .ToPagedResultAsync(paginationParameters, ct)
+                .PaginateAsync(paginationParameters, ct)
         );
 }

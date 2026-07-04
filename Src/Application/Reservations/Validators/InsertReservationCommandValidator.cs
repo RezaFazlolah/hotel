@@ -8,6 +8,7 @@ public class InsertReservationCommandValidator : AbstractValidator<InsertReserva
     public InsertReservationCommandValidator()
     {
         RuleFor(c => c.CheckOutDate)
-            .GreaterThanOrEqualTo(c => c.CheckInDate).WithMessage("CheckOutDate must be after CheckInDate.");
+            .GreaterThanOrEqualTo(c => c.CheckInDate)
+            .WithMessage("CheckOutDate must be after CheckInDate.");
     }
 }

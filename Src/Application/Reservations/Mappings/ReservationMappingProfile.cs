@@ -5,7 +5,7 @@ using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paging;
 
-namespace Application.Mappings;
+namespace Application.Reservations.Mappings;
 
 public class ReservationMappingProfile
     : Profile

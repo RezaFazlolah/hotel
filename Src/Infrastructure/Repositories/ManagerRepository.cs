@@ -15,7 +15,9 @@ public class ManagerRepository(
     : UserRepository(db, userManager),
         IManagerRepository
 {
-    public async Task<Result<Guid?>> GetHotelIdAsync(Guid managerId, CancellationToken ct)
+    public async Task<Result<Guid?>> GetHotelIdAsync(
+        Guid managerId,
+        CancellationToken ct)
     {
         var managerResult = await GetByIdAsync(managerId, ct);
         if (!managerResult.Succeeded)

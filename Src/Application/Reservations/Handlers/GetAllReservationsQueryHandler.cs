@@ -1,12 +1,8 @@
-using Application.Interfaces;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
 using AutoMapper;
-using Domain.Interface;
-using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -16,13 +12,12 @@ namespace Application.Reservations.Handlers;
 
 public class GetAllReservationsQueryHandler(
     ICurrentUserService currentUserService,
-    IAdminService adminService,
-    IManagerService managerService,
-    IGuestService guestService,
+    IReservationRepository reservationRepository,
     IMapper mapper)
     : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<ReservationDto>>>
 {
-    public async Task<Result<PagedResult<ReservationDto>>> Handle(GetAllReservationsQuery request,
+    public async Task<Result<PagedResult<ReservationDto>>> Handle(
+        GetAllReservationsQuery request,
         CancellationToken ct)
     {
         var rolesResult = currentUserService.Roles;
@@ -34,19 +29,19 @@ public class GetAllReservationsQueryHandler(
 
         if (roles.Contains(UserRole.Admin))
         {
-            var result = await adminService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+            var result = await reservationRepository.GetAllAsync(request.PaginationParameters, ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
         }
 
         if (roles.Contains(UserRole.Manager))
         {
-            var result = await managerService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+            var result = await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
         }
 
         if (roles.Contains(UserRole.Guest))
         {
-            var result = await guestService.GetAllReservationsAsync(userId, request.PaginationParameters, ct);
+            var result = await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
         }
 

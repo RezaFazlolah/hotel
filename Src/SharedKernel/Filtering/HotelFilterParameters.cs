@@ -1,9 +1,10 @@
 namespace SharedKernel.Filtering;
 
-public class HotelFilterParameters : BaseFilterParameters
+public class HotelFilterParameters
+    : BaseFilterParameters
 {
-    public string? Name { get; set; }
-    public string? Address { get; set; }
-    public decimal? MinRating { get; set; }
-    public decimal? MaxRating { get; set; }
+    public string? Name { get; init; }
+    public string? Address { get; init; }
+    public decimal? MinRating { get; init; }
+    public decimal? MaxRating { get; init; }
 }

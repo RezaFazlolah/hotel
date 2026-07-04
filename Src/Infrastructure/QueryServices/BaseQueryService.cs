@@ -1,10 +1,10 @@
+using Application.Extensions;
 using Application.Interfaces.QueryServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Interface;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
-using SharedKernel.Extension;
 using SharedKernel.Paging;
 
 namespace Infrastructure.QueryServices;
@@ -44,7 +44,7 @@ public abstract class BaseQueryService<TEntity, TDto>(
     {
         var dtos = await db.Set<TEntity>()
             .ProjectTo<TDto>(configurationProvider)
-            .ToPagedResultAsync(paginationParameters, ct);
+            .PaginateAsync(paginationParameters, ct);
 
         return Result<PagedResult<TDto>>.Success(dtos);
     }

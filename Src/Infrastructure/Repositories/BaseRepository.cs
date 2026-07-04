@@ -1,9 +1,9 @@
+using Application.Extensions;
 using Application.Interfaces.Repositories;
 using Domain.Interface;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Extension;
 using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;
@@ -16,7 +16,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(
         PaginationParameters paginationParameters,
         CancellationToken ct)
-        => Result<PagedResult<TEntity>>.Success(await CustomContext().ToPagedResultAsync(paginationParameters, ct));
+        => Result<PagedResult<TEntity>>.Success(await CustomContext().PaginateAsync(paginationParameters, ct));
 
     public IQueryable<TEntity> GetAllAsQueryable()
         => CustomContext();
@@ -85,7 +85,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
 
     protected abstract IQueryable<TEntity> CustomContext();
 
-    // protected virtual IQueryable<TEntity> Filter(IQueryable<TEntity> query, BaseFilterParameters filterParameters)
+    // protected virtual IQueryable<TEntity> ApplyFilter(IQueryable<TEntity> query, BaseFilterParameters filterParameters)
     // {
     //     throw new NotImplementedException();
     // }

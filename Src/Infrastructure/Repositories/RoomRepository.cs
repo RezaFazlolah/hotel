@@ -39,8 +39,7 @@ public class RoomRepository(AppDbContext db)
 
         return await base.UpdateAsync(room, cancellationToken);
     }
-
-
+    
     protected override IQueryable<Room> CustomContext()
         => db.Rooms
             .Include(r => r.Hotel)

@@ -8,10 +8,12 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
     public LoginCommandValidator()
     {
         RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage("PhoneNumber is required.")
+            .NotEmpty()
+            .WithMessage("PhoneNumber is required.")
             .Matches(@"^0\d{10}$").WithMessage("PhoneNumber format is invalid. example: 09123456789.");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password is required.");
+            .NotEmpty()
+            .WithMessage("Password is required.");
     }
 }

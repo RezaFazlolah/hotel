@@ -3,7 +3,7 @@ using Application.Auth.Dtos;
 using AutoMapper;
 using Domain.Models;
 
-namespace Application.Mappings;
+namespace Application.Auth.Mappings;
 
 public class AuthMappingProfile
     : Profile

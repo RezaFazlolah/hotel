@@ -10,9 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<IGuestService, GuestService>();
         services.AddScoped<IManagerService, ManagerService>();
-        services.AddScoped<IAdminService, AdminService>();
         
         services.AddScoped<IReservationService, ReservationService>();
 
