@@ -1,4 +1,6 @@
-namespace SharedKernel.Filtering;
+using SharedKernel.Filters;
+
+namespace Application.Hotels.Filters;
 
 public class HotelFilterParameters
     : BaseFilterParameters

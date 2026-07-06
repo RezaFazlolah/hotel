@@ -1,5 +1,5 @@
 using Application.Interfaces.Repositories;
-using Domain.Interface;
+using Domain.Interfaces;
 using Domain.Models;
 using SharedKernel.Common;
 

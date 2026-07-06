@@ -1,7 +1,8 @@
+using Application.Common;
 using Application.Reservations.Dtos;
 using MediatR;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Reservations.Queries;
 

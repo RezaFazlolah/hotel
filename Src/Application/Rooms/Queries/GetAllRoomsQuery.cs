@@ -1,13 +1,10 @@
+using Application.Common;
 using Application.Rooms.Dtos;
 using MediatR;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Rooms.Queries;
 
-public class GetAllRoomsQuery
-    : IRequest<Result<PagedResult<RoomDto>>>
-{
-    public PaginationParameters PaginationParameters { get; set; } = new();
-    // public RoomFilterParameters FilterParameters { get; set; }
-}
+public record GetAllRoomsQuery(PaginationParameters PaginationParameters)
+    : IRequest<Result<PagedResult<RoomDto>>>;

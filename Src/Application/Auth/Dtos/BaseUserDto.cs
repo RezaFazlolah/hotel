@@ -1,6 +1,6 @@
 namespace Application.Auth.Dtos;
 
-public record UserDto
+public record BaseUserDto
 {
     public Guid Id { get; set; }
     public string PhoneNumber { get; set; } = string.Empty;

@@ -1,6 +1,6 @@
 using Domain.Models;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Interfaces.Repositories;
 

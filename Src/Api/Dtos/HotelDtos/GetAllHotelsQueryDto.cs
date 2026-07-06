@@ -1,9 +1,7 @@
-using SharedKernel.Paging;
-
 namespace Api.Dtos.HotelDtos;
 
 public class GetAllHotelsQueryDto
 {
-    public PaginationParameters PaginationParameters { get; set; } = new();
-    // public HotelFilterParameters FilterParameters { get; set; }
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
 }

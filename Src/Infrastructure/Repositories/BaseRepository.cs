@@ -1,10 +1,10 @@
 using Application.Extensions;
 using Application.Interfaces.Repositories;
-using Domain.Interface;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Infrastructure.Repositories;
 
@@ -16,7 +16,10 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(
         PaginationParameters paginationParameters,
         CancellationToken ct)
-        => Result<PagedResult<TEntity>>.Success(await CustomContext().PaginateAsync(paginationParameters, ct));
+        => Result<PagedResult<TEntity>>.Success(
+            await CustomContext()
+                .PaginateAsync(paginationParameters, ct)
+        );
 
     public IQueryable<TEntity> GetAllAsQueryable()
         => CustomContext();
@@ -25,18 +28,11 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         TId id,
         CancellationToken ct)
     {
-        try
-        {
-            var entity = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
-            if (entity is null)
-                return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found.", ErrorCode.NotFound),
-                    ResultCode.NotFound);
-            return Result<TEntity>.Success(entity);
-        }
-        catch
-        {
-            return Result<TEntity>.Failure(new Error($"more than one {EntityName}s with ID {id} found."));
-        }
+        var entity = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
+        if (entity is null)
+            return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found.", ErrorCode.NotFound),
+                ResultCode.NotFound);
+        return Result<TEntity>.Success(entity);
     }
 
     public virtual async Task<Result<TEntity>> InsertAsync(
@@ -81,19 +77,9 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found."))
         // };
         => await db.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
-    // do i need to check for duplicated IDs in a separate service?
+    // Question: do i need to check for duplicated IDs in a separate service?
 
     protected abstract IQueryable<TEntity> CustomContext();
-
-    // protected virtual IQueryable<TEntity> ApplyFilter(IQueryable<TEntity> query, BaseFilterParameters filterParameters)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    // protected virtual IQueryable<TEntity> Sort(IQueryable<TEntity> query, BaseSortParameters sortParameters)
-    // {
-    //     throw new NotImplementedException();
-    // }
 
     public virtual string EntityName => typeof(TEntity).Name;
 }

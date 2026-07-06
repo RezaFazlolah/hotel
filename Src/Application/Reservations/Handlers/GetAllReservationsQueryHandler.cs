@@ -6,7 +6,7 @@ using AutoMapper;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Reservations.Handlers;
 

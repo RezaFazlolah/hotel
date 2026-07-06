@@ -1,4 +1,4 @@
-using Domain.Interface;
+using Domain.Interfaces;
 using SharedKernel.Enums;
 
 namespace Domain.Models;

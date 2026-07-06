@@ -4,7 +4,6 @@ using Application;
 using Domain;
 using Infrastructure;
 using Scalar.AspNetCore;
-using SharedKernel.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +25,9 @@ if (app.Environment.IsDevelopment())
     // Swagger
     app.UseSwagger();
     app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
+    
+    using var scope = app.Services.CreateScope();
+    scope.ServiceProvider.ValidateMapperConfiguration();
 }
 
 app.UseHttpsRedirection();

@@ -1,5 +1,6 @@
 using Application.Auth.Commands;
 using Application.Auth.Dtos;
+using Application.Auth.Factories;
 using Application.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Models;
@@ -15,7 +16,7 @@ public class RegisterCommandHandler(
 {
     public async Task<Result<RegisteredUserDto>> Handle(RegisterCommand request, CancellationToken ct)
     {
-        var registeringUser = mapper.Map<User>(request);
+        var registeringUser = UserFactory.CreateUserFromRegisterCommand(request); 
 
         var userRegisterResult = await userRepository.InsertAsync(registeringUser, request.Password, ct);
         if(!userRegisterResult.Succeeded)

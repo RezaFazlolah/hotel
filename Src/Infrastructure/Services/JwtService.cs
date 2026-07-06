@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
-using SharedKernel.Configuration;
+using SharedKernel.Configurations;
 
 namespace Infrastructure.Services;
 

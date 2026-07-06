@@ -1,12 +1,10 @@
+using Application.Common;
 using Application.Hotels.Dtos;
 using MediatR;
 using SharedKernel.Common;
-using SharedKernel.Filtering;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Hotels.Queries;
 
-public record GetAllHotelsQuery(
-    HotelFilterParameters HotelFilterParameters,
-    PaginationParameters PaginationParameters)
+public record GetAllHotelsQuery(PaginationParameters PaginationParameters)
     : IRequest<Result<PagedResult<HotelDto>>>;

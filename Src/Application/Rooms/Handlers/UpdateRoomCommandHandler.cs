@@ -5,7 +5,7 @@ using Application.Interfaces.Services;
 using Application.Rooms.Commands;
 using Application.Rooms.Dtos;
 using AutoMapper;
-using Domain.Interface;
+using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;

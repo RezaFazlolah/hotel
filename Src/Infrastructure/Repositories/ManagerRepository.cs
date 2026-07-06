@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SharedKernel.Common;
-using SharedKernel.Paging;
 
 namespace Infrastructure.Repositories;
 

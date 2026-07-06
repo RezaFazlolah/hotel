@@ -1,4 +1,3 @@
-using Application.Auth.Commands;
 using Application.Auth.Dtos;
 using AutoMapper;
 using Domain.Models;
@@ -10,9 +9,14 @@ public class AuthMappingProfile
 {
     public AuthMappingProfile()
     {
-        CreateMap<User, RegisteredUserDto>();
-        CreateMap<User, LoggedinUserDto>();
-        CreateMap<RegisterCommand, User>()
-            .ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.PhoneNumber));
+        CreateMap<User, BaseUserDto>()
+            .ForMember(dst => dst.Roles, opt => opt.Ignore());
+
+        CreateMap<User, RegisteredUserDto>()
+            .IncludeBase<User, BaseUserDto>();
+            
+        CreateMap<User, LoggedinUserDto>()
+            .ForMember(dst=>dst.Jwt, opt=>opt.Ignore())
+            .IncludeBase<User, BaseUserDto>();
     }
 }

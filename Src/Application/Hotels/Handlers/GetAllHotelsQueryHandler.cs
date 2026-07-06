@@ -3,7 +3,7 @@ using Application.Hotels.Queries;
 using Application.Interfaces.QueryServices;
 using MediatR;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Hotels.Handlers;
 

@@ -1,7 +1,6 @@
-using Domain.Interface;
+using Domain.Interfaces;
 using Domain.Models;
 using SharedKernel.Common;
-using SharedKernel.Paging;
 
 namespace Application.Services;
 

@@ -12,10 +12,10 @@ public class GetReservationByIdQueryHandler(IReservationRepository reservationRe
     public async Task<Result<Reservation>> Handle(GetReservationByIdQuery request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
-        // var reservation = await reservationRepository.GetByIdAsync(request.ReservationId, cancellationToken);
+        // var reservation = await reservationRepository.GetByIdAsync(request.Id, cancellationToken);
         //
         // return (reservation == null || reservation.GuestId != request.GuestId)
-        //     ? Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), 404)
+        //     ? Result<Reservation>.Failure(new Error($"reservation {request.Id} not found"), 404)
         //     : Result<Reservation>.Success(reservation);
     }
 }

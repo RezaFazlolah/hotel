@@ -5,7 +5,7 @@ using SharedKernel.Enums;
 
 namespace Application.Rooms.Commands;
 
-public class UpdateRoomCommand
+public record UpdateRoomCommand
     : IRequest<Result<RoomDto>>
 {
     public required Guid Id { get; set; }

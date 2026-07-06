@@ -1,4 +1,4 @@
-using Domain.Interface;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Models;

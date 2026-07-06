@@ -3,7 +3,7 @@ using Application.Rooms.Dtos;
 using AutoMapper;
 using Domain.Models;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Rooms.Mappings;
 
@@ -18,7 +18,15 @@ public class RoomMappingProfile
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
-        CreateMap<InsertRoomCommand, Room>();
-        CreateMap<UpdateRoomCommand, Room>();
+        
+        CreateMap<InsertRoomCommand, Room>()
+            .ForMember(dst => dst.Id, opt => opt.Ignore())
+            .ForMember(dst => dst.Hotel, opt => opt.Ignore())
+            .ForMember(dst => dst.Reservations, opt => opt.Ignore());
+        
+        
+        CreateMap<UpdateRoomCommand, Room>()
+            .ForMember(dst => dst.Hotel, opt => opt.Ignore())
+            .ForMember(dst => dst.Reservations, opt => opt.Ignore());
     }
 }

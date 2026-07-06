@@ -4,14 +4,15 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Common;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
 
 namespace Api.Controllers;
 
-public class AuthController(IMediator mediator, IMapper mapper)
-    : BaseController()
+public class AuthController(
+    IMediator mediator,
+    IMapper mapper)
+    : BaseController
 {
     [AllowAnonymous]
     [HttpPost("register")]
@@ -19,7 +20,7 @@ public class AuthController(IMediator mediator, IMapper mapper)
         [FromBody] RegisterCommandDto request, 
         CancellationToken cancellationToken)
     {
-        var command = new RegisterCommand(request.PhoneNumber, request.Password, request.FirstName, request.LastName, UserRole.Guest);
+        var command = mapper.Map<RegisterCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
@@ -41,8 +42,9 @@ public class AuthController(IMediator mediator, IMapper mapper)
         [FromBody] RegisterByAdminCommandDto request,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<RegisterCommand>(request);
-        var result = await mediator.Send(command, cancellationToken);
-        return HandleResult(result);
+        throw new NotImplementedException();
+        // var command = mapper.Map<RegisterCommand>(request);
+        // var result = await mediator.Send(command, cancellationToken);
+        // return HandleResult(result);
     }
 }

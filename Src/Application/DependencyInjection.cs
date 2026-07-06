@@ -1,6 +1,7 @@
-using Application.Behaviors;
+using Application.Common.Behaviors;
 using Application.Services;
-using Domain.Interface;
+using AutoMapper;
+using Domain.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IManagerService, ManagerService>();
-        
+
         services.AddScoped<IReservationService, ReservationService>();
 
         // Fluent Validation
@@ -28,5 +29,12 @@ public static class DependencyInjection
         services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
 
         return services;
+    }
+
+    // Application/DependencyInjection.cs/ValidateMapperConfiguration()
+    public static void ValidateMapperConfiguration(this IServiceProvider serviceProvider)
+    {
+        var mapper = serviceProvider.GetRequiredService<IMapper>();
+        mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 }

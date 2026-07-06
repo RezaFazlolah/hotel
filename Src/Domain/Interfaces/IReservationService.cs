@@ -1,8 +1,7 @@
-using System.Runtime.InteropServices.JavaScript;
 using Domain.Models;
 using SharedKernel.Common;
 
-namespace Domain.Interface;
+namespace Domain.Interfaces;
 
 public interface IReservationService
 {

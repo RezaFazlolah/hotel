@@ -2,10 +2,10 @@ using Application.Extensions;
 using Application.Interfaces.QueryServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain.Interface;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
 
@@ -19,19 +19,10 @@ public abstract class BaseQueryService<TEntity, TDto>(
         Guid id,
         CancellationToken ct)
     {
-        TDto? dto;
-
-        try
-        {
-            dto = await db.Set<TEntity>()
-                .Where(e => e.Id == id)
-                .ProjectTo<TDto>(configurationProvider)
-                .SingleOrDefaultAsync(ct);
-        }
-        catch (InvalidOperationException)
-        {
-            return Result<TDto>.Failure(new Error($"more than one {EntityName}s with {id} found."));
-        }
+        var dto = await db.Set<TEntity>()
+            .Where(e => e.Id == id)
+            .ProjectTo<TDto>(configurationProvider)
+            .SingleOrDefaultAsync(ct);
 
         return dto is null
             ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found."))
@@ -49,5 +40,5 @@ public abstract class BaseQueryService<TEntity, TDto>(
         return Result<PagedResult<TDto>>.Success(dtos);
     }
 
-    public virtual string EntityName => nameof(TEntity);
+    public virtual string EntityName => typeof(TEntity).Name;
 }

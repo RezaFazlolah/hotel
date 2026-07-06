@@ -1,8 +1,4 @@
-using Domain.Models;
-using SharedKernel.Common;
-using SharedKernel.Paging;
-
-namespace Domain.Interface;
+namespace Domain.Interfaces;
 
 public interface IUserService
 {

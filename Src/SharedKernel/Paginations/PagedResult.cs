@@ -1,4 +1,4 @@
-namespace SharedKernel.Paging;
+namespace SharedKernel.Paginations;
 
 public class PagedResult<T>
 {

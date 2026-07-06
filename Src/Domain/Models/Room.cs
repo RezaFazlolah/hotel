@@ -1,6 +1,4 @@
-using Domain.Interface;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Domain.Interfaces;
 using SharedKernel.Enums;
 
 namespace Domain.Models;

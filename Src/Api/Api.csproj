@@ -26,6 +26,7 @@
 
     <ItemGroup>
         <Folder Include="bin\"/>
+        <Folder Include="Common\" />
         <Folder Include="Mappings/"/>
     </ItemGroup>
 

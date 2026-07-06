@@ -5,5 +5,10 @@ using SharedKernel.Enums;
 
 namespace Application.Auth.Commands;
 
-public record RegisterCommand(string PhoneNumber, string Password, string FirstName, string LastName, UserRole Role)
+public record RegisterCommand(
+    string PhoneNumber,
+    string Password,
+    string FirstName,
+    string LastName,
+    UserRole Role)
     : IRequest<Result<RegisteredUserDto>>;

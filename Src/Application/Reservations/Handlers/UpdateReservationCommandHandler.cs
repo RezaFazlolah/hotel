@@ -23,10 +23,10 @@ public class UpdateReservationCommandHandler(
     {
         throw new NotImplementedException();
 
-        // if (await reservationRepository.ExistsAsync(request.ReservationId, cancellationToken))
-        //     return Result<Reservation>.Failure(new Error($"reservation {request.ReservationId} not found"), 404);
+        // if (await reservationRepository.ExistsAsync(request.Id, cancellationToken))
+        //     return Result<Reservation>.Failure(new Error($"reservation {request.Id} not found"), 404);
         //
-        // var reservation = await reservationRepository.GetByIdAsync(request.ReservationId, cancellationToken);
+        // var reservation = await reservationRepository.GetByIdAsync(request.Id, cancellationToken);
         //
         // var errors = new List<Error>();
         // if (await roomRepository.IsRoomReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,

@@ -1,9 +1,8 @@
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
-using Domain.Interface;
+using Domain.Interfaces;
 using Domain.Models;
 using SharedKernel.Common;
-using SharedKernel.Paging;
 
 namespace Application.Services;
 
@@ -39,12 +38,12 @@ public class ManagerService(
 
         if (hotelId is null)
             return Result<IEnumerable<Guid>>.Success([]);
-        
+
         var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdAsync(hotelId.Value, ct);
         if (!roomIdsResult.Succeeded)
             return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
         var roomIds = roomIdsResult.Value;
-        
+
         return Result<IEnumerable<Guid>>.Success(roomIds);
     }
 

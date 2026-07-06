@@ -5,7 +5,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Infrastructure.Repositories;
 

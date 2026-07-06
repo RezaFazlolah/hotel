@@ -1,4 +1,4 @@
-namespace Domain.Interface;
+namespace Domain.Interfaces;
 
 public interface IEntity<TId>
     where TId : IEquatable<TId>, new()

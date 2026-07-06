@@ -7,7 +7,7 @@ using SharedKernel.Enums;
 
 namespace Infrastructure;
 
-public class DbSeeder()
+public class DbSeeder
 {
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
@@ -87,13 +87,13 @@ public class DbSeeder()
                 UserRoleAsString.Admin, "1234")
         };
 
-        foreach (var item in users)
+        foreach (var user in users)
         {
-            if (await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == item.user.PhoneNumber) == null)
+            if (await userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == user.user.PhoneNumber) == null)
             {
-                var result = await userManager.CreateAsync(item.user, item.password);
+                var result = await userManager.CreateAsync(user.user, user.password);
                 if (result.Succeeded)
-                    await userManager.AddToRoleAsync(item.user, item.role);
+                    await userManager.AddToRoleAsync(user.user, user.role);
             }
         }
     }

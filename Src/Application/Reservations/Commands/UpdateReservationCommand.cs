@@ -4,5 +4,10 @@ using SharedKernel.Common;
 
 namespace Application.Reservations.Commands;
 
-public record UpdateReservationCommand(Guid ReservationId, DateTimeOffset CheckInDate, DateTimeOffset CheckOutDate)
-    : IRequest<Result<ReservationDto>>;
+public record UpdateReservationCommand
+    : IRequest<Result<ReservationDto>>
+{
+    public Guid Id { get; set; }
+    public DateTimeOffset CheckInDate { get; set; }
+    public DateTimeOffset CheckOutDate { get; set; }
+}

@@ -12,7 +12,9 @@ using SharedKernel.Constants;
 namespace Api.Controllers;
 
 [Authorize]
-public class ReservationController(IMediator mediator, IMapper mapper)
+public class ReservationController(
+    IMediator mediator,
+    IMapper mapper)
     : BaseController()
 {
     [HttpGet]
@@ -35,7 +37,7 @@ public class ReservationController(IMediator mediator, IMapper mapper)
         // if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
         //     return Unauthorized();
         //
-        // var request = new GetReservationByIdQuery() { GuestId = guestId, ReservationId = id };
+        // var request = new GetReservationByIdQuery() { GuestId = guestId, Id = id };
         // var result = await mediator.Send(request, cancellationToken);
         // return HandleResult(result);
     }
@@ -52,18 +54,19 @@ public class ReservationController(IMediator mediator, IMapper mapper)
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateAsync(
-        Guid id,
+        [FromRoute] Guid id,
         [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
         var command = mapper.Map<UpdateReservationCommand>(request);
+        command.Id = id;
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> CancelAsync(
-        Guid id,
+        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         var command = new CancelReservationCommand(id) { ReservationId = id };

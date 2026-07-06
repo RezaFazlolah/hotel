@@ -1,20 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Paging;
 
-namespace Application.Extensions;
+namespace SharedKernel.Paginations;
 
-public static class PaginationExtension
+public static class PaginationExtensions
 {
     public static async Task<PagedResult<T>> PaginateAsync<T>(
         this IQueryable<T> query,
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
+        var totalCount = query.Count();
+        
         query = query
             .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
             .Take(paginationParameters.PageSize);
 
-        return await CreatePagedResultAsync(query, paginationParameters, ct);
+        return await CreatePagedResultAsync(query, paginationParameters, totalCount, ct);
     }
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(
@@ -22,35 +23,36 @@ public static class PaginationExtension
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
-        var data = source
+        var totalCount = source.Count();
+        
+        var query = source
             .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
             .Take(paginationParameters.PageSize)
+            // Question: is this implementation correct?
             .AsQueryable();
 
-        return await CreatePagedResultAsync(data, paginationParameters, ct);
+        return await CreatePagedResultAsync(query, paginationParameters, totalCount, ct);
     }
 
     private static async Task<PagedResult<T>> CreatePagedResultAsync<T>(
         IQueryable<T> query,
         PaginationParameters paginationParameters,
+        int totalCount,
         CancellationToken ct)
     {
         var data = await query.ToListAsync(ct);
-        
-        var pageNumber = paginationParameters.PageNumber;
-        var totalCount = data.Count;
-        var totalPages = (int)Math.Ceiling((double)totalCount / paginationParameters.PageSize);
 
         var metaData = new PaginationMetadata
         {
             PageSize = paginationParameters.PageSize,
-            PageNumber = pageNumber,
-            TotalCount = totalCount,
-            TotalPages = totalPages,
-            HasNext = pageNumber < totalPages,
-            HasPrevious = pageNumber > 1
+            PageNumber = paginationParameters.PageNumber,
+            TotalCount = totalCount
         };
 
-        return new PagedResult<T> { Data = data, Metadata = metaData };
+        return new PagedResult<T>
+        {
+            Data = data,
+            Metadata = metaData
+        };
     }
 }

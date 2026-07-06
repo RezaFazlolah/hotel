@@ -1,6 +1,6 @@
-using Domain.Interface;
+using Domain.Interfaces;
 using SharedKernel.Common;
-using SharedKernel.Paging;
+using SharedKernel.Paginations;
 
 namespace Application.Interfaces.QueryServices;
 

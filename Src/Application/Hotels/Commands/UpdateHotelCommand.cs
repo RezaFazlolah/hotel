@@ -4,5 +4,11 @@ using SharedKernel.Common;
 
 namespace Application.Hotels.Commands;
 
-public record UpdateHotelCommand(Guid Id, string Name, string Address, float Rating)
-    : IRequest<Result<HotelDto>>;
+public record UpdateHotelCommand
+    : IRequest<Result<HotelDto>>
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public float Rating { get; set; }
+}

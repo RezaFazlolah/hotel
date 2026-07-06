@@ -4,7 +4,7 @@ using Application.Interfaces.Services;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
-using Domain.Interface;
+using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;

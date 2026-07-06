@@ -1,4 +1,4 @@
-namespace SharedKernel.Sorting;
+namespace SharedKernel.Sorts;
 
 public class BaseSortParameters
 {

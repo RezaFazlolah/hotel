@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using SharedKernel;
 using SharedKernel.Common;
 using SharedKernel.Constants;
-using SharedKernel.Paging;
 
 namespace Api.Controllers;
 
 [Authorize]
-public class HotelController(IMediator mediator, IMapper mapper)
+public class HotelController(
+    IMediator mediator,
+    IMapper mapper)
     : BaseController()
 {
     [HttpGet]
@@ -54,7 +55,8 @@ public class HotelController(IMediator mediator, IMapper mapper)
         [FromBody] UpdateHotelCommandDto request,
         CancellationToken ct)
     {
-        var command = new UpdateHotelCommand(id, request.Name, request.Address, request.Rating);
+        var command = mapper.Map<UpdateHotelCommand>(request);
+        command.Id = id;
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

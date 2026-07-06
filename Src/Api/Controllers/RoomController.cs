@@ -5,15 +5,15 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Common;
 using SharedKernel.Constants;
-using SharedKernel.Paging;
 
 namespace Api.Controllers;
 
 [Authorize]
-public class RoomController(IMediator mediator, IMapper mapper)
-    : BaseController()
+public class RoomController(
+    IMediator mediator,
+    IMapper mapper)
+    : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(
