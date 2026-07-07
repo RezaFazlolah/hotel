@@ -20,7 +20,7 @@ public class AuthController(
         [FromBody] RegisterCommandDto request, 
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<RegisterCommand>(request);
+        var command = mapper.Map<RegisterCommand>(request) with { Role = UserRole.Guest };
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }

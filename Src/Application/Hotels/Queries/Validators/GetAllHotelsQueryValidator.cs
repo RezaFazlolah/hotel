@@ -1,14 +1,13 @@
 using Application.Common.Validators;
-using Application.Rooms.Queries;
 using FluentValidation;
 
-namespace Application.Rooms.Validators;
+namespace Application.Hotels.Queries.Validators;
 
 // Future: use inheritance for GetAllHotelsQueryValidator, GetAllRoomsQueryValidator, GetAllReservationsQueryValidator 
-public class GetAllRoomsQueryValidator
-    : AbstractValidator<GetAllRoomsQuery>
+public class GetAllHotelsQueryValidator
+    : AbstractValidator<GetAllHotelsQuery>
 {
-    public GetAllRoomsQueryValidator()
+    public GetAllHotelsQueryValidator()
     {
         RuleFor(x => x.PaginationParameters)
             .SetValidator(new PaginationParametersValidator());

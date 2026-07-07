@@ -4,8 +4,5 @@ using SharedKernel.Common;
 
 namespace Application.Rooms.Queries;
 
-public class GetRoomByIdQuery
-    : IRequest<Result<RoomDto>>
-{
-    public required Guid RoomId { get; set; }
-}
+public record GetRoomByIdQuery(Guid RoomId)
+    : IRequest<Result<RoomDto>>;

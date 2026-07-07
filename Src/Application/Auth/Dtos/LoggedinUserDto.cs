@@ -3,5 +3,5 @@ namespace Application.Auth.Dtos;
 public record LoggedinUserDto
  : BaseUserDto
 {
-  public string Jwt { get; set; } = string.Empty;
+  public string Jwt { get; init; } = string.Empty;
 }

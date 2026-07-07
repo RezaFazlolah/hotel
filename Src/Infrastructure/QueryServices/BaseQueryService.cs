@@ -1,4 +1,3 @@
-using Application.Extensions;
 using Application.Interfaces.QueryServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -39,6 +38,6 @@ public abstract class BaseQueryService<TEntity, TDto>(
 
         return Result<PagedResult<TDto>>.Success(dtos);
     }
-
+    
     public virtual string EntityName => typeof(TEntity).Name;
 }

@@ -1,5 +1,6 @@
 using Domain.Interfaces;
 using SharedKernel.Common;
+using SharedKernel.Filters;
 using SharedKernel.Paginations;
 
 namespace Application.Interfaces.QueryServices;

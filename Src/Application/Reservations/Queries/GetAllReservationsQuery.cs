@@ -6,5 +6,8 @@ using SharedKernel.Paginations;
 
 namespace Application.Reservations.Queries;
 
-public record GetAllReservationsQuery(PaginationParameters PaginationParameters)
-    : IRequest<Result<PagedResult<ReservationDto>>>;
+public record GetAllReservationsQuery
+    : IRequest<Result<PagedResult<ReservationDto>>>
+{
+    public PaginationParameters? PaginationParameters { get; init; }
+}

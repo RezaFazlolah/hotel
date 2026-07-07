@@ -15,7 +15,9 @@ public class LoginCommandHandler(
     IMapper mapper)
     : IRequestHandler<LoginCommand, Result<LoggedinUserDto>>
 {
-    public async Task<Result<LoggedinUserDto>> Handle(LoginCommand request, CancellationToken ct)
+    public async Task<Result<LoggedinUserDto>> Handle(
+        LoginCommand request,
+        CancellationToken ct)
     {
         var userResult = await userRepository.GetByPhoneNumberAsync(request.PhoneNumber, ct);
         if (!userResult.Succeeded)

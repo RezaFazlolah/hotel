@@ -8,9 +8,9 @@ namespace Application.Rooms.Commands;
 public record UpdateRoomCommand
     : IRequest<Result<RoomDto>>
 {
-    public required Guid Id { get; set; }
-    public int Number { get; set; }
-    public RoomType Type { get; set; }
-    public decimal PricePerNight { get; set; }
-    public Guid? HotelId { get; set; }
+    public required Guid Id { get; init; }
+    public int? Number { get; init; }
+    public RoomType? Type { get; init; }
+    public decimal? PricePerNight { get; init; }
+    public Guid? HotelId { get; init; }
 }

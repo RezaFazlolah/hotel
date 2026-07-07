@@ -54,14 +54,10 @@ public class InsertRoomCommandHandler(
         var roomNumberExists = roomNumberExistsResult.Value;
 
         if (roomNumberExists)
-        {
             return Result<RoomDto>.Failure(new Error(
                 $"insert room failed. hotel {request.HotelId} already has room number {request.Number}."));
-        }
-        else
-        {
-            var result = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
-            return mapper.Map<Result<RoomDto>>(result);
-        }
+
+        var result = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
+        return mapper.Map<Result<RoomDto>>(result);
     }
 }

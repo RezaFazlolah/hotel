@@ -14,7 +14,9 @@ public class RegisterCommandHandler(
     IMapper mapper)
     : IRequestHandler<RegisterCommand, Result<RegisteredUserDto>>
 {
-    public async Task<Result<RegisteredUserDto>> Handle(RegisterCommand request, CancellationToken ct)
+    public async Task<Result<RegisteredUserDto>> Handle(
+        RegisterCommand request,
+        CancellationToken ct)
     {
         var registeringUser = UserFactory.CreateUserFromRegisterCommand(request); 
 

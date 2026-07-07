@@ -30,7 +30,7 @@ public class RoomController(
         [FromRoute] Guid id,
         CancellationToken ct)
     {
-        var request = new GetRoomByIdQuery { RoomId = id };
+        var request = new GetRoomByIdQuery(id);
         var result = await mediator.Send(request, ct);
         return HandleResult(result);
     }
@@ -54,8 +54,7 @@ public class RoomController(
         CancellationToken ct)
     {
         // future: i get error, its an EF Core tracking problem, fix it later when you read EF Core in details
-        var command = mapper.Map<UpdateRoomCommand>(request);
-        command.Id = id;
+        var command = mapper.Map<UpdateRoomCommand>(request) with {Id = id};
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
@@ -66,7 +65,7 @@ public class RoomController(
         [FromRoute] Guid id,
         CancellationToken ct)
     {
-        var request = new DeleteRoomCommand { RoomId = id };
+        var request = new DeleteRoomCommand(id);
         var result = await mediator.Send(request, ct);
         return HandleResult(result);
     }

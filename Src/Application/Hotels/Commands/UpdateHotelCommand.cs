@@ -7,8 +7,8 @@ namespace Application.Hotels.Commands;
 public record UpdateHotelCommand
     : IRequest<Result<HotelDto>>
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public float Rating { get; set; }
+    public required Guid Id { get; init; }
+    public string? Name { get; init; }
+    public string? Address { get; init; }
+    public float? Rating { get; init; }
 }

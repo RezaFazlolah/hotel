@@ -1,7 +1,6 @@
-using Application.Rooms.Commands;
 using FluentValidation;
 
-namespace Application.Rooms.Validators;
+namespace Application.Rooms.Commands.Validators;
 
 public class UpdateRoomCommandValidator : AbstractValidator<UpdateRoomCommand>
 {

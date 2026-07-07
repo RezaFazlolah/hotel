@@ -1,11 +1,11 @@
 namespace Application.Hotels.Dtos;
 
-public class HotelDto
+public record HotelDto
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public decimal Rating { get; set; }
+    public Guid Id { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public string Address { get; init; } = string.Empty;
+    public decimal Rating { get; init; }
     
     // public IReadOnlyList<ManagerDto> Managers { get; set; } = [];
     // public IReadOnlyList<RoomDto> Rooms { get; set; } = [];

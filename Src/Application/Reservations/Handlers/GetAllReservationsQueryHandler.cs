@@ -1,3 +1,4 @@
+using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Dtos;
@@ -13,6 +14,7 @@ namespace Application.Reservations.Handlers;
 public class GetAllReservationsQueryHandler(
     ICurrentUserService currentUserService,
     IReservationRepository reservationRepository,
+    IReservationQueryService reservationQueryService,
     IMapper mapper)
     : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<ReservationDto>>>
 {
@@ -28,23 +30,20 @@ public class GetAllReservationsQueryHandler(
         var userId = currentUserService.Id.Value;
 
         if (roles.Contains(UserRole.Admin))
-        {
-            var result = await reservationRepository.GetAllAsync(request.PaginationParameters, ct);
-            return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
-        }
+            return await reservationQueryService.GetAllAsync(request.PaginationParameters, ct);
 
         if (roles.Contains(UserRole.Manager))
         {
-            var result = await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
-            return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
+            var reservations = await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
+            return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
 
         if (roles.Contains(UserRole.Guest))
         {
-            var result = await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
-            return mapper.Map<Result<PagedResult<ReservationDto>>>(result);
+            var reservations = await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
+            return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
 
-        return Result<PagedResult<ReservationDto>>.Failure(new Error("user role not supported"));
+        return Result<PagedResult<ReservationDto>>.Failure(new Error("user role not supported."));
     }
 }

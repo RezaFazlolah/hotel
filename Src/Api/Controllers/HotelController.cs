@@ -5,8 +5,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel;
-using SharedKernel.Common;
 using SharedKernel.Constants;
 
 namespace Api.Controllers;
@@ -55,8 +53,7 @@ public class HotelController(
         [FromBody] UpdateHotelCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateHotelCommand>(request);
-        command.Id = id;
+        var command = mapper.Map<UpdateHotelCommand>(request) with { Id = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

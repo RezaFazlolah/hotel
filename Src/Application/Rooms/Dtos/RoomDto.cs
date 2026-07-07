@@ -2,12 +2,12 @@ using SharedKernel.Enums;
 
 namespace Application.Rooms.Dtos;
 
-public class RoomDto
+public record RoomDto
 {
-    public Guid Id { get; set; }
-    public Guid HotelId { get; set; }
-    public int Number { get; set; }
-    public RoomType Type { get; set; }
+    public Guid Id { get; init; }
+    public Guid HotelId { get; init; }
+    public int Number { get; init; }
+    public RoomType Type { get; init; }
 
     public decimal PricePerNight { get; set; }
     // public HotelDto? Hotel { get; set; }

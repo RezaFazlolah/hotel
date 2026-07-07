@@ -5,11 +5,11 @@ using SharedKernel.Enums;
 
 namespace Application.Rooms.Commands;
 
-public class InsertRoomCommand
+public record InsertRoomCommand
     : IRequest<Result<RoomDto>>
 {
-    public required int Number { get; set; }
-    public RoomType Type { get; set; }
-    public decimal PricePerNight { get; set; }
-    public required Guid HotelId { get; set; }
+    public required int Number { get; init; }
+    public required RoomType Type { get; init; }
+    public required decimal PricePerNight { get; init; }
+    public required Guid HotelId { get; init; }
 }

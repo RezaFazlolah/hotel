@@ -7,7 +7,7 @@ namespace Application.Reservations.Commands;
 public record UpdateReservationCommand
     : IRequest<Result<ReservationDto>>
 {
-    public Guid Id { get; set; }
-    public DateTimeOffset CheckInDate { get; set; }
-    public DateTimeOffset CheckOutDate { get; set; }
+    public required Guid Id { get; set; }
+    public DateTimeOffset? CheckInDate { get; set; }
+    public DateTimeOffset? CheckOutDate { get; set; }
 }

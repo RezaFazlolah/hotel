@@ -2,9 +2,9 @@ namespace Application.Auth.Dtos;
 
 public record BaseUserDto
 {
-    public Guid Id { get; set; }
-    public string PhoneNumber { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string[] Roles { get; set; } = [];
+    public Guid Id { get; init; }
+    public string PhoneNumber { get; init; } = string.Empty;
+    public string FirstName { get; init; } = string.Empty;
+    public string LastName { get; init; } = string.Empty;
+    public string[] Roles { get; init; } = [];
 }

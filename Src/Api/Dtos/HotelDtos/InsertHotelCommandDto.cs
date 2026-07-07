@@ -2,7 +2,7 @@ namespace Api.Dtos.HotelDtos;
 
 public class InsertHotelCommandDto
 {
-    public string Name { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string Address { get; set; }
     public float Rating { get; set; }
 }

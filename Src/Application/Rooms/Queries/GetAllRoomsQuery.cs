@@ -6,5 +6,8 @@ using SharedKernel.Paginations;
 
 namespace Application.Rooms.Queries;
 
-public record GetAllRoomsQuery(PaginationParameters PaginationParameters)
-    : IRequest<Result<PagedResult<RoomDto>>>;
+public record GetAllRoomsQuery
+    : IRequest<Result<PagedResult<RoomDto>>>
+{
+    public PaginationParameters? PaginationParameters { get; init; }
+}
