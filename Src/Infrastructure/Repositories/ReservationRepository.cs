@@ -1,4 +1,3 @@
-using Application.Extensions;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Domain.Models;
@@ -15,16 +14,20 @@ public class ReservationRepository(
     : BaseRepository<Guid, Reservation>(db),
         IReservationRepository
 {
-    public override async Task<bool> ExistsAsync(Guid id, CancellationToken ct)
+    public override async Task<bool> ExistsAsync(
+        Guid id,
+        CancellationToken ct)
         => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
             ct);
 
-    public async Task<Result<Reservation>> CancelAsync(Guid reservationId, CancellationToken ct)
+    public async Task<Result<Reservation>> CancelAsync(
+        Guid reservationId,
+        CancellationToken ct)
     {
-        var result = await GetByIdAsync(reservationId, ct);
-        if (!result.Succeeded)
-            return result;
-        var reservation = result.Value;
+        var reservationResult = await GetByIdAsync(reservationId, ct);
+        if (!reservationResult.Succeeded)
+            return reservationResult;
+        var reservation = reservationResult.Value;
 
         reservation.Status = ReservationStatus.Cancelled;
         await db.SaveChangesAsync(ct);

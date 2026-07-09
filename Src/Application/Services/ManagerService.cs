@@ -1,5 +1,6 @@
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using Domain.Interfaces;
 using Domain.Models;
 using SharedKernel.Common;
@@ -8,8 +9,10 @@ namespace Application.Services;
 
 public class ManagerService(
     IManagerRepository managerRepository,
-    IRoomQueryService roomQueryService)
-    : UserService, IManagerService
+    IRoomQueryService roomQueryService,
+    IRoomRepository roomRepository)
+    : UserService,
+        IManagerService
 {
     // public async Task<Result<IEnumerable<Guid>>> GetRoomsIdAsync(Guid managerId, CancellationToken ct)
     // {
@@ -47,17 +50,26 @@ public class ManagerService(
         return Result<IEnumerable<Guid>>.Success(roomIds);
     }
 
-    public async Task<Result<bool>> ManagesRoomsAsync(
+    // Question: i don't know if this is the right place to implement this method or not?
+    public async Task<Result<bool>> ManagesRoomAsync(
         Guid managerId,
         Guid roomId,
         CancellationToken ct)
     {
-        var roomsIdResult = await GetAllRoomsIdAsync(managerId, ct);
-        if (!roomsIdResult.Succeeded)
-            return Result<bool>.Failure(roomsIdResult.Errors);
-        var roomsId = roomsIdResult.Value;
+        var errors = new List<Error>();
 
-        var result = roomsId.Contains(roomId);
-        return Result<bool>.Success(result);
+        var roomResult = await roomRepository.GetByIdAsync(roomId, ct);
+        if (!roomResult.Succeeded)
+            errors.AddRange(roomResult.Errors);
+        var room = roomResult.Value;
+
+        var managerResult = await managerRepository.GetByIdAsync(managerId, ct);
+        if (!managerResult.Succeeded)
+            errors.AddRange(managerResult.Errors);
+        var manager = (Manager)managerResult.Value;
+
+        return errors.Any()
+            ? Result<bool>.Failure(errors)
+            : Result<bool>.Success(room.HotelId == manager.HotelId);
     }
 }

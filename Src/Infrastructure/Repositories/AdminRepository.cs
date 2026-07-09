@@ -8,8 +8,7 @@ namespace Infrastructure.Repositories;
 
 public class AdminRepository(
     AppDbContext db,
-    UserManager<User> userManager,
-    RoleManager<Role> roleManager)
+    UserManager<User> userManager)
     : UserRepository(db, userManager),
         IAdminRepository
 {

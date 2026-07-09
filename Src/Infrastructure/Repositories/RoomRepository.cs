@@ -6,20 +6,21 @@ using SharedKernel.Common;
 namespace Infrastructure.Repositories;
 
 public class RoomRepository(AppDbContext db)
-    : BaseRepository<Guid, Room>(db), IRoomRepository
+    : BaseRepository<Guid, Room>(db),
+        IRoomRepository
 {
     public override async Task<Result<Room>> InsertAsync(
         Room room,
-        CancellationToken cancellationToken)
-        => (await RoomNumberExistsAsync(room.HotelId, room.Number, cancellationToken)).Value
+        CancellationToken ct)
+        => (await RoomNumberExistsAsync(room.HotelId, room.Number, ct)).Value
             ? Result<Room>.Failure(new Error($"room number {room.Number} already exists"))
-            : await base.InsertAsync(room, cancellationToken);
+            : await base.InsertAsync(room, ct);
 
     public override async Task<Result<Room>> UpdateAsync(
         Room room,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var existingRoomResult = await GetByIdAsync(room.Id, cancellationToken);
+        var existingRoomResult = await GetByIdAsync(room.Id, ct);
         if (!existingRoomResult.Succeeded)
             return Result<Room>.Failure(existingRoomResult.Errors.Prepend(new Error($"update room {room.Id} failed.")));
         var existingRoom = existingRoomResult.Value;
@@ -27,7 +28,7 @@ public class RoomRepository(AppDbContext db)
         if (room.Number != existingRoom.Number)
         {
             var roomNumberExistsResult =
-                await RoomNumberExistsAsync(room.HotelId, room.Number, cancellationToken);
+                await RoomNumberExistsAsync(room.HotelId, room.Number, ct);
             if (!roomNumberExistsResult.Succeeded)
                 return Result<Room>.Failure(
                     roomNumberExistsResult.Errors.Prepend(new Error($"update room {room.Id} failed.")));
@@ -37,9 +38,9 @@ public class RoomRepository(AppDbContext db)
                     new Error($"update room {room.Id} failed. room number {room.Number} already exists."));
         }
 
-        return await base.UpdateAsync(room, cancellationToken);
+        return await base.UpdateAsync(room, ct);
     }
-    
+
     protected override IQueryable<Room> CustomContext()
         => db.Rooms
             .Include(r => r.Hotel)
@@ -62,8 +63,7 @@ public class RoomRepository(AppDbContext db)
         if (!await ExistsAsync(hotelId, ct))
             return Result<bool>.Failure(new Error($"hotel {hotelId} not found."));
 
-        var roomExists = await db.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber,
-            cancellationToken: ct);
+        var roomExists = await db.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber, ct);
         return Result<bool>.Success(roomExists);
     }
 }

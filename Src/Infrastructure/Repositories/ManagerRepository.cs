@@ -1,16 +1,13 @@
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SharedKernel.Common;
 
 namespace Infrastructure.Repositories;
 
 public class ManagerRepository(
     AppDbContext db,
-    UserManager<User> userManager,
-    RoleManager<Role> roleManager)
+    UserManager<User> userManager)
     : UserRepository(db, userManager),
         IManagerRepository
 {

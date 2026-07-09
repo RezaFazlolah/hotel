@@ -1,4 +1,3 @@
-using Application.Extensions;
 using Application.Interfaces.Repositories;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +20,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
                 .PaginateAsync(paginationParameters, ct)
         );
 
+    // Question: i think i shouldn't implement this method at all, IQueryable is Infrastructure concern
     public IQueryable<TEntity> GetAllAsQueryable()
         => CustomContext();
 
@@ -67,6 +67,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
+    // Question: do i need to check for duplicated IDs in a separate service?
     public virtual async Task<bool> ExistsAsync(
             TId id,
             CancellationToken ct)
@@ -77,7 +78,6 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found."))
         // };
         => await db.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
-    // Question: do i need to check for duplicated IDs in a separate service?
 
     protected abstract IQueryable<TEntity> CustomContext();
 

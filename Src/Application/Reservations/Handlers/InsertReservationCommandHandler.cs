@@ -1,4 +1,3 @@
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
@@ -32,7 +31,7 @@ public class InsertReservationCommandHandler(
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
-        if (currentUserInfo.roles.Contains(UserRole.Guest) || currentUserInfo.roles.Contains(UserRole.Admin))
+        if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
             var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
             if (!roomExists)
@@ -40,13 +39,17 @@ public class InsertReservationCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var roomExists = await managerService.ManagesRoomsAsync(currentUserInfo.id, request.RoomId, ct);
-            if (!roomExists.Succeeded)
-                return Result<ReservationDto>.Failure(roomExists.Errors.Prepend(rootError));
-            var managesRoom = roomExists.Value;
+            var managesRoomResult = await managerService.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct);
+            if (!managesRoomResult.Succeeded)
+                return Result<ReservationDto>.Failure(managesRoomResult.Errors.Prepend(rootError));
+            var managesRoom = managesRoomResult.Value;
 
             if (!managesRoom)
                 return Result<ReservationDto>.Failure([rootError, new Error($"room not found.")]);
+        }
+        else if (currentUserInfo.roles.Contains(UserRole.Admin))
+        {
+            
         }
         else
         {
