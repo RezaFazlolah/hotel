@@ -9,9 +9,13 @@ public interface IRoomRepository
     Task<Result<IReadOnlyList<Room>>> GetAllByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct);
-    
+
     Task<Result<bool>> RoomNumberExistsAsync(
         Guid hotelId,
         int roomNumber,
+        CancellationToken ct);
+
+    Task<Result<Guid>> GetHotelIdAsync(
+        Guid roomId,
         CancellationToken ct);
 }

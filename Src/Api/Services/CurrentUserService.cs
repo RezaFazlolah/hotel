@@ -37,7 +37,7 @@ public class CurrentUserService(
 
     public async Task<Result<User>> GetUserAsync(CancellationToken ct)
     {
-        var currentUserIdResult = Id;
+        var currentUserIdResult = this.Id;
         if (!currentUserIdResult.Succeeded)
             return Result<User>.Failure(currentUserIdResult.Errors);
         var currentUserId = currentUserIdResult.Value;
@@ -45,7 +45,7 @@ public class CurrentUserService(
         return await userRepository.GetByIdAsync(currentUserId, CancellationToken.None);
     }
 
-    public async Task<Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>> GetUserInfoAsync(
+    public async Task<Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>> GetCurrentUserInfoAsync(
         CancellationToken ct)
     {
         var currentUserIdResult = this.Id;

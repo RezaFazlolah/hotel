@@ -9,5 +9,5 @@ namespace Application.Reservations.Queries;
 public record GetAllReservationsQuery
     : IRequest<Result<PagedResult<ReservationDto>>>
 {
-    public PaginationParameters? PaginationParameters { get; init; }
+    public required PaginationParameters PaginationParameters { get; init; }
 }

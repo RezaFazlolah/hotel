@@ -25,7 +25,7 @@ public class RoomMappingProfiles
                             PageNumber = src.PageNumber.Value,
                             PageSize = src.PageSize.Value
                         }
-                        : null)
+                        : new PaginationParameters())
             );
     }
 }

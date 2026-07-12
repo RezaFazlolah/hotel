@@ -14,22 +14,6 @@ public class ManagerService(
     : UserService,
         IManagerService
 {
-    // public async Task<Result<IEnumerable<Guid>>> GetRoomsIdAsync(Guid managerId, CancellationToken ct)
-    // {
-    //     var managerResult = await managerRepository.GetByIdAsync(managerId, ct);
-    //     if (!managerResult.Succeeded)
-    //         return Result<IEnumerable<Guid>>.Failure(new Error($"manager {managerId} not found."));
-    //     var manager = (Manager)managerResult.Value;
-    //     
-    //     if(manager.HotelId is null)
-    //         return Result<IEnumerable<Guid>>.Failure(new Error($"manager {managerId} doesn't manage any hotels."));
-    //         
-    //     var roomsIdResult = await hotelRepository.GetRoomsIdAsync(manager.HotelId.Value, ct);
-    //     return roomsIdResult.Succeeded
-    //         ? Result<IEnumerable<Guid>>.Success(roomsIdResult.Value)
-    //         : Result<IEnumerable<Guid>>.Failure(roomsIdResult.Errors);
-    // }
-
     public async Task<Result<IEnumerable<Guid>>> GetAllRoomsIdAsync(
         Guid managerId,
         CancellationToken ct)
@@ -51,25 +35,24 @@ public class ManagerService(
     }
 
     // Question: i don't know if this is the right place to implement this method or not?
-    public async Task<Result<bool>> ManagesRoomAsync(
+    public async Task<bool> ManagesRoomAsync(
         Guid managerId,
         Guid roomId,
         CancellationToken ct)
     {
-        var errors = new List<Error>();
+        var managerHotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+        if (!managerHotelIdResult.Succeeded)
+            return false;
+        var managerHotelId = managerHotelIdResult.Value;
 
-        var roomResult = await roomRepository.GetByIdAsync(roomId, ct);
-        if (!roomResult.Succeeded)
-            errors.AddRange(roomResult.Errors);
-        var room = roomResult.Value;
+        if (managerHotelId is null)
+            return false;
+        
+        var roomHotelIdResult = await roomRepository.GetHotelIdAsync(roomId, ct);
+        if(!roomHotelIdResult.Succeeded)
+            return false;
+        var roomHotelId = roomHotelIdResult.Value;
 
-        var managerResult = await managerRepository.GetByIdAsync(managerId, ct);
-        if (!managerResult.Succeeded)
-            errors.AddRange(managerResult.Errors);
-        var manager = (Manager)managerResult.Value;
-
-        return errors.Any()
-            ? Result<bool>.Failure(errors)
-            : Result<bool>.Success(room.HotelId == manager.HotelId);
+        return managerHotelId ==  roomHotelId;
     }
 }

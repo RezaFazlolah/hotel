@@ -23,7 +23,7 @@ public class DeleteHotelCommandHandler(
             return Result<HotelDto>.Failure(rolesResult.Errors);
         var roles = rolesResult.Value;
 
-        // future: there is warning in this file regarding IEnumerable, currently i dont know much about collection and iteration, after learning these, fix the warning.
+        // if (roles.Contains(UserRole.Admin))
         if (roles.Contains(UserRole.Admin))
         {
             var result = await hotelRepository.DeleteAsync(request.HotelId, ct);

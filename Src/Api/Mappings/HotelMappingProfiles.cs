@@ -25,7 +25,7 @@ public class HotelMappingProfiles
                             PageNumber = src.PageNumber.Value,
                             PageSize = src.PageSize.Value
                         }
-                        : null)
+                        : new PaginationParameters())
             );
     }
 }

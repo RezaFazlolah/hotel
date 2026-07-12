@@ -28,8 +28,7 @@ public abstract class BaseQueryService<TEntity, TDto>(
             : Result<TDto>.Success(dto);
     }
 
-    public virtual async Task<Result<PagedResult<TDto>>> GetAllAsync(
-        PaginationParameters paginationParameters,
+    public virtual async Task<Result<PagedResult<TDto>>> GetAllAsync(PaginationParameters paginationParameters,
         CancellationToken ct)
     {
         var dtos = await db.Set<TEntity>()
@@ -38,6 +37,6 @@ public abstract class BaseQueryService<TEntity, TDto>(
 
         return Result<PagedResult<TDto>>.Success(dtos);
     }
-    
+
     public virtual string EntityName => typeof(TEntity).Name;
 }

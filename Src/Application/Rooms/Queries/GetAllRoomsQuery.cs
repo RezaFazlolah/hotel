@@ -9,5 +9,5 @@ namespace Application.Rooms.Queries;
 public record GetAllRoomsQuery
     : IRequest<Result<PagedResult<RoomDto>>>
 {
-    public PaginationParameters? PaginationParameters { get; init; }
+    public required PaginationParameters PaginationParameters { get; init; }
 }

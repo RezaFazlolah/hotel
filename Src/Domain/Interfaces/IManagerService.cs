@@ -10,7 +10,7 @@ public interface IManagerService
         CancellationToken ct);
 
     // Question: i don't know if this is the right place to implement this method or not?
-    Task<Result<bool>> ManagesRoomAsync(
+    Task<bool> ManagesRoomAsync(
         Guid managerId,
         Guid roomId,
         CancellationToken ct);

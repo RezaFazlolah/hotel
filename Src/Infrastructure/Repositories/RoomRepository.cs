@@ -66,4 +66,17 @@ public class RoomRepository(AppDbContext db)
         var roomExists = await db.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber, ct);
         return Result<bool>.Success(roomExists);
     }
+
+    // Performance: fetch only HotelId column instead of fetching all columns and returning only HotelId
+    public async Task<Result<Guid>> GetHotelIdAsync(
+        Guid roomId,
+        CancellationToken ct)
+    {
+        var roomResult = await GetByIdAsync(roomId, ct);
+        if (!roomResult.Succeeded)
+            return Result<Guid>.Failure(roomResult.Errors);
+        var room = roomResult.Value;
+        
+        return Result<Guid>.Success(room.HotelId);
+    }
 }

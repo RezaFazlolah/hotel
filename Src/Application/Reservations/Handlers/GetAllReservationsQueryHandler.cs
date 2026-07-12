@@ -35,12 +35,14 @@ public class GetAllReservationsQueryHandler(
         if (roles.Contains(UserRole.Manager))
         {
             var reservations = await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
+
             return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
 
         if (roles.Contains(UserRole.Guest))
         {
             var reservations = await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
+
             return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
 

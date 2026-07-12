@@ -8,5 +8,5 @@ namespace Application.Hotels.Queries;
 public record GetAllHotelsQuery
     : IRequest<Result<PagedResult<HotelDto>>>
 {
-    public PaginationParameters? PaginationParameters { get; init; }
+    public required PaginationParameters PaginationParameters { get; init; }
 }
