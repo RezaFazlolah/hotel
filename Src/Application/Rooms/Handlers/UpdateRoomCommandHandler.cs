@@ -35,7 +35,7 @@ public class UpdateRoomCommandHandler(
         if (callerRoles.Contains(UserRole.Admin))
         {
             if (!await roomRepository.ExistsAsync(request.Id, ct))
-                return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. room not found."));
+                return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. room not found"));
         }
         else if (callerRoles.Contains(UserRole.Manager))
         {
@@ -44,10 +44,10 @@ public class UpdateRoomCommandHandler(
                 return Result<RoomDto>.Failure(roomsIdResult.Errors);
             var roomsId = roomsIdResult.Value;
             if (!roomsId.Contains(request.Id))
-                return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. room not found."));
+                return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. room not found"));
         }
         else
-            return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. unauthorized access."));
+            return Result<RoomDto>.Failure(new Error($"update room {request.Id} failed. unauthorized access"));
 
         var updatedRoom = mapper.Map<Room>(request);
 

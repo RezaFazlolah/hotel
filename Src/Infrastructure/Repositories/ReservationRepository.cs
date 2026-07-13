@@ -20,19 +20,9 @@ public class ReservationRepository(
         => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
             ct);
 
-    public async Task<Result<Reservation>> CancelAsync(
-        Guid reservationId,
-        CancellationToken ct)
-    {
-        var reservationResult = await GetByIdAsync(reservationId, ct);
-        if (!reservationResult.Succeeded)
-            return reservationResult;
-        var reservation = reservationResult.Value;
-
-        reservation.Status = ReservationStatus.Cancelled;
-        await db.SaveChangesAsync(ct);
-        return Result<Reservation>.Success(reservation);
-    }
+    // reservation is cancelled, not deleted
+    public override Task<Result<Reservation>> DeleteAsync(Guid id, CancellationToken ct)
+        => throw new NotSupportedException();
 
     protected override IQueryable<Reservation> CustomContext()
         => db.Reservations
@@ -58,10 +48,10 @@ public class ReservationRepository(
         DateTimeOffset checkOutDate,
         CancellationToken ct)
         => await db.Reservations.AnyAsync(r =>
-                (r.RoomId == roomId &&
-                 !(r.CheckOutDate < checkInDate ||
-                   checkOutDate < r.CheckInDate && r.Status != ReservationStatus.Cancelled) &&
-                 r.GuestId != guestId),
+                r.RoomId == roomId
+                && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate)
+                && r.Status != ReservationStatus.Cancelled
+                && r.GuestId != guestId,
             ct);
 
     public async Task<Result<PagedResult<Reservation>>> GetAllByHotelIdAsync(
@@ -73,7 +63,7 @@ public class ReservationRepository(
         if (!roomIdsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
-                    .Prepend(new Error($"get reservations for hotel {hotelId} failed."))
+                    .Prepend(new Error($"get reservations for hotel {hotelId} failed"))
             );
         var roomIds = roomIdsResult.Value;
 
@@ -95,7 +85,7 @@ public class ReservationRepository(
         if (!roomIdsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
-                    .Prepend(new Error($"get reservations for hotels {string.Join(", ", hotelsIdAsList)} failed."))
+                    .Prepend(new Error($"get reservations for hotels {string.Join(", ", hotelsIdAsList)} failed"))
             );
         var roomIds = roomIdsResult.Value;
 

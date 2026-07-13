@@ -30,13 +30,13 @@ public class DeleteRoomCommandHandler(
         var callerRolesResult = currentUserService.Roles;
         if (!callerRolesResult.Succeeded)
             return Result<RoomDto>.Failure(
-                callerRolesResult.Errors.Prepend(new Error($"delete room {request.RoomId} failed.")));
+                callerRolesResult.Errors.Prepend(new Error($"delete room {request.RoomId} failed")));
         var callerRoles = callerRolesResult.Value;
 
         if (callerRoles.Contains(UserRole.Admin))
         {
             if (!await roomRepository.ExistsAsync(request.RoomId, ct))
-                return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. room not found."),
+                return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. room not found"),
                     ResultCode.NotFound);
         }
         else if (callerRoles.Contains(UserRole.Manager))
@@ -46,11 +46,11 @@ public class DeleteRoomCommandHandler(
                 return Result<RoomDto>.Failure(roomsIdResult.Errors);
             var roomsId = roomsIdResult.Value;
             if (!roomsId.Contains(request.RoomId))
-                return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. room not found."),
+                return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. room not found"),
                     ResultCode.NotFound);
         }
         else
-            return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. unauthorized access."));
+            return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. unauthorized access"));
 
         var result = await roomRepository.DeleteAsync(request.RoomId, ct);
         return mapper.Map<Result<RoomDto>>(result);

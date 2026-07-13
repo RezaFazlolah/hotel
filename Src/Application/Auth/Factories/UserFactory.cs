@@ -17,6 +17,6 @@ public static class UserFactory
         {
             PhoneNumber = registerCommand.PhoneNumber,
             FirstName = registerCommand.FirstName,
-            LastName = registerCommand.LastName
+            LastName = registerCommand.LastName??string.Empty
         };
 }

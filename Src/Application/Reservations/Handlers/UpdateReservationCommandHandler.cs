@@ -1,13 +1,13 @@
-using Application.Interfaces;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
+using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Application.Reservations.Handlers;
 
@@ -15,33 +15,64 @@ public class UpdateReservationCommandHandler(
     IReservationRepository reservationRepository,
     ICurrentUserService currentUserService,
     IRoomRepository roomRepository,
+    IManagerService managerService,
     IMapper mapper)
     : IRequestHandler<UpdateReservationCommand, Result<ReservationDto>>
 {
-    public async Task<Result<ReservationDto>> Handle(UpdateReservationCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result<ReservationDto>> Handle(
+        UpdateReservationCommand request,
+        CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var rootError = new Error($"update reservation {request.Id} failed");
 
-        // if (await reservationRepository.ExistsAsync(request.Id, cancellationToken))
-        //     return Result<Reservation>.Failure(new Error($"reservation {request.Id} not found"), 404);
-        //
-        // var reservation = await reservationRepository.GetByIdAsync(request.Id, cancellationToken);
-        //
-        // var errors = new List<Error>();
-        // if (await roomRepository.IsRoomReservedAsync(reservation.RoomId, request.CheckInDate, request.CheckOutDate,
-        //         currentUserService.Id, cancellationToken))
-        //     errors.Add(new Error($"room {reservation.RoomId} is reserved"));
-        // if (errors.Count > 0)
-        //     return Result<Reservation>.Failure(errors, 404);
-        //
-        // var r = mapper.Map(request, reservation);
-        // reservation.TotalPrice = await reservationRepository.CalculateTotalPriceAsync(reservation.RoomId,
-        //     request.CheckInDate, request.CheckOutDate, cancellationToken);
-        //
-        // var updatedReservation = await reservationRepository.UpdateAsync(reservation, cancellationToken);
-        // return updatedReservation == null
-        //     ? Result<Reservation>.Failure(new Error("update reservation failed"), 400)
-        //     : Result<Reservation>.Success(updatedReservation);
+        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        if (!currentUserInfoResult.Succeeded)
+            return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
+
+        var reservationResult = await reservationRepository.GetByIdAsync(request.Id, ct);
+        if (!reservationResult.Succeeded)
+            return Result<ReservationDto>.Failure(reservationResult.Errors.Prepend(rootError));
+        var reservation = reservationResult.Value;
+
+        if (currentUserInfo.roles.Contains(UserRole.Admin))
+        {
+        }
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
+        {
+            if (!await managerService.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
+                return Result<ReservationDto>.Failure([rootError, new Error($"reservation not found")]);
+        }
+        else if (currentUserInfo.roles.Contains(UserRole.Guest))
+        {
+            if (reservation.GuestId != currentUserInfo.id)
+                return Result<ReservationDto>.Failure([rootError, new Error($"reservation not found")]);
+        }
+        else
+        {
+            return Result<ReservationDto>.Failure([rootError, new Error($"forbidden request", ErrorCode.Forbidden)]);
+        }
+
+        if (reservation.Status == ReservationStatus.Cancelled)
+            return Result<ReservationDto>.Failure([rootError, new Error("reservation is cancelled")]);
+
+        var updatedReservation = new Reservation
+        {
+            GuestId = reservation.GuestId,
+            RoomId = reservation.RoomId,
+            CheckInDate = request.CheckInDate ?? reservation.CheckInDate,
+            CheckOutDate = request.CheckOutDate ?? reservation.CheckOutDate
+        };
+
+        var isRoomReserved = await reservationRepository.IsRoomReservedAsync(updatedReservation.RoomId,
+            updatedReservation.GuestId,
+            updatedReservation.CheckInDate, updatedReservation.CheckOutDate, ct);
+        if (isRoomReserved)
+            return Result<ReservationDto>.Failure([rootError, new Error("another room is already reserved")]);
+
+        var reservationUpdateResult = await reservationRepository.UpdateAsync(updatedReservation, ct);
+        return reservationUpdateResult.Succeeded
+            ? mapper.Map<Result<ReservationDto>>(reservationUpdateResult)
+            : Result<ReservationDto>.Failure(reservationUpdateResult.Errors.Prepend(rootError));
     }
 }

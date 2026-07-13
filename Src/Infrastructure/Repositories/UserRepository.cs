@@ -23,7 +23,7 @@ public class UserRepository(
             CancellationToken ct)
         // throwing NotSupportedException is intentional, instead InsertAsync(User user, string password, CancellationToken ct) should be used for User
         => throw new NotSupportedException(
-            "use UserRepository.InsertAsync(User user, string password, CancellationToken ct) instead.");
+            "use UserRepository.InsertAsync(User user, string password, CancellationToken ct) instead");
 
     public virtual async Task<Result> InsertAsync(
         User user,
@@ -45,7 +45,7 @@ public class UserRepository(
             Guid id,
             CancellationToken ct)
         // throwing NotSupportedException is intentional, instead DeleteAsync(User user, CancellationToken ct) should be used for User 
-        => throw new NotSupportedException("use UserRepository.DeleteAsync(User user, CancellationToken ct) instead.");
+        => throw new NotSupportedException("use UserRepository.DeleteAsync(User user, CancellationToken ct) instead");
 
     public async Task<Result> DeleteAsync(
         User user,
@@ -57,7 +57,7 @@ public class UserRepository(
         {
             var errors = userDeleteResult.Errors.Select(e => $"{e.Code}: {e.Description}");
             var errorsAsString = string.Join(". ", errors);
-            return Result.Failure(new Error($"delete user {user.PhoneNumber} failed. {errorsAsString}."));
+            return Result.Failure(new Error($"delete user {user.PhoneNumber} failed. {errorsAsString}"));
         }
 
         return Result.Success();
@@ -113,7 +113,7 @@ public class UserRepository(
         var errorsAsString = string.Join(". ", errors);
 
         return Result.Failure(
-            new Error($"add role {role.ToString()} to user {user.Id} failed. {errorsAsString}.")
+            new Error($"add role {role.ToString()} to user {user.Id} failed. {errorsAsString}")
         );
     }
 

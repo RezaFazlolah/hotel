@@ -1,7 +1,5 @@
 using Application.Hotels.Commands;
 using Application.Hotels.Dtos;
-using Application.Interfaces;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
@@ -21,40 +19,40 @@ public class UpdateHotelCommandHandler(
 {
     public async Task<Result<HotelDto>> Handle(UpdateHotelCommand request, CancellationToken ct)
     {
+        var rootError = new Error($"update hotel {request.Id} failed");
+
         var currentUserRolesResult = currentUserService.Roles;
         if (!currentUserRolesResult.Succeeded)
             return Result<HotelDto>.Failure(
-                currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
+                currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed")));
         var currentUserRoles = currentUserRolesResult.Value;
 
         var updatedHotel = mapper.Map<Hotel>(request);
 
         if (currentUserRoles.Contains(UserRole.Admin))
         {
-            var hotelUpdateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-            return mapper.Map<Result<HotelDto>>(hotelUpdateResult);
         }
-
-        if (currentUserRoles.Contains(UserRole.Manager))
+        else if (currentUserRoles.Contains(UserRole.Manager))
         {
             var managerId = currentUserService.Id.Value;
             var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<HotelDto>.Failure(
-                    hotelIdResult.Errors.Prepend(new Error($"update hotel {request.Id} failed.")));
+                    hotelIdResult.Errors.Prepend(new Error($"update hotel {request.Id} failed")));
             var hotelId = hotelIdResult.Value;
 
             if (hotelId != request.Id)
                 return Result<HotelDto>.Failure(
                     new Error(
-                        $"update hotel {request.Id} failed. hotel not found.",
+                        $"update hotel {request.Id} failed. hotel not found",
                         ErrorCode.Forbidden), ResultCode.Forbidden);
-            var hotelUpdateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-            return mapper.Map<Result<HotelDto>>(hotelUpdateResult);
+        }
+        else
+        {
+            return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)]);
         }
 
-        return Result<HotelDto>.Failure(
-            new Error($"update hotel {request.Id} failed. unauthorized access", ErrorCode.Forbidden),
-            ResultCode.Forbidden);
+        var hotelUpdateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
+        return mapper.Map<Result<HotelDto>>(hotelUpdateResult);
     }
 }

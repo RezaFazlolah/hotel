@@ -27,18 +27,18 @@ public class LoginCommandHandler(
 
         var isPasswordCorrect = await userRepository.CheckPassword(user, request.Password);
         if (!isPasswordCorrect)
-            return Result<LoggedinUserDto>.Failure(new Error($"user {request.PhoneNumber} login failed. incorrect password."));
+            return Result<LoggedinUserDto>.Failure(new Error($"user {request.PhoneNumber} login failed. incorrect password"));
 
         var jwtResult = await jwtService.GenerateJwt(user);
         if (!jwtResult.Succeeded)
             return Result<LoggedinUserDto>.Failure(
-                jwtResult.Errors.Prepend(new Error($"user {request.PhoneNumber} login failed.")));
+                jwtResult.Errors.Prepend(new Error($"user {request.PhoneNumber} login failed")));
         var jwt = jwtResult.Value;
 
         var rolesResult = await userRepository.GetRolesAsync(user, ct);
         if (!rolesResult.Succeeded)
             return Result<LoggedinUserDto>.Failure(
-                rolesResult.Errors.Prepend(new Error($"user {request.PhoneNumber} login failed.")));
+                rolesResult.Errors.Prepend(new Error($"user {request.PhoneNumber} login failed")));
         var roles = rolesResult.Value.Select(r => r.ToString()).ToArray();
         
         var userDto = mapper.Map<LoggedinUserDto>(user) with {Roles = roles, Jwt = jwt};

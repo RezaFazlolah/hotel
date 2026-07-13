@@ -30,7 +30,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     {
         var entity = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
         if (entity is null)
-            return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found.", ErrorCode.NotFound),
+            return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
                 ResultCode.NotFound);
         return Result<TEntity>.Success(entity);
     }
@@ -75,7 +75,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         // {
         //     0 => Result<bool>.Success(false),
         //     1 => Result<bool>.Success(true),
-        //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found."))
+        //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found"))
         // };
         => await db.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
 

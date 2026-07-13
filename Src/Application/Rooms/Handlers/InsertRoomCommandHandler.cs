@@ -24,38 +24,38 @@ public class InsertRoomCommandHandler(
     {
         var userRolesResult = currentUserService.Roles;
         if (!userRolesResult.Succeeded)
-            return Result<RoomDto>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed.")));
+            return Result<RoomDto>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed")));
         var userRoles = userRolesResult.Value;
         var userId = currentUserService.Id.Value;
 
         if (userRoles.Contains(UserRole.Admin))
         {
             if (!await hotelRepository.ExistsAsync(request.HotelId, ct))
-                return Result<RoomDto>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found."));
+                return Result<RoomDto>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found"));
         }
         else if (userRoles.Contains(UserRole.Manager))
         {
             var hotelIdResult = await managerRepository.GetHotelIdAsync(userId, ct);
             if (!hotelIdResult.Succeeded)
-                return Result<RoomDto>.Failure(hotelIdResult.Errors.Prepend(new Error("insert room failed.")));
+                return Result<RoomDto>.Failure(hotelIdResult.Errors.Prepend(new Error("insert room failed")));
             var hotelId = hotelIdResult.Value;
 
             if (request.HotelId != hotelId)
-                return Result<RoomDto>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found."));
+                return Result<RoomDto>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found"));
         }
         else
-            return Result<RoomDto>.Failure(new Error("insert room failed. unauthorized access.", ErrorCode.Forbidden),
+            return Result<RoomDto>.Failure(new Error("insert room failed. unauthorized access", ErrorCode.Forbidden),
                 ResultCode.Forbidden);
 
         var roomNumberExistsResult =
             await roomRepository.RoomNumberExistsAsync(request.HotelId, request.Number, ct);
         if (!roomNumberExistsResult.Succeeded)
-            return Result<RoomDto>.Failure(roomNumberExistsResult.Errors.Prepend(new Error($"insert room failed.")));
+            return Result<RoomDto>.Failure(roomNumberExistsResult.Errors.Prepend(new Error($"insert room failed")));
         var roomNumberExists = roomNumberExistsResult.Value;
 
         if (roomNumberExists)
             return Result<RoomDto>.Failure(new Error(
-                $"insert room failed. hotel {request.HotelId} already has room number {request.Number}."));
+                $"insert room failed. hotel {request.HotelId} already has room number {request.Number}"));
 
         var result = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
         return mapper.Map<Result<RoomDto>>(result);

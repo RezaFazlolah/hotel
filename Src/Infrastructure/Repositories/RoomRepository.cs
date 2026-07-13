@@ -22,7 +22,7 @@ public class RoomRepository(AppDbContext db)
     {
         var existingRoomResult = await GetByIdAsync(room.Id, ct);
         if (!existingRoomResult.Succeeded)
-            return Result<Room>.Failure(existingRoomResult.Errors.Prepend(new Error($"update room {room.Id} failed.")));
+            return Result<Room>.Failure(existingRoomResult.Errors.Prepend(new Error($"update room {room.Id} failed")));
         var existingRoom = existingRoomResult.Value;
 
         if (room.Number != existingRoom.Number)
@@ -31,11 +31,11 @@ public class RoomRepository(AppDbContext db)
                 await RoomNumberExistsAsync(room.HotelId, room.Number, ct);
             if (!roomNumberExistsResult.Succeeded)
                 return Result<Room>.Failure(
-                    roomNumberExistsResult.Errors.Prepend(new Error($"update room {room.Id} failed.")));
+                    roomNumberExistsResult.Errors.Prepend(new Error($"update room {room.Id} failed")));
             var roomNumberExists = roomNumberExistsResult.Value;
             if (roomNumberExists)
                 return Result<Room>.Failure(
-                    new Error($"update room {room.Id} failed. room number {room.Number} already exists."));
+                    new Error($"update room {room.Id} failed. room number {room.Number} already exists"));
         }
 
         return await base.UpdateAsync(room, ct);
@@ -61,7 +61,7 @@ public class RoomRepository(AppDbContext db)
         CancellationToken ct)
     {
         if (!await ExistsAsync(hotelId, ct))
-            return Result<bool>.Failure(new Error($"hotel {hotelId} not found."));
+            return Result<bool>.Failure(new Error($"hotel {hotelId} not found"));
 
         var roomExists = await db.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber, ct);
         return Result<bool>.Success(roomExists);

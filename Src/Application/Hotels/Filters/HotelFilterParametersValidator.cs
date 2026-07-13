@@ -20,6 +20,6 @@ public class HotelFilterParametersValidator
         RuleFor(x=>x.MinRating)
             .LessThanOrEqualTo(x=>x.MaxRating)
             .When(x => x.MinRating.HasValue && x.MaxRating.HasValue)
-            .WithMessage("MinRating must be less than or equal to MaxRating.");
+            .WithMessage("MinRating must be less than or equal to MaxRating");
     }
 }

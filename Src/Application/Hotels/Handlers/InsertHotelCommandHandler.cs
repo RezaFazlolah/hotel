@@ -22,11 +22,11 @@ public class InsertHotelCommandHandler(
     {
         var currentUserRolesResult = currentUserService.Roles;
         if (!currentUserRolesResult.Succeeded)
-            return Result<HotelDto>.Failure(currentUserRolesResult.Errors.Prepend(new Error($"insert hotel failed.")));
+            return Result<HotelDto>.Failure(currentUserRolesResult.Errors.Prepend(new Error($"insert hotel failed")));
         var currentUserRoles = currentUserRolesResult.Value;
 
         if (!currentUserRoles.Contains(UserRole.Admin))
-            return Result<HotelDto>.Failure(new Error("insert hotel failed. forbidden access.", ErrorCode.Forbidden),
+            return Result<HotelDto>.Failure(new Error("insert hotel failed. forbidden access", ErrorCode.Forbidden),
                 ResultCode.Forbidden);
 
         var hotel = mapper.Map<Hotel>(request);

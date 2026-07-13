@@ -11,6 +11,10 @@ using SharedKernel.Enums;
 
 namespace Application.Reservations.Handlers;
 
+// Bug: i get error, it has something to do with DB lock.
+// i spent about an hour trying to debug it and nuked DB multiple times, but i couldnt solve it.
+// when i uncomment "!(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate)" at ReservationRepository.IsReservedAsync(), my problem is solved.
+// come back later
 public class InsertReservationCommandHandler(
     IReservationRepository reservationRepository,
     IRoomRepository roomRepository,
@@ -25,7 +29,7 @@ public class InsertReservationCommandHandler(
         InsertReservationCommand request,
         CancellationToken ct)
     {
-        var rootError = new Error($"insert reservation for guest {request.GuestId} and room {request.RoomId} failed.");
+        var rootError = new Error($"insert reservation for guest {request.GuestId} and room {request.RoomId} failed");
 
         var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
         if (!currentUserInfoResult.Succeeded)
@@ -38,11 +42,11 @@ public class InsertReservationCommandHandler(
 
             var guestExists = await guestRepository.ExistsAsync(request.GuestId, ct);
             if (!guestExists)
-                errors.Add(new Error($"guest not found."));
+                errors.Add(new Error($"guest not found"));
 
             var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
             if (!roomExists)
-                errors.Add(new Error($"room not found."));
+                errors.Add(new Error($"room not found"));
 
             if (errors.Any())
                 return Result<ReservationDto>.Failure(errors.Prepend(rootError));
@@ -53,11 +57,11 @@ public class InsertReservationCommandHandler(
 
             var guestExists = await guestRepository.ExistsAsync(request.GuestId, ct);
             if (!guestExists)
-                errors.Add(new Error($"guest not found."));
+                errors.Add(new Error($"guest not found"));
 
             var managesRoom = await managerService.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct);
             if (!managesRoom)
-                errors.Add(new Error($"room not found."));
+                errors.Add(new Error($"room not found"));
 
             if (errors.Any())
                 return Result<ReservationDto>.Failure(errors.Prepend(rootError));
@@ -66,21 +70,21 @@ public class InsertReservationCommandHandler(
         {
             var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
             if (!roomExists)
-                return Result<ReservationDto>.Failure([rootError, new Error($"room not found.")]);
+                return Result<ReservationDto>.Failure([rootError, new Error($"room not found")]);
 
             // for Guest, ignore request's GuestId
             request = request with { GuestId = request.GuestId };
         }
         else
         {
-            return Result<ReservationDto>.Failure([rootError, new Error("forbidden request.", ErrorCode.Forbidden)],
+            return Result<ReservationDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
                 ResultCode.Forbidden);
         }
 
         var isReserved = await reservationRepository.IsRoomReservedAsync(request.RoomId, request.CheckInDate,
             request.CheckOutDate, ct);
         if (isReserved)
-            return Result<ReservationDto>.Failure([rootError, new Error($"room is reserved.")]);
+            return Result<ReservationDto>.Failure([rootError, new Error($"room is reserved")]);
 
         var reservation = mapper.Map<Reservation>(request);
 

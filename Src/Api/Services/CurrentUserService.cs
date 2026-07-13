@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Models;
@@ -35,7 +34,7 @@ public class CurrentUserService(
         }
     }
 
-    public async Task<Result<User>> GetUserAsync(CancellationToken ct)
+    public async Task<Result<User>> GetCurrentUserAsync(CancellationToken ct)
     {
         var currentUserIdResult = this.Id;
         if (!currentUserIdResult.Succeeded)
@@ -53,16 +52,17 @@ public class CurrentUserService(
             return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserIdResult.Errors);
         var currentUserId = currentUserIdResult.Value;
 
-        var currentUserResult = await this.GetUserAsync(ct);
-        if (!currentUserResult.Succeeded)
-            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserResult.Errors);
-        var currentUser = currentUserResult.Value;
-
         var currentUserRolesResult = this.Roles;
         if (!currentUserRolesResult.Succeeded)
             return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserRolesResult.Errors);
         var currentUserRoles = currentUserRolesResult.Value;
 
-        return Result<(Guid, User, IReadOnlyList<UserRole>)>.Success((currentUserId, currentUser, currentUserRoles));
+        var currentUserResult = await this.GetCurrentUserAsync(ct);
+        if (!currentUserResult.Succeeded)
+            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserResult.Errors);
+        var currentUser = currentUserResult.Value;
+
+        return Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>.Success((currentUserId, currentUser,
+            currentUserRoles));
     }
 }

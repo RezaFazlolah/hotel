@@ -22,30 +22,34 @@ public class GetAllReservationsQueryHandler(
         GetAllReservationsQuery request,
         CancellationToken ct)
     {
-        var rolesResult = currentUserService.Roles;
-        if (!rolesResult.Succeeded)
+        var rootError = new Error("get all reservations failed.");
+
+        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        if (!currentUserInfoResult.Succeeded)
             return Result<PagedResult<ReservationDto>>.Failure(
-                rolesResult.Errors.Prepend(new Error("get all reservations failed.")));
-        var roles = rolesResult.Value;
-        var userId = currentUserService.Id.Value;
+                currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
+
+        var roles = currentUserInfo.roles;
+        var userId = currentUserInfo.id;
 
         if (roles.Contains(UserRole.Admin))
             return await reservationQueryService.GetAllAsync(request.PaginationParameters, ct);
-
         if (roles.Contains(UserRole.Manager))
         {
-            var reservations = await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
-
+            var reservations =
+                await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
-
         if (roles.Contains(UserRole.Guest))
         {
-            var reservations = await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
-
+            var reservations =
+                await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
 
-        return Result<PagedResult<ReservationDto>>.Failure(new Error("user role not supported."));
+        return Result<PagedResult<ReservationDto>>.Failure([
+            rootError, new Error("forbidden request", ErrorCode.Forbidden)
+        ]);
     }
 }

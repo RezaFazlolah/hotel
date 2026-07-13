@@ -16,7 +16,7 @@ public class ReservationService(
         var roomResult = await roomRepository.GetByIdAsync(reservation.RoomId, ct);
         if (!roomResult.Succeeded)
             return Result<decimal>.Failure(
-                roomResult.Errors.Prepend(new Error($"calculate reservation {reservation.Id} price failed.")));
+                roomResult.Errors.Prepend(new Error($"calculate reservation {reservation.Id} price failed")));
         var room = roomResult.Value;
 
         var reservationTotalPrice =

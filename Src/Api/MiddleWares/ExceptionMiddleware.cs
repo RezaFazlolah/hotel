@@ -31,7 +31,7 @@ public class ExceptionMiddleware(RequestDelegate next)
         catch (Exception)
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsync("An unexpected error occurred.");
+            await context.Response.WriteAsync("An unexpected error occurred");
         }
     }
 }

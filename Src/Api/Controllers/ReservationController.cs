@@ -32,14 +32,9 @@ public class ReservationController(
         [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        // var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        // if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var guestId))
-        //     return Unauthorized();
-        //
-        // var request = new GetReservationByIdQuery() { GuestId = guestId, Id = id };
-        // var result = await mediator.Send(request, cancellationToken);
-        // return HandleResult(result);
+        var query = new GetReservationByIdQuery(id);
+        var result = await mediator.Send(query, cancellationToken);
+        return HandleResult(result);
     }
 
     [HttpPost]

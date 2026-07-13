@@ -23,6 +23,6 @@ public class RoomService(
 
         return hotelExists
             ? Result<bool>.Success(room.HotelId == hotelId)
-            : Result<bool>.Failure(new Error($"hotel {hotelId} not found."));
+            : Result<bool>.Failure(new Error($"hotel {hotelId} not found"));
     }
 }

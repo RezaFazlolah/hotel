@@ -7,10 +7,6 @@ namespace Application.Interfaces.Repositories;
 public interface IReservationRepository
     : IBaseRepository<Guid, Reservation>
 {
-    Task<Result<Reservation>> CancelAsync(
-        Guid reservationId,
-        CancellationToken ct);
-
     Task<bool> IsRoomReservedAsync(
         // check if there is any reservation
         Guid roomId,
