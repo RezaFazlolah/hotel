@@ -21,31 +21,26 @@ public class UpdateHotelCommandHandler(
     {
         var rootError = new Error($"update hotel {request.Id} failed");
 
-        var currentUserRolesResult = currentUserService.Roles;
-        if (!currentUserRolesResult.Succeeded)
-            return Result<HotelDto>.Failure(
-                currentUserRolesResult.Errors.Prepend(new Error($"update hotel {request.Id} failed")));
-        var currentUserRoles = currentUserRolesResult.Value;
+        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        if (!currentUserInfoResult.Succeeded)
+            return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
 
         var updatedHotel = mapper.Map<Hotel>(request);
 
-        if (currentUserRoles.Contains(UserRole.Admin))
+        if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
         }
-        else if (currentUserRoles.Contains(UserRole.Manager))
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var managerId = currentUserService.Id.Value;
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+            var hotelIdResult = await managerRepository.GetHotelIdAsync(currentUserInfo.id, ct);
             if (!hotelIdResult.Succeeded)
-                return Result<HotelDto>.Failure(
-                    hotelIdResult.Errors.Prepend(new Error($"update hotel {request.Id} failed")));
+                return Result<HotelDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
             var hotelId = hotelIdResult.Value;
 
             if (hotelId != request.Id)
-                return Result<HotelDto>.Failure(
-                    new Error(
-                        $"update hotel {request.Id} failed. hotel not found",
-                        ErrorCode.Forbidden), ResultCode.Forbidden);
+                return Result<HotelDto>.Failure([rootError, new Error($"hotel not found", ErrorCode.Forbidden)],
+                    ResultCode.Forbidden);
         }
         else
         {
@@ -53,6 +48,8 @@ public class UpdateHotelCommandHandler(
         }
 
         var hotelUpdateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-        return mapper.Map<Result<HotelDto>>(hotelUpdateResult);
+        return hotelUpdateResult.Succeeded
+            ? mapper.Map<Result<HotelDto>>(hotelUpdateResult)
+            : Result<HotelDto>.Failure(hotelUpdateResult.Errors.Prepend(rootError));
     }
 }
