@@ -1,13 +1,10 @@
 using Api.Dtos.ReservationDtos;
 using Application.Reservations.Commands;
-using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Common;
-using SharedKernel.Constants;
 
 namespace Api.Controllers;
 
@@ -15,7 +12,7 @@ namespace Api.Controllers;
 public class ReservationController(
     IMediator mediator,
     IMapper mapper)
-    : BaseController()
+    : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(
@@ -53,8 +50,7 @@ public class ReservationController(
         [FromBody] UpdateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<UpdateReservationCommand>(request);
-        command.Id = id;
+        var command = mapper.Map<UpdateReservationCommand>(request) with { Id = id };
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }

@@ -122,6 +122,7 @@ public class ReservationRepository(
                 .PaginateAsync(paginationParameters, ct)
         );
 
+    // Smell: getting all reservations for manager shouldnt be implemented in ReservationRepository, because reservation knows nothing about manager
     public async Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
         Guid managerId,
         PaginationParameters paginationParameters,

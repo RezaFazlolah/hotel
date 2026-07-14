@@ -18,9 +18,10 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         // DbContext
+        // Future: use options pattern for fetching connection string
         services.AddDbContext<AppDbContext>(options =>
             // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            options.UseSqlite(configuration.GetConnectionString("SqliteConnection")));
+            options.UseSqlite(configuration.GetConnectionString("Sqlite")));
 
         // identity
         services.AddIdentityCore<User>(options =>

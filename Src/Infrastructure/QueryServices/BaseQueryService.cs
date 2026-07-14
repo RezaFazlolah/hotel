@@ -24,7 +24,7 @@ public abstract class BaseQueryService<TEntity, TDto>(
             .SingleOrDefaultAsync(ct);
 
         return dto is null
-            ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found."))
+            ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found"))
             : Result<TDto>.Success(dto);
     }
 

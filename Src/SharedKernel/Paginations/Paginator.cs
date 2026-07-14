@@ -1,26 +1,12 @@
-using Microsoft.EntityFrameworkCore;
+using SharedKernel.Interfaces;
 
 namespace SharedKernel.Paginations;
 
-public static class PaginationExtensions
+public class Paginator
+    : IPaginator
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(
-        this IQueryable<T> query,
-        PaginationParameters paginationParameters,
-        CancellationToken ct)
-    {
-        var totalCount = query.Count();
-
-        var data = await query
-            .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
-            .Take(paginationParameters.PageSize)
-            .ToListAsync(ct);
-
-        return Paginate(data, paginationParameters, totalCount);
-    }
-
     // Smell: Paginate method is implemented twice, SharedKernel/Paginations/Paginator.cs & SharedKernel/Paginations/PaginationExtensions.cs
-    private static PagedResult<T> Paginate<T>(
+    public PagedResult<T> Paginate<T>(
         IEnumerable<T> source,
         PaginationParameters paginationParameters,
         int totalCount)

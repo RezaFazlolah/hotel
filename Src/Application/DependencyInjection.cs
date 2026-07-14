@@ -4,6 +4,8 @@ using AutoMapper;
 using Domain.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using SharedKernel.Interfaces;
+using SharedKernel.Paginations;
 
 namespace Application;
 
@@ -27,6 +29,8 @@ public static class DependencyInjection
 
         // AutoMapper
         services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
+
+        services.AddSingleton<IPaginator, Paginator>();
 
         return services;
     }
