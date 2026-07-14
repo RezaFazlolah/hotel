@@ -76,7 +76,27 @@ public class RoomRepository(AppDbContext db)
         if (!roomResult.Succeeded)
             return Result<Guid>.Failure(roomResult.Errors);
         var room = roomResult.Value;
-        
+
         return Result<Guid>.Success(room.HotelId);
     }
+
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct)
+        => Result<IReadOnlyList<Guid>>.Success(
+            await db.Rooms
+                .Where(r => r.HotelId == hotelId)
+                .Select(r => r.Id)
+                .ToListAsync(ct)
+        );
+
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
+        IEnumerable<Guid> hotelIds,
+        CancellationToken ct)
+        => Result<IReadOnlyList<Guid>>.Success(
+            await db.Rooms
+                .Where(r => hotelIds.Contains(r.HotelId))
+                .Select(r => r.Id)
+                .ToListAsync(ct)
+        );
 }

@@ -18,4 +18,12 @@ public interface IRoomRepository
     Task<Result<Guid>> GetHotelIdAsync(
         Guid roomId,
         CancellationToken ct);
+
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct);
+
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
+        IEnumerable<Guid> hotelIds,
+        CancellationToken ct);
 }

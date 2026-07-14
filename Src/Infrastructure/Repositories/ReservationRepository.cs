@@ -1,4 +1,3 @@
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,7 @@ namespace Infrastructure.Repositories;
 
 public class ReservationRepository(
     AppDbContext db,
-    IRoomQueryService roomQueryService)
+    IRoomRepository roomRepository)
     : BaseRepository<Guid, Reservation>(db),
         IReservationRepository
 {
@@ -59,7 +58,7 @@ public class ReservationRepository(
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
-        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdAsync(hotelId, ct);
+        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId, ct);
         if (!roomIdsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
@@ -81,7 +80,7 @@ public class ReservationRepository(
     {
         var hotelsIdAsList = hotelIds.ToList();
 
-        var roomIdsResult = await roomQueryService.GetAllIdsByHotelIdsAsync(hotelsIdAsList, ct);
+        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdsAsync(hotelsIdAsList, ct);
         if (!roomIdsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors

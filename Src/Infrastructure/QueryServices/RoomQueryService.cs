@@ -1,9 +1,12 @@
+using Application.Hotels.Dtos;
 using Application.Interfaces.QueryServices;
 using Application.Rooms.Dtos;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
+using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
 
@@ -13,23 +16,13 @@ public class RoomQueryService(
     : BaseQueryService<Room, RoomDto>(db, configurationProvider),
         IRoomQueryService
 {
-    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
+    public async Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(
         Guid hotelId,
+        PaginationParameters paginationParameters,
         CancellationToken ct)
-        => Result<IReadOnlyList<Guid>>.Success(
+        => Result<PagedResult<RoomDto>>.Success(
             await db.Rooms
                 .Where(r => r.HotelId == hotelId)
-                .Select(r => r.Id)
-                .ToListAsync(ct)
-        );
-
-    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
-        IEnumerable<Guid> hotelIds,
-        CancellationToken ct)
-        => Result<IReadOnlyList<Guid>>.Success(
-            await db.Rooms
-                .Where(r => hotelIds.Contains(r.HotelId))
-                .Select(r => r.Id)
-                .ToListAsync(ct)
-        );
+                .ProjectTo<RoomDto>(configurationProvider)
+                .PaginateAsync(paginationParameters, ct));
 }
