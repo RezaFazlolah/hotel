@@ -17,7 +17,7 @@ public class CurrentUserService(
         Guid.TryParse(httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.Sub),
             out var currentUserId)
             ? Result<Guid>.Success(currentUserId)
-            : Result<Guid>.Failure(new Error("parsing current user ID failed."));
+            : Result<Guid>.Failure(new Error("get current user ID failed"));
 
     public Result<IReadOnlyList<UserRole>> Roles
     {
@@ -29,7 +29,7 @@ public class CurrentUserService(
                 .ToList();
 
             return roles is null
-                ? Result<IReadOnlyList<UserRole>>.Failure(new Error("getting current user roles failed."))
+                ? Result<IReadOnlyList<UserRole>>.Failure(new Error("get current user roles failed"))
                 : Result<IReadOnlyList<UserRole>>.Success(roles);
         }
     }

@@ -40,11 +40,9 @@ public class GetAllHotelsQueryHandler(
             var manager = (Manager)currentUserInfo.user;
             var hotelDto = mapper.Map<HotelDto>(manager.Hotel);
 
-            return hotelDto is null
-                ? Result<PagedResult<HotelDto>>.Success(
-                    paginator.Paginate<HotelDto>([], request.PaginationParameters, 0))
-                : Result<PagedResult<HotelDto>>.Success(
-                    paginator.Paginate([hotelDto], request.PaginationParameters, 1));
+            return Result<PagedResult<HotelDto>>.Success(
+                paginator.Paginate<HotelDto>(hotelDto is null ? [] : [hotelDto], request.PaginationParameters,
+                    hotelDto is null ? 0 : 1));
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))

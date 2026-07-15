@@ -1,10 +1,7 @@
-using Application.Hotels.Dtos;
 using Application.Interfaces.QueryServices;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Dtos;
 using Application.Rooms.Queries;
-using AutoMapper;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
@@ -16,10 +13,8 @@ namespace Application.Rooms.Handlers;
 
 public class GetAllRoomsQueryHandler(
     IRoomQueryService roomQueryService,
-    IRoomRepository roomRepository,
     ICurrentUserService currentUserService,
-    IPaginator paginator,
-    IMapper mapper)
+    IPaginator paginator)
     : IRequestHandler<GetAllRoomsQuery, Result<PagedResult<RoomDto>>>
 {
     public async Task<Result<PagedResult<RoomDto>>> Handle(
@@ -37,7 +32,6 @@ public class GetAllRoomsQueryHandler(
         {
             return await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
         }
-
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             var manager = (Manager)currentUserInfo.user;
@@ -48,7 +42,6 @@ public class GetAllRoomsQueryHandler(
 
             return await roomQueryService.GetAllByHotelIdAsync(manager.HotelId.Value, request.PaginationParameters, ct);
         }
-
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
             return await roomQueryService.GetAllAsync(request.PaginationParameters, ct);

@@ -22,7 +22,7 @@ public class GetAllReservationsQueryHandler(
         GetAllReservationsQuery request,
         CancellationToken ct)
     {
-        var rootError = new Error("get all reservations failed.");
+        var rootError = new Error("get all reservations failed");
 
         var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
         if (!currentUserInfoResult.Succeeded)
@@ -30,21 +30,23 @@ public class GetAllReservationsQueryHandler(
                 currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
-        var roles = currentUserInfo.roles;
-        var userId = currentUserInfo.id;
-
-        if (roles.Contains(UserRole.Admin))
+        if (currentUserInfo.roles.Contains(UserRole.Admin))
+        {
             return await reservationQueryService.GetAllAsync(request.PaginationParameters, ct);
-        if (roles.Contains(UserRole.Manager))
+        }
+
+        if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             var reservations =
-                await reservationRepository.GetAllByManagerIdAsync(userId, request.PaginationParameters, ct);
+                await reservationRepository.GetAllByManagerIdAsync(currentUserInfo.id, request.PaginationParameters,
+                    ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
-        if (roles.Contains(UserRole.Guest))
+
+        if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
             var reservations =
-                await reservationRepository.GetAllByGuestIdAsync(userId, request.PaginationParameters, ct);
+                await reservationRepository.GetAllByGuestIdAsync(currentUserInfo.id, request.PaginationParameters, ct);
             return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
         }
 
