@@ -52,6 +52,6 @@ public class GetAllHotelsQueryHandler(
 
         return Result<PagedResult<HotelDto>>.Failure([
             rootError, new Error($"forbidden request", ErrorCode.Forbidden)
-        ]);
+        ], ResultCode.Forbidden);
     }
 }
