@@ -29,10 +29,10 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         CancellationToken ct)
     {
         var entity = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
-        if (entity is null)
-            return Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
-                ResultCode.NotFound);
-        return Result<TEntity>.Success(entity);
+        return entity is null
+            ? Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
+                ResultCode.NotFound)
+            : Result<TEntity>.Success(entity);
     }
 
     public virtual async Task<Result<TEntity>> InsertAsync(

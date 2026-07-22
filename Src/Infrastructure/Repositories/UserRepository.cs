@@ -124,17 +124,10 @@ public class UserRepository(
         Guid id,
         CancellationToken ct)
     {
-        try
-        {
             var result = await userManager.Users.SingleOrDefaultAsync(u => id == u.Id, ct);
             return result is null
                 ? Result<User>.Failure(new Error($"{EntityName} with id {id} not found", ErrorCode.NotFound),
                     ResultCode.NotFound)
                 : Result<User>.Success(result);
-        }
-        catch
-        {
-            return Result<User>.Failure(new Error($"more than 1 {EntityName} with id {id} found"));
-        }
     }
 }

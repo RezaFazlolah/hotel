@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
@@ -24,7 +25,7 @@ public abstract class BaseQueryService<TEntity, TDto>(
             .SingleOrDefaultAsync(ct);
 
         return dto is null
-            ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found"))
+            ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found", ErrorCode.NotFound), ResultCode.NotFound)
             : Result<TDto>.Success(dto);
     }
 
