@@ -48,12 +48,12 @@ public class DbSeeder
                     await userManager.AddToRoleAsync(user.user, user.role);
             }
         }
-
-        var managersId = await db.Managers
+        
+        // hotel
+        var managerIds = await db.Managers
             .Select(m => m.Id)
             .ToListAsync();
         
-        // hotel
         var hotels = new List<Hotel>
         {
             new()
@@ -61,21 +61,21 @@ public class DbSeeder
                 Name = "Parsian",
                 Address = "Hamadan",
                 Rating = 3.8m,
-                ManagerId = managersId[0]
+                ManagerId = managerIds[0]
             },
             new()
             {
                 Name = "Spinas",
                 Address = "Tehran",
                 Rating = 4.5m,
-                ManagerId = managersId[1]
+                ManagerId = managerIds[1]
             },
             new()
             {
                 Name = "Khatam",
                 Address = "Isfahan",
                 Rating = 4.9m,
-                ManagerId = managersId[2]
+                ManagerId = managerIds[2]
             },
         };
 
@@ -86,7 +86,10 @@ public class DbSeeder
         }
         
         // room
-        var hotelIds = await db.Hotels.Select(h => h.Id).ToListAsync();
+        var hotelIds = await db.Hotels
+            .Select(h => h.Id)
+            .ToListAsync();
+        
         var rooms = new List<Room>
         {
             new Room { Number = 101, Type = RoomType.Normal, PricePerNight = 100, HotelId = hotelIds[0] },

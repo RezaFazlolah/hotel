@@ -7,10 +7,10 @@ using SharedKernel.Paginations;
 
 namespace Application.Reservations.Mappings;
 
-public class ReservationMappingProfile
+public class ReservationMappingProfiles
     : Profile
 {
-    public ReservationMappingProfile()
+    public ReservationMappingProfiles()
     {
         CreateMap<Reservation, ReservationDto>();
         // .ForMember(dst => dst.RoomDto, opt => opt.MapFrom(src => src.Room));

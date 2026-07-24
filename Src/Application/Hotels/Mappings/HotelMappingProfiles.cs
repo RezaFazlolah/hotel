@@ -7,10 +7,10 @@ using SharedKernel.Paginations;
 
 namespace Application.Hotels.Mappings;
 
-public class HotelMappingProfile
+public class HotelMappingProfiles
     : Profile
 {
-    public HotelMappingProfile()
+    public HotelMappingProfiles()
     {
         CreateMap<Hotel, HotelDto>();
         CreateMap<Result<Hotel>, Result<HotelDto>>();

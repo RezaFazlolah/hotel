@@ -4,10 +4,10 @@ using Domain.Models;
 
 namespace Application.Auth.Mappings;
 
-public class AuthMappingProfile
+public class AuthMappingProfiles
     : Profile
 {
-    public AuthMappingProfile()
+    public AuthMappingProfiles()
     {
         CreateMap<User, BaseUserDto>()
             .ForMember(dst => dst.Roles, opt => opt.Ignore());
