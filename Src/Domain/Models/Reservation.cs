@@ -14,6 +14,6 @@ public class Reservation
     public decimal TotalPrice { get; set; }
     public ReservationStatus Status { get; set; }
 
-    public Guest? Guest { get; set; }
-    public Room? Room { get; set; }
+    public Guest Guest { get; set; } = null!;
+    public Room Room { get; set; } = null!;
 }

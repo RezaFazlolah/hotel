@@ -11,5 +11,5 @@ public class HotelRepository(AppDbContext db)
     protected override IQueryable<Hotel> CustomContext()
         => db.Hotels
             .Include(h => h.Rooms)
-            .Include(h => h.Managers);
+            .Include(h => h.Manager);
 }

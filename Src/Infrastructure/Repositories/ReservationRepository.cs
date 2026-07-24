@@ -19,7 +19,7 @@ public class ReservationRepository(
         => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
             ct);
 
-    // reservation is cancelled, not deleted
+    // reservation is canceled, not deleted
     public override Task<Result<Reservation>> DeleteAsync(Guid id, CancellationToken ct)
         => throw new NotSupportedException();
 
@@ -121,14 +121,14 @@ public class ReservationRepository(
                 .PaginateAsync(paginationParameters, ct)
         );
 
-    // Smell: getting all reservations for manager shouldnt be implemented in ReservationRepository, because reservation knows nothing about manager
+    // Smell: getting all reservations for manager shouldn't be implemented in ReservationRepository, because reservation knows nothing about manager
     public async Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
         Guid managerId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
-                .Where(r => r.Room.Hotel.Managers.Select(m => m.Id).Contains(managerId))
+                .Where(r => r.Room.Hotel.Manager.Id == managerId)
                 .PaginateAsync(paginationParameters, ct)
         );
 }

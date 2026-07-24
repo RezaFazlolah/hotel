@@ -11,7 +11,7 @@ public class Room
     public RoomType Type { get; set; }
     public decimal PricePerNight { get; set; }
 
-    public required Guid HotelId { get; set; }
-    public Hotel? Hotel { get; set; }
+    public Guid HotelId { get; set; }
+    public Hotel Hotel { get; set; } = null!;
     public IReadOnlyList<Reservation> Reservations { get; set; } = [];
 }

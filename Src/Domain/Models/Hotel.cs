@@ -11,5 +11,5 @@ public class Hotel
     public decimal Rating { get; set; }
 
     public IReadOnlyList<Room> Rooms { get; set; } = [];
-    public IReadOnlyList<Manager> Managers { get; set; } = [];
+    public Manager Manager { get; set; } = null!;
 }

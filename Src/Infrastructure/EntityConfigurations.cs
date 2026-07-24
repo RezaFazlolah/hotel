@@ -28,6 +28,10 @@ public class HotelConfiguration
 {
     public void Configure(EntityTypeBuilder<Hotel> builder)
     {
+        builder.HasOne(h => h.Manager)
+            .WithOne(m => m.Hotel)
+            .HasForeignKey<Manager>(m => m.HotelId)
+            .IsRequired();
     }
 }
 
@@ -77,10 +81,8 @@ public class ManagerConfiguration
 {
     public void Configure(EntityTypeBuilder<Manager> builder)
     {
-        builder.HasOne(m => m.Hotel)
-            .WithMany(h => h.Managers)
-            .HasForeignKey(m => m.HotelId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(m => m.HotelId)
+            .IsUnique();
 
         builder.ToTable("Managers");
     }
