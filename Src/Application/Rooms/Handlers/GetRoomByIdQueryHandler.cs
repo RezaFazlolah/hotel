@@ -1,9 +1,7 @@
 using Application.Interfaces.QueryServices;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Dtos;
 using Application.Rooms.Queries;
-using AutoMapper;
 using Domain.Interfaces;
 using MediatR;
 using SharedKernel.Common;

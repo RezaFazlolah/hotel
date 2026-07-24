@@ -15,54 +15,6 @@ public class DbSeeder
         var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
         var db = serviceProvider.GetRequiredService<AppDbContext>();
 
-        // hotel
-        var hotels = new List<Hotel>
-        {
-            new()
-            {
-                Name = "Parsian",
-                Address = "Hamadan",
-                Rating = 3.8m
-            },
-            new()
-            {
-                Name = "Spinas",
-                Address = "Tehran",
-                Rating = 4.5m
-            },
-            new()
-            {
-                Name = "Khatam",
-                Address = "Isfahan",
-                Rating = 4.9m
-            },
-        };
-
-        if (!db.Hotels.Any())
-        {
-            await db.Hotels.AddRangeAsync(hotels);
-            await db.SaveChangesAsync();
-        }
-
-
-        // room
-        var hotelIds = await db.Hotels.Select(h => h.Id).ToListAsync();
-        var rooms = new List<Room>
-        {
-            new Room { Number = 101, Type = RoomType.Normal, PricePerNight = 100, HotelId = hotelIds[0]},
-            new Room { Number = 302, Type = RoomType.Vip, PricePerNight = 500, HotelId = hotelIds[0]},
-            new Room { Number = 101, Type = RoomType.Vip, PricePerNight = 200, HotelId = hotelIds[1]},
-            new Room { Number = 711, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotelIds[2]},
-            new Room { Number = 712, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotelIds[2]},
-            new Room { Number = 713, Type = RoomType.Vip, PricePerNight = 700, HotelId = hotelIds[2]},
-        };
-
-        if (!db.Rooms.Any())
-        {
-            await db.Rooms.AddRangeAsync(rooms);
-            await db.SaveChangesAsync();
-        }
-
         // roles
         foreach (var role in Enum.GetNames<UserRole>())
             if (!await roleManager.RoleExistsAsync(role))
@@ -75,11 +27,11 @@ public class DbSeeder
                 UserRoleAsString.Guest, "1234"),
             (new Guest { FirstName = "guest2", UserName = "09184129512", PhoneNumber = "09184129512" },
                 UserRoleAsString.Guest, "1234"),
-            (new Manager { FirstName = "manager1", UserName = "09184129521", PhoneNumber = "09184129521", HotelId = hotels[0].Id },
+            (new Manager { FirstName = "manager1", UserName = "09184129521", PhoneNumber = "09184129521" },
                 UserRoleAsString.Manager, "1234"),
-            (new Manager { FirstName = "manager2", UserName = "09184129522", PhoneNumber = "09184129522", HotelId = hotels[2].Id },
+            (new Manager { FirstName = "manager2", UserName = "09184129522", PhoneNumber = "09184129522" },
                 UserRoleAsString.Manager, "1234"),
-            (new Manager { FirstName = "manager3", UserName = "09184129523", PhoneNumber = "09184129523", HotelId = hotels[2].Id },
+            (new Manager { FirstName = "manager3", UserName = "09184129523", PhoneNumber = "09184129523" },
                 UserRoleAsString.Manager, "1234"),
             (new Admin { FirstName = "admin1", UserName = "09184129531", PhoneNumber = "09184129531" },
                 UserRoleAsString.Admin, "1234"),
@@ -95,6 +47,60 @@ public class DbSeeder
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(user.user, user.role);
             }
+        }
+
+        var managersId = await db.Managers
+            .Select(m => m.Id)
+            .ToListAsync();
+        
+        // hotel
+        var hotels = new List<Hotel>
+        {
+            new()
+            {
+                Name = "Parsian",
+                Address = "Hamadan",
+                Rating = 3.8m,
+                ManagerId = managersId[0]
+            },
+            new()
+            {
+                Name = "Spinas",
+                Address = "Tehran",
+                Rating = 4.5m,
+                ManagerId = managersId[1]
+            },
+            new()
+            {
+                Name = "Khatam",
+                Address = "Isfahan",
+                Rating = 4.9m,
+                ManagerId = managersId[2]
+            },
+        };
+
+        if (!db.Hotels.Any())
+        {
+            await db.Hotels.AddRangeAsync(hotels);
+            await db.SaveChangesAsync();
+        }
+        
+        // room
+        var hotelIds = await db.Hotels.Select(h => h.Id).ToListAsync();
+        var rooms = new List<Room>
+        {
+            new Room { Number = 101, Type = RoomType.Normal, PricePerNight = 100, HotelId = hotelIds[0] },
+            new Room { Number = 302, Type = RoomType.Vip, PricePerNight = 500, HotelId = hotelIds[0] },
+            new Room { Number = 101, Type = RoomType.Vip, PricePerNight = 200, HotelId = hotelIds[1] },
+            new Room { Number = 711, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotelIds[2] },
+            new Room { Number = 712, Type = RoomType.Normal, PricePerNight = 400, HotelId = hotelIds[2] },
+            new Room { Number = 713, Type = RoomType.Vip, PricePerNight = 700, HotelId = hotelIds[2] },
+        };
+
+        if (!db.Rooms.Any())
+        {
+            await db.Rooms.AddRangeAsync(rooms);
+            await db.SaveChangesAsync();
         }
     }
 }

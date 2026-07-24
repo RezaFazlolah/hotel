@@ -36,11 +36,11 @@ public class GetAllRoomsQueryHandler(
         {
             var manager = (Manager)currentUserInfo.user;
 
-            if (manager.HotelId is null)
+            if (manager.Hotel?.Id is null)
                 return Result<PagedResult<RoomDto>>.Success(paginator.Paginate<RoomDto>([],
                     request.PaginationParameters, 0));
 
-            return await roomQueryService.GetAllByHotelIdAsync(manager.HotelId.Value, request.PaginationParameters, ct);
+            return await roomQueryService.GetAllByHotelIdAsync(manager.Hotel.Id, request.PaginationParameters, ct);
         }
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {

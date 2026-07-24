@@ -25,7 +25,7 @@ public class ManagerRepository(
             return Result<Guid?>.Failure(managerResult.Errors);
         var manager = (Manager)managerResult.Value;
 
-        return Result<Guid?>.Success(manager.HotelId);
+        return Result<Guid?>.Success(manager.Hotel?.Id);
 
         // var hotelId = await db.Managers
         //     .Where(m => m.Id == managerId)
