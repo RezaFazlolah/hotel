@@ -20,27 +20,32 @@ public class GetRoomByIdQueryHandler(
         CancellationToken ct)
     {
         var rootError = new Error($"get room {request.RoomId} failed");
+
         var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
         if (!currentUserInfoResult.Succeeded)
             return Result<RoomDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        var roomDtoResult = await roomQueryService.GetByIdAsync(request.RoomId, ct);
+        if (!roomDtoResult.Succeeded)
+            return Result<RoomDto>.Failure(roomDtoResult.Errors.Prepend(rootError));
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await roomQueryService.GetByIdAsync(request.RoomId, ct);
+            return roomDtoResult;
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             return await managerService.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct)
-                ? await roomQueryService.GetByIdAsync(request.RoomId, ct)
+                ? roomDtoResult
                 : Result<RoomDto>.Failure([rootError, new Error("room not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await roomQueryService.GetByIdAsync(request.RoomId, ct);
+            return roomDtoResult;
         }
 
         return Result<RoomDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],

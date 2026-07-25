@@ -1,7 +1,6 @@
 using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
 using Application.Interfaces.QueryServices;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using MediatR;
 using SharedKernel.Common;
@@ -11,8 +10,7 @@ namespace Application.Hotels.Handlers;
 
 public class GetHotelByIdQueryHandler(
     IHotelQueryService hotelQueryService,
-    ICurrentUserService currentUserService,
-    IManagerRepository managerRepository)
+    ICurrentUserService currentUserService)
     : IRequestHandler<GetHotelByIdQuery, Result<HotelDto>>
 {
     public async Task<Result<HotelDto>> Handle(GetHotelByIdQuery request, CancellationToken ct)
@@ -24,26 +22,26 @@ public class GetHotelByIdQueryHandler(
             return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        var hotelDtoResult = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
+        if (!hotelDtoResult.Succeeded)
+            return Result<HotelDto>.Failure(hotelDtoResult.Errors.Prepend(rootError));
+        var hotelDto = hotelDtoResult.Value;
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await hotelQueryService.GetByIdAsync(request.HotelId, ct);
+            return hotelDtoResult;
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(currentUserInfo.id, ct);
-            if (!hotelIdResult.Succeeded)
-                return Result<HotelDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
-            var hotelId = hotelIdResult.Value;
-
-            if (request.HotelId == hotelId)
-                return await hotelQueryService.GetByIdAsync(request.HotelId, ct);
-            return Result<HotelDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
+            return currentUserInfo.id == hotelDto.ManagerId
+                ? hotelDtoResult
+                : Result<HotelDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await hotelQueryService.GetByIdAsync(request.HotelId, ct);
+            return hotelDtoResult;
         }
 
         return Result<HotelDto>.Failure(

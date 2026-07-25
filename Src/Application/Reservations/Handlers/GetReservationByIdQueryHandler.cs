@@ -30,7 +30,7 @@ public class GetReservationByIdQueryHandler(
         if (!reservationDtoResult.Succeeded)
             return Result<ReservationDto>.Failure(reservationDtoResult.Errors.Prepend(rootError));
         var reservationDto = reservationDtoResult.Value;
-        
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
             return reservationDtoResult;
