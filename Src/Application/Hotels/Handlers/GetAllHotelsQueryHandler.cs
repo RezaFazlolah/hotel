@@ -15,8 +15,7 @@ namespace Application.Hotels.Handlers;
 public class GetAllHotelsQueryHandler(
     IHotelQueryService hotelQueryService,
     ICurrentUserService currentUserService,
-    IPaginator paginator,
-    IMapper mapper)
+    IPaginator paginator)
     : IRequestHandler<GetAllHotelsQuery, Result<PagedResult<HotelDto>>>
 {
     public async Task<Result<PagedResult<HotelDto>>> Handle(
@@ -37,12 +36,15 @@ public class GetAllHotelsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var manager = (Manager)currentUserInfo.user;
-            var hotelDto = mapper.Map<HotelDto>(manager.Hotel);
+            var hotelDtoResult = await hotelQueryService.GetByManagerIdAsync(currentUserInfo.id, ct);
+            if (!hotelDtoResult.Succeeded)
+                return Result<PagedResult<HotelDto>>.Failure(hotelDtoResult.Errors.Prepend(rootError));
+            var hotelDto = hotelDtoResult.Value;
 
-            return Result<PagedResult<HotelDto>>.Success(
-                paginator.Paginate<HotelDto>(hotelDto is null ? [] : [hotelDto], request.PaginationParameters,
-                    hotelDto is null ? 0 : 1));
+            return Result<PagedResult<HotelDto>>.Success(paginator.Paginate<HotelDto>(
+                hotelDto is null ? [] : [hotelDto],
+                request.PaginationParameters,
+                hotelDto is null ? 0 : 1));
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))

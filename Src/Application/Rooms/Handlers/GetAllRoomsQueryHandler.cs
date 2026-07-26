@@ -30,21 +30,22 @@ public class GetAllRoomsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
+            await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
         }
+
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var manager = (Manager)currentUserInfo.user;
-
-            if (manager.Hotel?.Id is null)
+            var hotelId = ((Manager)currentUserInfo.user).Hotel?.Id;
+            if (hotelId is null)
                 return Result<PagedResult<RoomDto>>.Success(paginator.Paginate<RoomDto>([],
                     request.PaginationParameters, 0));
 
-            return await roomQueryService.GetAllByHotelIdAsync(manager.Hotel.Id, request.PaginationParameters, ct);
+            return await roomQueryService.GetAllByHotelIdAsync(hotelId.Value, request.PaginationParameters, ct);
         }
+
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
+            await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
         }
 
         return Result<PagedResult<RoomDto>>.Failure([
