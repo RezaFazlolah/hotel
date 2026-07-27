@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
@@ -31,14 +30,13 @@ public class JwtService(
         var rolesAsClaims = roles.Select(r => new Claim(ClaimTypes.Role, r));
         claims.AddRange(rolesAsClaims);
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key));
-        var expirationInMinutes = jwtOptions.Value.DurationInMinutes;
-
+        var jwtSettings = jwtOptions.Value;
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
         var token = new JwtSecurityToken(
-            issuer: jwtOptions.Value.Issuer,
-            audience: jwtOptions.Value.Audience,
+            issuer: jwtSettings.Issuer,
+            audience: jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expirationInMinutes),
+            expires: DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
             signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256));
 
         var result = new JwtSecurityTokenHandler().WriteToken(token);

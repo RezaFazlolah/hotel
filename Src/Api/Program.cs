@@ -36,6 +36,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-await DbSeeder.SeedAsync(app.Services.CreateScope().ServiceProvider);
+using (var scope = app.Services.CreateScope())
+{
+    await DbSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 app.Run();

@@ -1,6 +1,5 @@
 using System.Text;
 using Api.Services;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -12,7 +11,9 @@ namespace Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         // scalar
         services.AddOpenApi();
@@ -48,6 +49,7 @@ public static class DependencyInjection
         services.AddOptions<JwtSettings>()
             .Bind(configuration.GetSection("JwtSettings"))
             .ValidateOnStart();
+        services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
 
         // auth
         services.AddAuthentication(options =>

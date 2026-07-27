@@ -1,10 +1,12 @@
+using Application.Hotels.Commands;
 using FluentValidation;
 
-namespace Application.Hotels.Commands.Validators;
+namespace Application.Hotels.Validators;
 
-public class UpdateHotelCommandValidator : AbstractValidator<UpdateHotelCommand>
+public class InsertHotelCommandValidator
+    : AbstractValidator<InsertHotelCommand>
 {
-    public UpdateHotelCommandValidator()
+    public InsertHotelCommandValidator()
     {
         RuleFor(c => c.Name)
             .NotEmpty().
@@ -15,7 +17,7 @@ public class UpdateHotelCommandValidator : AbstractValidator<UpdateHotelCommand>
             .WithMessage("Address is required");
         
         RuleFor(c => c.Rating)
-            .InclusiveBetween(1, 5)
+            .InclusiveBetween(0, 5)
             .WithMessage("Rating must be between 1 and 5");
     }
 }

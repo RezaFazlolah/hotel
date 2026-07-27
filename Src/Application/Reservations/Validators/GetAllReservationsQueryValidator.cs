@@ -1,7 +1,8 @@
 using Application.Common.Validators;
+using Application.Reservations.Queries;
 using FluentValidation;
 
-namespace Application.Reservations.Queries.Validators;
+namespace Application.Reservations.Validators;
 
 // Future: use inheritance for GetAllHotelsQueryValidator, GetAllRoomsQueryValidator, GetAllReservationsQueryValidator 
 public class GetAllReservationsQueryValidator
