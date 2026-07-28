@@ -25,4 +25,14 @@ public class RoomQueryService(
                 .Where(r => r.HotelId == hotelId)
                 .ProjectTo<RoomDto>(configurationProvider)
                 .PaginateAsync(paginationParameters, ct));
+
+    public async Task<Result<PagedResult<RoomDto>>> GetAllByManagerIdAsync(
+        Guid managerId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+        => Result<PagedResult<RoomDto>>.Success(
+            await db.Rooms
+                .Where(r => r.Hotel.ManagerId == managerId)
+                .ProjectTo<RoomDto>(configurationProvider)
+                .PaginateAsync(paginationParameters, ct));
 }

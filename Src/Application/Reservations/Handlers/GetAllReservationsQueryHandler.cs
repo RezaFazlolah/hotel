@@ -37,17 +37,13 @@ public class GetAllReservationsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var reservations =
-                await reservationRepository.GetAllByManagerIdAsync(currentUserInfo.id, request.PaginationParameters,
-                    ct);
-            return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
+            return await reservationQueryService.GetAllByManagerIdAsync(currentUserInfo.id, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            var reservations =
-                await reservationRepository.GetAllByGuestIdAsync(currentUserInfo.id, request.PaginationParameters, ct);
-            return mapper.Map<Result<PagedResult<ReservationDto>>>(reservations);
+            return await reservationQueryService.GetAllByGuestIdAsync(currentUserInfo.id,
+                request.PaginationParameters, ct);
         }
 
         return Result<PagedResult<ReservationDto>>.Failure([

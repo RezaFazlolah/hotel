@@ -46,9 +46,4 @@ public interface IReservationRepository
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
-
-    Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
-        Guid managerId,
-        PaginationParameters paginationParameters,
-        CancellationToken ct);
 }

@@ -12,4 +12,9 @@ public interface IRoomQueryService
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
+
+    Task<Result<PagedResult<RoomDto>>> GetAllByManagerIdAsync(
+        Guid managerId,
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
 }

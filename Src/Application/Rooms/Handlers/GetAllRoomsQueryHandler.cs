@@ -1,4 +1,5 @@
 using Application.Interfaces.QueryServices;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Dtos;
 using Application.Rooms.Queries;
@@ -14,6 +15,7 @@ namespace Application.Rooms.Handlers;
 public class GetAllRoomsQueryHandler(
     IRoomQueryService roomQueryService,
     ICurrentUserService currentUserService,
+    IHotelRepository hotelRepository,
     IPaginator paginator)
     : IRequestHandler<GetAllRoomsQuery, Result<PagedResult<RoomDto>>>
 {
@@ -35,12 +37,7 @@ public class GetAllRoomsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelId = ((Manager)currentUserInfo.user).Hotel?.Id;
-            if (hotelId is null)
-                return Result<PagedResult<RoomDto>>.Success(paginator.Paginate<RoomDto>([],
-                    request.PaginationParameters, 0));
-
-            return await roomQueryService.GetAllByHotelIdAsync(hotelId.Value, request.PaginationParameters, ct);
+            return await roomQueryService.GetAllByManagerIdAsync(currentUserInfo.id, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))

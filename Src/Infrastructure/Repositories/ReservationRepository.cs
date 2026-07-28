@@ -120,15 +120,4 @@ public class ReservationRepository(
                 .Where(r => r.GuestId == guestId)
                 .PaginateAsync(paginationParameters, ct)
         );
-
-    // Smell: getting all reservations for manager shouldn't be implemented in ReservationRepository, because reservation knows nothing about manager
-    public async Task<Result<PagedResult<Reservation>>> GetAllByManagerIdAsync(
-        Guid managerId,
-        PaginationParameters paginationParameters,
-        CancellationToken ct)
-        => Result<PagedResult<Reservation>>.Success(
-            await db.Reservations
-                .Where(r => r.Room.Hotel.Manager.Id == managerId)
-                .PaginateAsync(paginationParameters, ct)
-        );
 }
