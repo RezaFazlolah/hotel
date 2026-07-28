@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using SharedKernel.Configurations;
 
 namespace Infrastructure;
 
@@ -36,6 +38,11 @@ public static class DependencyInjection
             .AddRoles<Role>()
             .AddEntityFrameworkStores<AppDbContext>();
 
+        services.AddOptions<JwtSettings>()
+            .Bind(configuration.GetSection("JwtSettings"))
+            .ValidateOnStart();
+        services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
+        
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IGuestRepository, GuestRepository>();
         services.AddScoped<IManagerRepository, ManagerRepository>();

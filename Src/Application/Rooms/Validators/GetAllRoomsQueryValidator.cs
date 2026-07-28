@@ -1,6 +1,7 @@
 using Application.Common.Validators;
 using Application.Rooms.Queries;
 using FluentValidation;
+using SharedKernel.Paginations;
 
 namespace Application.Rooms.Validators;
 
@@ -8,9 +9,9 @@ namespace Application.Rooms.Validators;
 public class GetAllRoomsQueryValidator
     : AbstractValidator<GetAllRoomsQuery>
 {
-    public GetAllRoomsQueryValidator()
+    public GetAllRoomsQueryValidator(IValidator<PaginationParameters> paginationParametersValidator)
     {
         RuleFor(x => x.PaginationParameters)
-            .SetValidator(new PaginationParametersValidator());
+            .SetValidator(paginationParametersValidator);
     }
 }

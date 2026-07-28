@@ -1,6 +1,7 @@
 using Application.Common.Validators;
 using Application.Reservations.Queries;
 using FluentValidation;
+using SharedKernel.Paginations;
 
 namespace Application.Reservations.Validators;
 
@@ -8,9 +9,9 @@ namespace Application.Reservations.Validators;
 public class GetAllReservationsQueryValidator
     : AbstractValidator<GetAllReservationsQuery>
 {
-    public GetAllReservationsQueryValidator()
+    public GetAllReservationsQueryValidator(IValidator<PaginationParameters> paginationParametersValidator)
     {
         RuleFor(x => x.PaginationParameters)
-            .SetValidator(new PaginationParametersValidator());
+            .SetValidator(paginationParametersValidator);
     }
 }

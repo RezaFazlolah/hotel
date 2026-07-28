@@ -36,7 +36,9 @@ public class GetHotelByIdQueryHandler(
         {
             return currentUserInfo.id == hotelDto.ManagerId
                 ? hotelDtoResult
-                : Result<HotelDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
+                : Result<HotelDto>.Failure(
+                    [rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
@@ -44,7 +46,7 @@ public class GetHotelByIdQueryHandler(
             return hotelDtoResult;
         }
 
-        return Result<HotelDto>.Failure(
-            [rootError, new Error("forbidden request", ErrorCode.Forbidden)], ResultCode.Forbidden);
+        return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
+            ResultCode.Forbidden);
     }
 }

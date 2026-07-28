@@ -1,8 +1,10 @@
 using Application.Common.Behaviors;
+using Application.Configurations;
 using Application.Services;
 using AutoMapper;
 using Domain.Interfaces;
 using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Interfaces;
 using SharedKernel.Paginations;
@@ -11,7 +13,9 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddApplicationServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddScoped<IManagerService, ManagerService>();
 
@@ -30,6 +34,11 @@ public static class DependencyInjection
         // AutoMapper
         services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
 
+        services.AddOptions<PaginationSettings>()
+            .Bind(configuration.GetSection("PaginationSettings"))
+            .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
+            .ValidateOnStart();
+        
         services.AddSingleton<IPaginator, Paginator>();
 
         return services;
