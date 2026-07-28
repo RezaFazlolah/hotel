@@ -34,6 +34,24 @@ public class CurrentUserService(
         }
     }
 
+    public Result<(Guid id, IReadOnlyList<UserRole> roles)> Info
+    {
+        get
+        {
+            var currentUserIdResult = this.Id;
+            if (!currentUserIdResult.Succeeded)
+                return Result<(Guid, IReadOnlyList<UserRole>)>.Failure(currentUserIdResult.Errors);
+            var currentUserId = currentUserIdResult.Value;
+
+            var currentUserRolesResult = this.Roles;
+            if (!currentUserRolesResult.Succeeded)
+                return Result<(Guid, IReadOnlyList<UserRole>)>.Failure(currentUserRolesResult.Errors);
+            var currentUserRoles = currentUserRolesResult.Value;
+
+            return Result<(Guid id, IReadOnlyList<UserRole> roles)>.Success((currentUserId, currentUserRoles));
+        }
+    }
+    
     public async Task<Result<User>> GetCurrentUserAsync(CancellationToken ct)
     {
         var currentUserIdResult = this.Id;
@@ -42,27 +60,5 @@ public class CurrentUserService(
         var currentUserId = currentUserIdResult.Value;
 
         return await userRepository.GetByIdAsync(currentUserId, CancellationToken.None);
-    }
-
-    public async Task<Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>> GetCurrentUserInfoAsync(
-        CancellationToken ct)
-    {
-        var currentUserIdResult = this.Id;
-        if (!currentUserIdResult.Succeeded)
-            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserIdResult.Errors);
-        var currentUserId = currentUserIdResult.Value;
-
-        var currentUserRolesResult = this.Roles;
-        if (!currentUserRolesResult.Succeeded)
-            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserRolesResult.Errors);
-        var currentUserRoles = currentUserRolesResult.Value;
-
-        var currentUserResult = await this.GetCurrentUserAsync(ct);
-        if (!currentUserResult.Succeeded)
-            return Result<(Guid, User, IReadOnlyList<UserRole>)>.Failure(currentUserResult.Errors);
-        var currentUser = currentUserResult.Value;
-
-        return Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>.Success((currentUserId, currentUser,
-            currentUserRoles));
     }
 }

@@ -22,20 +22,21 @@ public class InsertRoomCommandHandler(
 {
     public async Task<Result<RoomDto>> Handle(InsertRoomCommand request, CancellationToken ct)
     {
-        var userRolesResult = currentUserService.Roles;
-        if (!userRolesResult.Succeeded)
-            return Result<RoomDto>.Failure(userRolesResult.Errors.Prepend(new Error("insert room failed")));
-        var userRoles = userRolesResult.Value;
-        var userId = currentUserService.Id.Value;
+        var rootError = new Error($"insert room failed");
 
-        if (userRoles.Contains(UserRole.Admin))
+        var currentUserInfoResult = currentUserService.Info;
+        if (!currentUserInfoResult.Succeeded)
+            return Result<RoomDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
+
+        if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
             if (!await hotelRepository.ExistsAsync(request.HotelId, ct))
                 return Result<RoomDto>.Failure(new Error($"insert room failed. hotel {request.HotelId} not found"));
         }
-        else if (userRoles.Contains(UserRole.Manager))
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(userId, ct);
+            var hotelIdResult = await managerRepository.GetHotelIdAsync(currentUserInfo.id, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<RoomDto>.Failure(hotelIdResult.Errors.Prepend(new Error("insert room failed")));
             var hotelId = hotelIdResult.Value;

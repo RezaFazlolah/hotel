@@ -21,7 +21,7 @@ public class GetReservationByIdQueryHandler(
     {
         var rootError = new Error($"get reservation {request.Id} failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

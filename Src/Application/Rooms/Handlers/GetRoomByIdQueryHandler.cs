@@ -21,7 +21,7 @@ public class GetRoomByIdQueryHandler(
     {
         var rootError = new Error($"get room {request.RoomId} failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<RoomDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

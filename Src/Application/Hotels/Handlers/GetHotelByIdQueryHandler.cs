@@ -17,7 +17,7 @@ public class GetHotelByIdQueryHandler(
     {
         var rootError = new Error("get hotel by id failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

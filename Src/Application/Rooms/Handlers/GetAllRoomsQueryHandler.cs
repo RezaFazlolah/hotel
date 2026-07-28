@@ -25,7 +25,7 @@ public class GetAllRoomsQueryHandler(
     {
         var rootError = new Error($"get all rooms failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<PagedResult<RoomDto>>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

@@ -21,7 +21,7 @@ public class UpdateHotelCommandHandler(
     {
         var rootError = new Error($"update hotel {request.Id} failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

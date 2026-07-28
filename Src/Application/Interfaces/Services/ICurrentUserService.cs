@@ -8,6 +8,6 @@ public interface ICurrentUserService
 {
     Result<Guid> Id { get; }
     Result<IReadOnlyList<UserRole>> Roles { get; }
+    Result<(Guid id, IReadOnlyList<UserRole> roles)> Info { get; }
     Task<Result<User>> GetCurrentUserAsync(CancellationToken ct);
-    Task<Result<(Guid id, User user, IReadOnlyList<UserRole> roles)>> GetCurrentUserInfoAsync(CancellationToken ct);
 }

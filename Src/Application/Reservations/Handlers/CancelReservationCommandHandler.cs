@@ -23,7 +23,7 @@ public class CancelReservationCommandHandler(
     {
         var rootError = new Error($"cancel reservation {request.ReservationId} failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

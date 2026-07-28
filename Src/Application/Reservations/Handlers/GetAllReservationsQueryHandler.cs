@@ -24,7 +24,7 @@ public class GetAllReservationsQueryHandler(
     {
         var rootError = new Error("get all reservations failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<PagedResult<ReservationDto>>.Failure(
                 currentUserInfoResult.Errors.Prepend(rootError));

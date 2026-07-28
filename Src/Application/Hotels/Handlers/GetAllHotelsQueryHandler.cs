@@ -24,7 +24,7 @@ public class GetAllHotelsQueryHandler(
     {
         var rootError = new Error($"get all hotels failed");
 
-        var currentUserInfoResult = await currentUserService.GetCurrentUserInfoAsync(ct);
+        var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<PagedResult<HotelDto>>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;

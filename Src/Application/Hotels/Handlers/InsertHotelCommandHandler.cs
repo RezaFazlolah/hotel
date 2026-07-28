@@ -1,7 +1,5 @@
 using Application.Hotels.Commands;
 using Application.Hotels.Dtos;
-using Application.Interfaces;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
@@ -20,13 +18,15 @@ public class InsertHotelCommandHandler(
 {
     public async Task<Result<HotelDto>> Handle(InsertHotelCommand request, CancellationToken ct)
     {
-        var currentUserRolesResult = currentUserService.Roles;
-        if (!currentUserRolesResult.Succeeded)
-            return Result<HotelDto>.Failure(currentUserRolesResult.Errors.Prepend(new Error($"insert hotel failed")));
-        var currentUserRoles = currentUserRolesResult.Value;
+        var rootError = new Error($"insert hotel failed");
 
-        if (!currentUserRoles.Contains(UserRole.Admin))
-            return Result<HotelDto>.Failure(new Error("insert hotel failed. forbidden access", ErrorCode.Forbidden),
+        var currentUserInfoResult = currentUserService.Info;
+        if (!currentUserInfoResult.Succeeded)
+            return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
+
+        if (!currentUserInfo.roles.Contains(UserRole.Admin))
+            return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
                 ResultCode.Forbidden);
 
         var hotel = mapper.Map<Hotel>(request);
