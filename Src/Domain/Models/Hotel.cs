@@ -12,5 +12,11 @@ public class Hotel
 
     public Guid ManagerId { get; set; }
     public Manager Manager { get; set; } = null!;
-    public ICollection<Room> Rooms { get; } = [];
+    private readonly List<Room> _rooms = [];
+    public IReadOnlyList<Room> Rooms => _rooms;
+
+    public void AddRoom(Room room)
+    {
+        _rooms.Add(room);
+    }
 }

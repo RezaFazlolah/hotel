@@ -31,10 +31,10 @@ public class HotelConfiguration
         builder.HasOne(h => h.Manager)
             .WithOne(m => m.Hotel)
             .HasForeignKey<Hotel>(h => h.ManagerId);
-        // .IsRequired();
-        //
-        // builder.HasIndex(h => h.ManagerId)
-        //     .IsUnique();
+
+        builder.Navigation(h => h.Rooms)
+            .HasField("_rooms")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
 
