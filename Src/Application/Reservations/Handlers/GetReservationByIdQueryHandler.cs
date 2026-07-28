@@ -40,7 +40,8 @@ public class GetReservationByIdQueryHandler(
         {
             return await managerService.ManagesRoomAsync(currentUserInfo.id, reservationDto.RoomId, ct)
                 ? reservationDtoResult
-                : Result<ReservationDto>.Failure([rootError, new Error("reservation not found")]);
+                : Result<ReservationDto>.Failure([rootError, new Error("reservation not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
@@ -50,6 +51,7 @@ public class GetReservationByIdQueryHandler(
                 : Result<ReservationDto>.Failure([rootError, new Error("reservation not found")]);
         }
 
-        return Result<ReservationDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)]);
+        return Result<ReservationDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
+            ResultCode.Forbidden);
     }
 }

@@ -52,8 +52,7 @@ public class GetAllHotelsQueryHandler(
             return await hotelQueryService.GetAllAsync(request.PaginationParameters, ct);
         }
 
-        return Result<PagedResult<HotelDto>>.Failure([
-            rootError, new Error($"forbidden request", ErrorCode.Forbidden)
-        ], ResultCode.Forbidden);
+        return Result<PagedResult<HotelDto>>.Failure([rootError, new Error($"forbidden request", ErrorCode.Forbidden)],
+            ResultCode.Forbidden);
     }
 }

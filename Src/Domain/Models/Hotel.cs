@@ -12,5 +12,5 @@ public class Hotel
 
     public Guid ManagerId { get; set; }
     public Manager Manager { get; set; } = null!;
-    public IReadOnlyList<Room> Rooms { get; set; } = [];
+    public ICollection<Room> Rooms { get; } = [];
 }

@@ -46,11 +46,6 @@ public static class DependencyInjection
 
         services.AddControllers();
 
-        services.AddOptions<JwtSettings>()
-            .Bind(configuration.GetSection("JwtSettings"))
-            .ValidateOnStart();
-        services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
-
         // auth
         services.AddAuthentication(options =>
             {

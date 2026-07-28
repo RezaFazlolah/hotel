@@ -1,6 +1,7 @@
 using Application.Common.Validators;
 using Application.Hotels.Queries;
 using FluentValidation;
+using SharedKernel.Paginations;
 
 namespace Application.Hotels.Validators;
 
@@ -8,9 +9,9 @@ namespace Application.Hotels.Validators;
 public class GetAllHotelsQueryValidator
     : AbstractValidator<GetAllHotelsQuery>
 {
-    public GetAllHotelsQueryValidator()
+    public GetAllHotelsQueryValidator(IValidator<PaginationParameters> paginationParametersValidator)
     {
         RuleFor(x => x.PaginationParameters)
-            .SetValidator(new PaginationParametersValidator());
+            .SetValidator(paginationParametersValidator);
     }
 }
