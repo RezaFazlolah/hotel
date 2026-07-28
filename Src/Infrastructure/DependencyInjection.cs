@@ -39,7 +39,7 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AppDbContext>();
 
         services.AddOptions<JwtSettings>()
-            .Bind(configuration.GetSection("JwtSettings"))
+            .Bind(configuration.GetSection(JwtSettings.SectionName))
             .ValidateOnStart();
         services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
         

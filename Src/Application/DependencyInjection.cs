@@ -35,7 +35,7 @@ public static class DependencyInjection
         services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
 
         services.AddOptions<PaginationSettings>()
-            .Bind(configuration.GetSection("PaginationSettings"))
+            .Bind(configuration.GetSection(PaginationSettings.SectionName))
             .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
             .ValidateOnStart();
         
