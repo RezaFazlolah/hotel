@@ -3,5 +3,5 @@ namespace Domain.Models;
 public class Guest
     : User
 {
-    public IReadOnlyList<Reservation> Reservations { get; set; } = [];
+    public ICollection<Reservation> Reservations { get; } = [];
 }

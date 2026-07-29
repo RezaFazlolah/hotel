@@ -1,6 +1,7 @@
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Infrastructure;
 
@@ -15,11 +16,6 @@ public class RoomConfiguration
 
         builder.HasIndex(r => new { r.HotelId, r.Number })
             .IsUnique();
-
-        builder.HasOne(r => r.Hotel)
-            .WithMany(h => h.Rooms)
-            .HasForeignKey(r => r.HotelId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 
@@ -31,10 +27,6 @@ public class HotelConfiguration
         builder.HasOne(h => h.Manager)
             .WithOne(m => m.Hotel)
             .HasForeignKey<Hotel>(h => h.ManagerId);
-
-        builder.Navigation(h => h.Rooms)
-            .HasField("_rooms")
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
 
@@ -47,17 +39,7 @@ public class ReservationConfiguration
             .HasConversion<string>()
             .HasMaxLength(100);
 
-        builder.HasIndex(r => new { r.CheckInDate, r.CheckOutDate });
-
-        builder.HasOne(r => r.Room)
-            .WithMany(rm => rm.Reservations)
-            .HasForeignKey(r => r.RoomId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(r => r.Guest)
-            .WithMany(g => g.Reservations)
-            .HasForeignKey(r => r.GuestId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // builder.HasIndex(r => new { r.CheckInDate, r.CheckOutDate });
     }
 }
 
