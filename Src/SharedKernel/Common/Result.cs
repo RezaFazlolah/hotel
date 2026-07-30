@@ -29,11 +29,23 @@ public class Result<T>
     public string? Message { get; init; }
     public ResultCode Code { get; init; }
 
-    public static Result<T> Success(T value, ResultCode resultCode = ResultCode.Default, string? message=null) => new() { Succeeded = true, Value = value, Code = resultCode, Message = message };
+    public static Result<T> Success(T value, ResultCode resultCode = ResultCode.Default, string? message = null) =>
+        new() { Succeeded = true, Value = value, Code = resultCode, Message = message };
 
-    public static Result<T> Failure(IEnumerable<Error> errors, ResultCode resultCode = ResultCode.Default, string? message = null) =>
+    public static Result<T> Failure(IEnumerable<Error> errors, ResultCode resultCode = ResultCode.Default,
+        string? message = null) =>
         new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
 
     public static Result<T> Failure(Error error, ResultCode resultCode = ResultCode.Default, string? message = null)
         => Failure([error], resultCode, message);
+
+    public static Result<T> Forbidden(Error? error)
+    {
+        var baseError = new[] { new Error("forbidden request", ErrorCode.Forbidden) };
+        var errors = error is null
+            ? baseError
+            : baseError.Prepend(error);
+        
+        return Result<T>.Failure(errors, ResultCode.Forbidden);
+    }
 }

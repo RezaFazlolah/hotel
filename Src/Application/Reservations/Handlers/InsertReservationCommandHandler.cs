@@ -12,7 +12,7 @@ using SharedKernel.Enums;
 namespace Application.Reservations.Handlers;
 
 // Bug: i get error, it has something to do with DB lock.
-// i spent about an hour trying to debug it and nuked DB multiple times, but i couldnt solve it.
+// i spent about an hour trying to debug it and nuked DB multiple times, but i couldn't solve it.
 // when i uncomment "!(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate)" at ReservationRepository.IsReservedAsync(), my problem is solved.
 // come back later
 public class InsertReservationCommandHandler(
@@ -76,10 +76,7 @@ public class InsertReservationCommandHandler(
             request = request with { GuestId = request.GuestId };
         }
         else
-        {
-            return Result<ReservationDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
-                ResultCode.Forbidden);
-        }
+            return Result<ReservationDto>.Forbidden(rootError);
 
         var isReserved = await reservationRepository.IsRoomReservedAsync(request.RoomId, request.CheckInDate,
             request.CheckOutDate, ct);

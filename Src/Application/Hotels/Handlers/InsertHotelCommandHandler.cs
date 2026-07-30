@@ -26,11 +26,12 @@ public class InsertHotelCommandHandler(
         var currentUserInfo = currentUserInfoResult.Value;
 
         if (!currentUserInfo.roles.Contains(UserRole.Admin))
-            return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
-                ResultCode.Forbidden);
+            return Result<HotelDto>.Forbidden(rootError);
 
         var hotel = mapper.Map<Hotel>(request);
         var result = await hotelRepository.InsertAsync(hotel, ct);
-        return mapper.Map<Result<HotelDto>>(result);
+        return result.Succeeded
+            ? mapper.Map<Result<HotelDto>>(result)
+            : Result<HotelDto>.Failure(result.Errors.Prepend(rootError));
     }
 }
