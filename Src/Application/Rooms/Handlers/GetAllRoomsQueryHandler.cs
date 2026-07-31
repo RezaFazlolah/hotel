@@ -1,22 +1,17 @@
 using Application.Interfaces.QueryServices;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Dtos;
 using Application.Rooms.Queries;
-using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Interfaces;
 using SharedKernel.Paginations;
 
 namespace Application.Rooms.Handlers;
 
 public class GetAllRoomsQueryHandler(
     IRoomQueryService roomQueryService,
-    ICurrentUserService currentUserService,
-    IHotelRepository hotelRepository,
-    IPaginator paginator)
+    ICurrentUserService currentUserService)
     : IRequestHandler<GetAllRoomsQuery, Result<PagedResult<RoomDto>>>
 {
     public async Task<Result<PagedResult<RoomDto>>> Handle(

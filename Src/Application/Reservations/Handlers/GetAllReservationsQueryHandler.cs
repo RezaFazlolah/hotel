@@ -1,9 +1,7 @@
 using Application.Interfaces.QueryServices;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
-using AutoMapper;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -13,9 +11,7 @@ namespace Application.Reservations.Handlers;
 
 public class GetAllReservationsQueryHandler(
     ICurrentUserService currentUserService,
-    IReservationRepository reservationRepository,
-    IReservationQueryService reservationQueryService,
-    IMapper mapper)
+    IReservationQueryService reservationQueryService)
     : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<ReservationDto>>>
 {
     public async Task<Result<PagedResult<ReservationDto>>> Handle(

@@ -3,7 +3,6 @@ using Application.Reservations.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
 

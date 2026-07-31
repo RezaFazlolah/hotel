@@ -14,7 +14,6 @@ namespace Application.Reservations.Handlers;
 public class UpdateReservationCommandHandler(
     IReservationRepository reservationRepository,
     ICurrentUserService currentUserService,
-    IRoomRepository roomRepository,
     IManagerService managerService,
     IMapper mapper)
     : IRequestHandler<UpdateReservationCommand, Result<ReservationDto>>

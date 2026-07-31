@@ -45,14 +45,4 @@ public static class DependencyInjection
             return services;
         }
     }
-
-    extension(IServiceProvider serviceProvider)
-    {
-        // Application/DependencyInjection.cs/ValidateMapperConfiguration()
-        public void ValidateMapperConfiguration()
-        {
-            var mapper = serviceProvider.GetRequiredService<IMapper>();
-            mapper.ConfigurationProvider.AssertConfigurationIsValid();
-        }
-    }
 }
