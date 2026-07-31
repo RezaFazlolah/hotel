@@ -13,41 +13,46 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplicationServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services.AddScoped<IManagerService, ManagerService>();
-
-        services.AddScoped<IReservationService, ReservationService>();
-
-        // Fluent Validation
-        services.AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>();
-
-        // MediatR
-        services.AddMediatR(cfg =>
+        public IServiceCollection AddApplicationServices(
+            IConfiguration configuration)
         {
-            cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
-            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>)); // FluentValidation
-        });
+            services.AddScoped<IManagerService, ManagerService>();
 
-        // AutoMapper
-        services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
+            services.AddScoped<IReservationService, ReservationService>();
 
-        services.AddOptions<PaginationSettings>()
-            .Bind(configuration.GetSection(PaginationSettings.SectionName))
-            .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
-            .ValidateOnStart();
-        
-        services.AddSingleton<IPaginator, Paginator>();
+            // Fluent Validation
+            services.AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>();
 
-        return services;
+            // MediatR
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>)); // FluentValidation
+            });
+
+            // AutoMapper
+            services.AddAutoMapper(_ => { }, typeof(ApplicationAssemblyMarker).Assembly);
+
+            services.AddOptions<PaginationSettings>()
+                .Bind(configuration.GetSection(PaginationSettings.SectionName))
+                .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
+                .ValidateOnStart();
+
+            services.AddSingleton<IPaginator, Paginator>();
+
+            return services;
+        }
     }
 
-    // Application/DependencyInjection.cs/ValidateMapperConfiguration()
-    public static void ValidateMapperConfiguration(this IServiceProvider serviceProvider)
+    extension(IServiceProvider serviceProvider)
     {
-        var mapper = serviceProvider.GetRequiredService<IMapper>();
-        mapper.ConfigurationProvider.AssertConfigurationIsValid();
+        // Application/DependencyInjection.cs/ValidateMapperConfiguration()
+        public void ValidateMapperConfiguration()
+        {
+            var mapper = serviceProvider.GetRequiredService<IMapper>();
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+        }
     }
 }

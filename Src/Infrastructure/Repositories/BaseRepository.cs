@@ -20,7 +20,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
                 .PaginateAsync(paginationParameters, ct)
         );
 
-    // Question: i think i shouldn't implement this method at all, IQueryable is Infrastructure concern
+    // smell: i think i shouldn't implement this method at all, IQueryable is Infrastructure concern
     public IQueryable<TEntity> GetAllAsQueryable()
         => CustomContext();
 

@@ -11,67 +11,68 @@ namespace Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApiServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        // scalar
-        services.AddOpenApi();
-
-        // swagger
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(options =>
+        public IServiceCollection AddApiServices(IConfiguration configuration)
         {
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            // scalar
+            services.AddOpenApi();
+
+            // swagger
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(options =>
             {
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "Enter your JWT token here"
-            });
-
-            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-            {
-                [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-            });
-        });
-
-        // HttpContextAccessor
-        services.AddHttpContextAccessor();
-
-        // AutoMapper
-        services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
-
-        services.AddControllers();
-
-        // auth
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer();
-
-        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
-            .Configure<IOptions<JwtSettings>>((options, jwtOptions) =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtOptions.Value.Issuer,
-                    ValidAudience = jwtOptions.Value.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key))
-                };
-                options.MapInboundClaims = false;
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter your JWT token here"
+                });
+
+                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                });
             });
 
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
+            // HttpContextAccessor
+            services.AddHttpContextAccessor();
 
-        return services;
+            // AutoMapper
+            services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
+
+            services.AddControllers();
+
+            // auth
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer();
+
+            services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+                .Configure<IOptions<JwtSettings>>((options, jwtOptions) =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtOptions.Value.Issuer,
+                        ValidAudience = jwtOptions.Value.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key))
+                    };
+                    options.MapInboundClaims = false;
+                });
+
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+            return services;
+        }
     }
 }

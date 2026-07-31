@@ -4,19 +4,21 @@ namespace SharedKernel.Paginations;
 
 public static class PaginationExtensions
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(
-        this IQueryable<T> query,
-        PaginationParameters paginationParameters,
-        CancellationToken ct)
+    extension<T>(IQueryable<T> query)
     {
-        var totalCount = query.Count();
+        public async Task<PagedResult<T>> PaginateAsync(
+            PaginationParameters paginationParameters,
+            CancellationToken ct)
+        {
+            var totalCount = query.Count();
 
-        var data = await query
-            .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
-            .Take(paginationParameters.PageSize)
-            .ToListAsync(ct);
+            var data = await query
+                .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)
+                .Take(paginationParameters.PageSize)
+                .ToListAsync(ct);
 
-        return Paginate(data, paginationParameters, totalCount);
+            return Paginate(data, paginationParameters, totalCount);
+        }
     }
 
     // Smell: Paginate method is implemented twice, SharedKernel/Paginations/Paginator.cs & SharedKernel/Paginations/PaginationExtensions.cs

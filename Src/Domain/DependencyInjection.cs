@@ -4,8 +4,11 @@ namespace Domain;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddDomainServices(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        return services;
+        public IServiceCollection AddDomainServices()
+        {
+            return services;
+        }
     }
 }

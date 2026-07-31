@@ -4,11 +4,13 @@ namespace Application.Extensions;
 
 public static class SortExtension
 {
-    public static IQueryable SortAsync(
-        this IQueryable query,
-        BaseSortParameters sortParameters,
-        CancellationToken ct)
+    extension(IQueryable query)
     {
-        throw new NotImplementedException();
+        public IQueryable SortAsync(
+            BaseSortParameters sortParameters,
+            CancellationToken ct)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,6 @@ using Domain.Models;
 using Infrastructure.QueryServices;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,49 +15,51 @@ namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
-        IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        // DbContext
-        // Future: use options pattern for fetching connection string
-        services.AddDbContext<AppDbContext>(options =>
-            // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            options.UseSqlite(configuration.GetConnectionString("Sqlite")));
+        public IServiceCollection AddInfrastructureServices(IConfiguration configuration)
+        {
+            // DbContext
+            // Future: use options pattern for fetching connection string
+            services.AddDbContext<AppDbContext>(options =>
+                // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlite(configuration.GetConnectionString("Sqlite")));
 
-        // identity
-        services.AddIdentityCore<User>(options =>
-            {
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 1;
-                options.Password.RequiredUniqueChars = 0;
-            })
-            .AddRoles<Role>()
-            .AddEntityFrameworkStores<AppDbContext>();
+            // identity
+            services.AddIdentityCore<User>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredLength = 1;
+                    options.Password.RequiredUniqueChars = 0;
+                })
+                .AddRoles<Role>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
-        services.AddOptions<JwtSettings>()
-            .Bind(configuration.GetSection(JwtSettings.SectionName))
-            .ValidateOnStart();
-        services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
-        
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IGuestRepository, GuestRepository>();
-        services.AddScoped<IManagerRepository, ManagerRepository>();
-        services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddOptions<JwtSettings>()
+                .Bind(configuration.GetSection(JwtSettings.SectionName))
+                .ValidateOnStart();
+            services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
 
-        services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGuestRepository, GuestRepository>();
+            services.AddScoped<IManagerRepository, ManagerRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
 
-        services.AddScoped<IHotelRepository, HotelRepository>();
-        services.AddScoped<IHotelQueryService, HotelQueryService>();
+            services.AddScoped<IJwtService, JwtService>();
 
-        services.AddScoped<IRoomRepository, RoomRepository>();
-        services.AddScoped<IRoomQueryService, RoomQueryService>();
+            services.AddScoped<IHotelRepository, HotelRepository>();
+            services.AddScoped<IHotelQueryService, HotelQueryService>();
 
-        services.AddScoped<IReservationRepository, ReservationRepository>();
-        services.AddScoped<IReservationQueryService, ReservationQueryService>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IRoomQueryService, RoomQueryService>();
 
-        return services;
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IReservationQueryService, ReservationQueryService>();
+
+            return services;
+        }
     }
 }
