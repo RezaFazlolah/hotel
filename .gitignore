@@ -6,7 +6,7 @@
 # REZA's manual ignores
 *.db*
 *.odg
-/Test.cs
+Test.cs
 *.txt
 bin\\Debug/
 session*.md
