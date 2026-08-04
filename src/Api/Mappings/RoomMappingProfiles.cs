@@ -1,5 +1,6 @@
 using Api.Dtos.RoomDtos;
 using Application.Rooms.Commands;
+using Application.Rooms.Filters;
 using Application.Rooms.Queries;
 using AutoMapper;
 using SharedKernel.Paginations;
@@ -26,6 +27,17 @@ public class RoomMappingProfiles
                             PageSize = src.PageSize.Value
                         }
                         : new PaginationParameters())
-            );
+            )
+            .ForMember(dst => dst.RoomFilterParameters,
+                opt => opt.MapFrom(src =>
+                    new RoomFilterParameters
+                    {
+                        MinNumber = src.MinNumber,
+                        MaxNumber = src.MaxNumber,
+                        Type = src.Type,
+                        MinPricePerNight = src.MinPricePerNight,
+                        MaxPricePerNight = src.MaxPricePerNight
+                    }
+                ));
     }
 }

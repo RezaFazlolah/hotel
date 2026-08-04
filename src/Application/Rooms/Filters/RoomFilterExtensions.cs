@@ -6,8 +6,11 @@ public static class RoomFilterExtensions
 {
     public static IQueryable<Room> ApplyFilter(
         this IQueryable<Room> query,
-        RoomFilterParameters roomFilterParameters)
+        RoomFilterParameters? roomFilterParameters)
     {
+        if(roomFilterParameters is null)
+            return query;
+        
         if (roomFilterParameters.MinNumber.HasValue)
             query = query.Where(r => roomFilterParameters.MinNumber.Value <= r.Number);
         if (roomFilterParameters.MaxNumber.HasValue)
