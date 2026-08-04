@@ -1,11 +1,10 @@
-using Application.Hotels.Dtos;
 using Application.Interfaces.QueryServices;
 using Application.Rooms.Dtos;
 using Application.Rooms.Filters;
+using Application.Rooms.Sorts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
 
@@ -14,7 +13,7 @@ namespace Infrastructure.QueryServices;
 public class RoomQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Room, RoomDto, RoomFilterParameters>(db, configurationProvider),
+    : BaseQueryService<Room, RoomDto, RoomFilterParameters, RoomSortParameters>(db, configurationProvider),
         IRoomQueryService
 {
     public async Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(

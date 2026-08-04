@@ -1,12 +1,14 @@
 using Application.Hotels.Filters;
+using Application.Hotels.Sorts;
 using Domain.Models;
 using SharedKernel.Common;
-using SharedKernel.Paginations;
 
 namespace Application.Interfaces.Repositories;
 
 public interface IHotelRepository
-    : IBaseRepository<Guid, Hotel, HotelFilterParameters>
+    : IBaseRepository<Guid, Hotel, HotelFilterParameters, HotelSortParameters>
 {
-    Task<Result<Guid>> GetIdByManagerIdAsync(Guid managerId, CancellationToken ct);
+    Task<Result<Guid>> GetIdByManagerIdAsync(
+        Guid managerId,
+        CancellationToken ct);
 }

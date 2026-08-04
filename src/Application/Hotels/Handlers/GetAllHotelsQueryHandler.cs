@@ -29,7 +29,7 @@ public class GetAllHotelsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.PaginationParameters, ct);
+            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.HotelSortParameters, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
@@ -47,7 +47,7 @@ public class GetAllHotelsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.PaginationParameters, ct);
+            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.HotelSortParameters, request.PaginationParameters, ct);
         }
 
         return Result<PagedResult<HotelDto>>.Failure([rootError, new Error($"forbidden request", ErrorCode.Forbidden)],

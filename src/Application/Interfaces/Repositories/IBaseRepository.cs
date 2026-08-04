@@ -3,10 +3,11 @@ using SharedKernel.Paginations;
 
 namespace Application.Interfaces.Repositories;
 
-public interface IBaseRepository<in TId, TEntity, TFilterParameters>
+public interface IBaseRepository<in TId, TEntity, TFilterParameters, TSortParameters>
 {
     Task<Result<PagedResult<TEntity>>> GetAllAsync(
-        TFilterParameters filterParameters,
+        TFilterParameters? filterParameters,
+        TSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 

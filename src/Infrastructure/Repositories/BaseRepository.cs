@@ -7,13 +7,14 @@ using SharedKernel.Paginations;
 
 namespace Infrastructure.Repositories;
 
-public abstract class BaseRepository<TId, TEntity, TFilterParameters>(AppDbContext db)
-    : IBaseRepository<TId, TEntity, TFilterParameters>
+public abstract class BaseRepository<TId, TEntity, TFilterParameters, TSortParameters>(AppDbContext db)
+    : IBaseRepository<TId, TEntity, TFilterParameters, TSortParameters>
     where TId : IEquatable<TId>, new()
     where TEntity : class, IEntity<TId>
 {
     public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(
-        TFilterParameters filterParameters,
+        TFilterParameters? filterParameters,
+        TSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<TEntity>>.Success(

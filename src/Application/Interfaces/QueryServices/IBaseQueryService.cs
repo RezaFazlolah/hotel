@@ -4,7 +4,7 @@ using SharedKernel.Paginations;
 
 namespace Application.Interfaces.QueryServices;
 
-public interface IBaseQueryService<TEntity, TDto, TFilterParameters>
+public interface IBaseQueryService<TEntity, TDto, TFilterParameters, TSortParameters>
     where TEntity : class, IEntity<Guid>
 {
     Task<Result<TDto>> GetByIdAsync(
@@ -13,6 +13,7 @@ public interface IBaseQueryService<TEntity, TDto, TFilterParameters>
 
     Task<Result<PagedResult<TDto>>> GetAllAsync(
         TFilterParameters? filterParameters,
+        TSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 

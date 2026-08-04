@@ -28,7 +28,7 @@ public class GetAllReservationsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await reservationQueryService.GetAllAsync(request.ReservationFilterParameters, request.PaginationParameters, ct);
+            return await reservationQueryService.GetAllAsync(request.ReservationFilterParameters, request.ReservationSortParameters, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))

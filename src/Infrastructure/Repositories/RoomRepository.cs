@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Application.Rooms.Filters;
+using Application.Rooms.Sorts;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
@@ -7,7 +8,7 @@ using SharedKernel.Common;
 namespace Infrastructure.Repositories;
 
 public class RoomRepository(AppDbContext db)
-    : BaseRepository<Guid, Room, RoomFilterParameters>(db),
+    : BaseRepository<Guid, Room, RoomFilterParameters, RoomSortParameters>(db),
         IRoomRepository
 {
     public override async Task<Result<Room>> InsertAsync(

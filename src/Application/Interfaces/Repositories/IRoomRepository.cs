@@ -1,11 +1,12 @@
 using Application.Rooms.Filters;
+using Application.Rooms.Sorts;
 using Domain.Models;
 using SharedKernel.Common;
 
 namespace Application.Interfaces.Repositories;
 
 public interface IRoomRepository
-    : IBaseRepository<Guid, Room, RoomFilterParameters>
+    : IBaseRepository<Guid, Room, RoomFilterParameters, RoomSortParameters>
 {
     Task<Result<IReadOnlyList<Room>>> GetAllByHotelIdAsync(
         Guid hotelId,

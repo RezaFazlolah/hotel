@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Application.Reservations.Filters;
+using Application.Reservations.Sorts;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
@@ -11,7 +12,7 @@ namespace Infrastructure.Repositories;
 public class ReservationRepository(
     AppDbContext db,
     IRoomRepository roomRepository)
-    : BaseRepository<Guid, Reservation, ReservationFilterParameters>(db),
+    : BaseRepository<Guid, Reservation, ReservationFilterParameters, ReservationSortParameters>(db),
         IReservationRepository
 {
     public override async Task<bool> ExistsAsync(

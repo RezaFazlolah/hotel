@@ -1,4 +1,5 @@
 using Application.Hotels.Filters;
+using Application.Hotels.Sorts;
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,8 @@ using SharedKernel.Common;
 namespace Infrastructure.Repositories;
 
 public class HotelRepository(AppDbContext db)
-    : BaseRepository<Guid, Hotel, HotelFilterParameters>(db), IHotelRepository
+    : BaseRepository<Guid, Hotel, HotelFilterParameters, HotelSortParameters>(db),
+        IHotelRepository
 {
     protected override IQueryable<Hotel> CustomContext()
         => db.Hotels

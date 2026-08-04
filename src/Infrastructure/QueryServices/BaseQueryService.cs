@@ -9,10 +9,10 @@ using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
 
-public abstract class BaseQueryService<TEntity, TDto, TFilterParameters>(
+public abstract class BaseQueryService<TEntity, TDto, TFilterParameters, TSortParameters>(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : IBaseQueryService<TEntity, TDto, TFilterParameters>
+    : IBaseQueryService<TEntity, TDto, TFilterParameters, TSortParameters>
     where TEntity : class, IEntity<Guid>
 {
     public virtual async Task<Result<TDto>> GetByIdAsync(
@@ -31,6 +31,7 @@ public abstract class BaseQueryService<TEntity, TDto, TFilterParameters>(
 
     public virtual async Task<Result<PagedResult<TDto>>> GetAllAsync(
         TFilterParameters? filterParameters,
+        TSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
