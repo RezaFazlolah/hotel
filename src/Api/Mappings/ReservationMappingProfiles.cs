@@ -1,5 +1,6 @@
 using Api.Dtos.ReservationDtos;
 using Application.Reservations.Commands;
+using Application.Reservations.Filters;
 using Application.Reservations.Queries;
 using AutoMapper;
 using SharedKernel.Paginations;
@@ -26,6 +27,18 @@ public class ReservationMappingProfiles
                             PageSize = src.PageSize.Value
                         }
                         : new PaginationParameters())
-            );
+            )
+            .ForMember(dst => dst.ReservationFilterParameters,
+                opt => opt.MapFrom(src =>
+                    new ReservationFilterParameters
+                    {
+                        MinCheckInDate = src.MinCheckInDate,
+                        MaxCheckInDate = src.MaxCheckInDate,
+                        MinCheckOutDate = src.MinCheckOutDate,
+                        MaxCheckOutDate = src.MaxCheckOutDate,
+                        MinTotalPrice = src.MinTotalPrice,
+                        MaxTotalPrice = src.MaxTotalPrice,
+                        Status = src.Status
+                    }));
     }
 }
