@@ -16,8 +16,6 @@ public class HotelQueryService(
     : BaseQueryService<Hotel, HotelDto>(db, configurationProvider),
         IHotelQueryService
 {
-    // private readonly IConfigurationProvider _configurationProvider = configurationProvider;
-
     public async Task<Result<HotelDto?>> GetByManagerIdAsync(
         Guid managerId,
         CancellationToken ct)
