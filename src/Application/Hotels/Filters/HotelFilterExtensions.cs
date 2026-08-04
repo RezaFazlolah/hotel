@@ -6,8 +6,11 @@ public static class HotelFilterExtensions
 {
     extension(IQueryable<Hotel> query)
     {
-        public IQueryable<Hotel> ApplyFilter(HotelFilterParameters hotelFilterParameters)
+        public IQueryable<Hotel> ApplyFilter(HotelFilterParameters? hotelFilterParameters)
         {
+            if(hotelFilterParameters is null)
+                return query;
+            
             if (hotelFilterParameters.Name is not null)
                 query = query.Where(h => h.Name.Contains(hotelFilterParameters.Name));
             if (hotelFilterParameters.Address is not null)

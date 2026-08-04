@@ -14,7 +14,7 @@ public interface IHotelQueryService
             CancellationToken ct);
     
     public Task<Result<PagedResult<HotelDto>>> GetAllAsync(
+    HotelFilterParameters? hotelFilterParameters,
     PaginationParameters paginationParameters,
-    HotelFilterParameters hotelFilterParameters,
     CancellationToken ct);
 }

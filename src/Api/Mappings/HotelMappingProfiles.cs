@@ -1,5 +1,6 @@
 using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
+using Application.Hotels.Filters;
 using Application.Hotels.Queries;
 using AutoMapper;
 using SharedKernel.Paginations;
@@ -26,6 +27,17 @@ public class HotelMappingProfiles
                             PageSize = src.PageSize.Value
                         }
                         : new PaginationParameters())
-            );
+            )
+            .ForMember(dst => dst.HotelFilterParameters,
+                opt => opt.MapFrom(src =>
+                    src.Name == null && src.Address == null && src.MinRating == null && src.MaxRating == null
+                        ? null
+                        : new HotelFilterParameters
+                        {
+                            Name = src.Name,
+                            Address = src.Address,
+                            MinRating = src.MinRating,
+                            MaxRating = src.MaxRating
+                        }));
     }
 }

@@ -1,7 +1,9 @@
+using Application.Hotels.Filters;
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
+using SharedKernel.Paginations;
 
 namespace Infrastructure.Repositories;
 
@@ -23,5 +25,17 @@ public class HotelRepository(AppDbContext db)
         return hotelResult is null
             ? Result<Guid>.Failure(new Error($"manager ${managerId} doesnt manage any hotel"))
             : Result<Guid>.Success(hotelResult.Id);
+    }
+
+    public async Task<Result<PagedResult<Hotel>>> GetAllAsync(
+        HotelFilterParameters? hotelFilterParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+    {
+        var result = await db.Hotels
+            .ApplyFilter(hotelFilterParameters)
+            .PaginateAsync(paginationParameters, ct);
+        
+        return Result<PagedResult<Hotel>>.Success(result);
     }
 }

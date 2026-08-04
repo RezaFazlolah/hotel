@@ -2,8 +2,6 @@ using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
-using AutoMapper;
-using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -31,7 +29,7 @@ public class GetAllHotelsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await hotelQueryService.GetAllAsync(request.PaginationParameters, ct);
+            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
@@ -49,7 +47,7 @@ public class GetAllHotelsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await hotelQueryService.GetAllAsync(request.PaginationParameters, ct);
+            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.PaginationParameters, ct);
         }
 
         return Result<PagedResult<HotelDto>>.Failure([rootError, new Error($"forbidden request", ErrorCode.Forbidden)],

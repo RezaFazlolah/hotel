@@ -9,8 +9,6 @@ public interface IBaseRepository<in TId, TEntity>
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    IQueryable<TEntity> GetAllAsQueryable();
-
     Task<Result<TEntity>> GetByIdAsync(
         TId id,
         CancellationToken ct);

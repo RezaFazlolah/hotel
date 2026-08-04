@@ -1,6 +1,7 @@
+using Application.Rooms.Filters;
 using FluentValidation;
 
-namespace Application.Rooms.Filters;
+namespace Application.Rooms.Validators;
 
 public class RoomFilterParametersValidator
     : AbstractValidator<RoomFilterParameters>

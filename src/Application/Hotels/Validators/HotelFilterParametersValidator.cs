@@ -1,6 +1,7 @@
+using Application.Hotels.Filters;
 using FluentValidation;
 
-namespace Application.Hotels.Filters;
+namespace Application.Hotels.Validators;
 
 public class HotelFilterParametersValidator
     : AbstractValidator<HotelFilterParameters>
@@ -15,7 +16,7 @@ public class HotelFilterParametersValidator
         RuleFor(x => x.MaxRating)
             .InclusiveBetween(0, 5)
             .When(x => x.MaxRating.HasValue)
-            .WithMessage("Min rating must be between 0 & 5");
+            .WithMessage("Max rating must be between 0 & 5");
 
         RuleFor(x=>x.MinRating)
             .LessThanOrEqualTo(x=>x.MaxRating)

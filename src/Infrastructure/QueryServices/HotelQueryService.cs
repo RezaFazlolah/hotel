@@ -22,22 +22,22 @@ public class HotelQueryService(
         Guid managerId,
         CancellationToken ct)
     {
-        return Result<HotelDto?>.Success( 
+        return Result<HotelDto?>.Success(
             await db.Hotels
-            .ProjectTo<HotelDto>(configurationProvider)
-            .FirstOrDefaultAsync(h => h.ManagerId == managerId, ct));
+                .ProjectTo<HotelDto>(configurationProvider)
+                .FirstOrDefaultAsync(h => h.ManagerId == managerId, ct));
     }
 
     public async Task<Result<PagedResult<HotelDto>>> GetAllAsync(
+        HotelFilterParameters? hotelFilterParameters,
         PaginationParameters paginationParameters,
-        HotelFilterParameters hotelFilterParameters,
         CancellationToken ct)
     {
-        var result = await db.Hotels.AsQueryable()
+        var result = await db.Hotels
             .ApplyFilter(hotelFilterParameters)
             .ProjectTo<HotelDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct);
-
+        
         return Result<PagedResult<HotelDto>>.Success(result);
     }
 }
