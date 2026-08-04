@@ -1,4 +1,5 @@
 using Application.Reservations.Dtos;
+using Application.Reservations.Filters;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
@@ -6,7 +7,7 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.QueryServices;
 
 public interface IReservationQueryService
-    : IBaseQueryService<Reservation, ReservationDto>
+    : IBaseQueryService<Reservation, ReservationDto, ReservationFilterParameters>
 {
     Task<Result<PagedResult<ReservationDto>>> GetAllByManagerIdAsync(
         Guid managerId,

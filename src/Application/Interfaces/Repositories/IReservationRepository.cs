@@ -1,3 +1,4 @@
+using Application.Reservations.Filters;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
@@ -5,7 +6,7 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.Repositories;
 
 public interface IReservationRepository
-    : IBaseRepository<Guid, Reservation>
+    : IBaseRepository<Guid, Reservation, ReservationFilterParameters>
 {
     Task<bool> IsRoomReservedAsync(
         // check if there is any reservation

@@ -27,7 +27,7 @@ public class GetAllRoomsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
+            await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
@@ -37,7 +37,7 @@ public class GetAllRoomsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            await roomQueryService.GetAllAsync(request.PaginationParameters, ct);
+            await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.PaginationParameters, ct);
         }
 
         return Result<PagedResult<RoomDto>>.Failure([

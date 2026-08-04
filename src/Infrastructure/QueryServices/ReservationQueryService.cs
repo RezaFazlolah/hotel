@@ -1,5 +1,6 @@
 using Application.Interfaces.QueryServices;
 using Application.Reservations.Dtos;
+using Application.Reservations.Filters;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
@@ -11,7 +12,7 @@ namespace Infrastructure.QueryServices;
 public class ReservationQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Reservation, ReservationDto>(db, configurationProvider),
+    : BaseQueryService<Reservation, ReservationDto, ReservationFilterParameters>(db, configurationProvider),
         IReservationQueryService
 {
     public async Task<Result<PagedResult<ReservationDto>>> GetAllByManagerIdAsync(

@@ -13,7 +13,7 @@ namespace Infrastructure.QueryServices;
 public class HotelQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Hotel, HotelDto>(db, configurationProvider),
+    : BaseQueryService<Hotel, HotelDto, HotelFilterParameters>(db, configurationProvider),
         IHotelQueryService
 {
     public async Task<Result<HotelDto?>> GetByManagerIdAsync(

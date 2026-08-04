@@ -1,11 +1,10 @@
 using Domain.Interfaces;
 using SharedKernel.Common;
-using SharedKernel.Filters;
 using SharedKernel.Paginations;
 
 namespace Application.Interfaces.QueryServices;
 
-public interface IBaseQueryService<TEntity, TDto>
+public interface IBaseQueryService<TEntity, TDto, TFilterParameters>
     where TEntity : class, IEntity<Guid>
 {
     Task<Result<TDto>> GetByIdAsync(
@@ -13,6 +12,7 @@ public interface IBaseQueryService<TEntity, TDto>
         CancellationToken ct);
 
     Task<Result<PagedResult<TDto>>> GetAllAsync(
+        TFilterParameters? filterParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 

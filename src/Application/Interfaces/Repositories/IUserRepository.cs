@@ -1,3 +1,4 @@
+using Application.Users.Filters;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -5,7 +6,7 @@ using SharedKernel.Enums;
 namespace Application.Interfaces.Repositories;
 
 public interface IUserRepository
-    : IBaseRepository<Guid, User>
+    : IBaseRepository<Guid, User, UserFilterParameters>
 {
     Task<Result> InsertAsync(
         User user,

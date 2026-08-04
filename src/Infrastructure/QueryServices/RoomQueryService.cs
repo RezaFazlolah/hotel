@@ -1,6 +1,7 @@
 using Application.Hotels.Dtos;
 using Application.Interfaces.QueryServices;
 using Application.Rooms.Dtos;
+using Application.Rooms.Filters;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
@@ -13,7 +14,7 @@ namespace Infrastructure.QueryServices;
 public class RoomQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Room, RoomDto>(db, configurationProvider),
+    : BaseQueryService<Room, RoomDto, RoomFilterParameters>(db, configurationProvider),
         IRoomQueryService
 {
     public async Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(

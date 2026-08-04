@@ -1,4 +1,5 @@
 using Application.Interfaces.Repositories;
+using Application.Users.Filters;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace Infrastructure.Repositories;
 public class UserRepository(
     AppDbContext db,
     UserManager<User> userManager)
-    : BaseRepository<Guid, User>(db),
+    : BaseRepository<Guid, User, UserFilterParameters>(db),
         IUserRepository
 {
     public virtual async Task<bool> ExistsAsync(

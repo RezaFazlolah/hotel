@@ -1,4 +1,5 @@
 using Application.Rooms.Dtos;
+using Application.Rooms.Filters;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
@@ -6,7 +7,7 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.QueryServices;
 
 public interface IRoomQueryService
-    : IBaseQueryService<Room, RoomDto>
+    : IBaseQueryService<Room, RoomDto, RoomFilterParameters>
 {
     Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(
         Guid hotelId,
