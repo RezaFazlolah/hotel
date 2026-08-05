@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories;
 public class ReservationRepository(
     AppDbContext db,
     IRoomRepository roomRepository)
-    : BaseRepository<Guid, Reservation, ReservationFilterParameters, ReservationSortParameters>(db),
+    : BaseRepository<Guid, Reservation>(db),
         IReservationRepository
 {
     public override async Task<bool> ExistsAsync(
@@ -24,11 +24,6 @@ public class ReservationRepository(
     // reservation is canceled, not deleted
     public override Task<Result<Reservation>> DeleteAsync(Guid id, CancellationToken ct)
         => throw new NotSupportedException();
-
-    protected override IQueryable<Reservation> CustomContext()
-        => db.Reservations
-            .Include(r => r.Room)
-            .Include(r => r.Guest);
 
     public async Task<bool> IsRoomReservedAsync(
         Guid roomId,

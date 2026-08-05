@@ -1,15 +1,20 @@
 using Application.Reservations.Dtos;
 using Application.Reservations.Filters;
 using Application.Reservations.Sorts;
-using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
 
 namespace Application.Interfaces.QueryServices;
 
 public interface IReservationQueryService
-    : IBaseQueryService<Reservation, ReservationDto, ReservationFilterParameters, ReservationSortParameters>
+    : IBaseQueryService<ReservationDto>
 {
+    Task<Result<PagedResult<ReservationDto>>> GetAllAsync(
+        ReservationFilterParameters? hotelFilterParameters,
+        ReservationSortParameters? hotelSortParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
+    
     Task<Result<PagedResult<ReservationDto>>> GetAllByManagerIdAsync(
         Guid managerId,
         PaginationParameters paginationParameters,

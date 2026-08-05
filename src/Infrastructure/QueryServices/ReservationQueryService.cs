@@ -13,9 +13,24 @@ namespace Infrastructure.QueryServices;
 public class ReservationQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Reservation, ReservationDto, ReservationFilterParameters, ReservationSortParameters>(db, configurationProvider),
+    : BaseQueryService<Reservation, ReservationDto>(db, configurationProvider),
         IReservationQueryService
 {
+    public async Task<Result<PagedResult<ReservationDto>>> GetAllAsync(
+        ReservationFilterParameters? reservationFilterParameters,
+        ReservationSortParameters? reservationSortParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+    {
+        var result = await db.Reservations
+            .ApplyFilter(reservationFilterParameters)
+            .ApplySort(reservationSortParameters)
+            .ProjectTo<ReservationDto>(configurationProvider)
+            .PaginateAsync(paginationParameters, ct);
+
+        return Result<PagedResult<ReservationDto>>.Success(result);
+    }
+
     public async Task<Result<PagedResult<ReservationDto>>> GetAllByManagerIdAsync(
         Guid managerId,
         PaginationParameters paginationParameters,
