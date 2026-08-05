@@ -42,7 +42,7 @@ public class HotelMappingProfiles
                 opt=>opt.MapFrom(src =>
                     new HotelSortParameters
                     {
-                        HotelSortBy =  src.HotelSortBy ?? HotelSortBy.None,
+                        SortBy =  src.HotelSortBy ?? HotelSortBy.None,
                         IsAscending = src.IsAscending ?? true
                     }));
     }

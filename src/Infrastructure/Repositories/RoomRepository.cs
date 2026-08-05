@@ -1,6 +1,4 @@
 using Application.Interfaces.Repositories;
-using Application.Rooms.Filters;
-using Application.Rooms.Sorts;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
@@ -8,7 +6,7 @@ using SharedKernel.Common;
 namespace Infrastructure.Repositories;
 
 public class RoomRepository(AppDbContext db)
-    : BaseRepository<Guid, Room, RoomFilterParameters, RoomSortParameters>(db),
+    : BaseRepository<Guid, Room>(db),
         IRoomRepository
 {
     public override async Task<Result<Room>> InsertAsync(
@@ -43,16 +41,11 @@ public class RoomRepository(AppDbContext db)
         return await base.UpdateAsync(room, ct);
     }
 
-    protected override IQueryable<Room> CustomContext()
-        => db.Rooms
-            .Include(r => r.Hotel)
-            .Include(r => r.Reservations);
-
     public async Task<Result<IReadOnlyList<Room>>> GetAllByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct)
         => Result<IReadOnlyList<Room>>.Success(
-            await CustomContext()
+            await db.Rooms
                 .Where(r => r.HotelId == hotelId)
                 .ToListAsync(ct)
         );

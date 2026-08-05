@@ -11,11 +11,6 @@ public class HotelRepository(AppDbContext db)
     : BaseRepository<Guid, Hotel>(db),
         IHotelRepository
 {
-    protected override IQueryable<Hotel> CustomContext()
-        => db.Hotels;
-            // .Include(h => h.Rooms)
-            // .Include(h => h.Manager);
-
     public async Task<Result<Guid>> GetIdByManagerIdAsync(
         Guid managerId,
         CancellationToken ct)

@@ -14,7 +14,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
 {
     public virtual async Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct)
         => Result<IReadOnlyList<TEntity>>.Success(
-            await CustomContext().ToListAsync(ct));
+            await db.Set<TEntity>().ToListAsync(ct));
 
     public virtual async Task<Result<TEntity>> GetByIdAsync(
         TId id,
@@ -64,15 +64,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     public virtual async Task<bool> ExistsAsync(
             TId id,
             CancellationToken ct)
-        // => (await CustomContext().CountAsync(e => e.Id.Equals(id), ct)) switch
-        // {
-        //     0 => Result<bool>.Success(false),
-        //     1 => Result<bool>.Success(true),
-        //     _ => Result<bool>.Failure(new Error($"more than one {EntityName}s with id {id} found"))
-        // };
         => await db.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
-
-    protected abstract IQueryable<TEntity> CustomContext();
 
     public virtual string EntityName => typeof(TEntity).Name;
 }

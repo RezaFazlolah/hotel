@@ -119,9 +119,6 @@ public class UserRepository(
         );
     }
 
-    protected override IQueryable<User> CustomContext()
-        => userManager.Users;
-
     public override async Task<Result<User>> GetByIdAsync(
         Guid id,
         CancellationToken ct)

@@ -8,7 +8,7 @@ public class HotelSortParametersValidator
 {
     public HotelSortParametersValidator()
     {
-        RuleFor(x => x.HotelSortBy)
+        RuleFor(x => x.SortBy)
             .IsInEnum()
             .WithMessage("Hotel sort by is not valid");
     }

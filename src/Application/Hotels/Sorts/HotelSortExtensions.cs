@@ -11,7 +11,7 @@ public static class HotelSortExtensions
             if (hotelSortParameters is null)
                 return query.OrderBy(h => h.Id);
                 
-            return hotelSortParameters.HotelSortBy switch
+            return hotelSortParameters.SortBy switch
             {
                 HotelSortBy.Name => hotelSortParameters.IsAscending
                     ? query.OrderBy(h => h.Name)
