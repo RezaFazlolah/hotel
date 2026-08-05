@@ -5,14 +5,13 @@ using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
 
-public abstract class BaseQueryService<TEntity, TDto, TFilterParameters, TSortParameters>(
+public abstract class BaseQueryService<TEntity, TDto>(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : IBaseQueryService<TEntity, TDto, TFilterParameters, TSortParameters>
+    : IBaseQueryService<TDto>
     where TEntity : class, IEntity<Guid>
 {
     public virtual async Task<Result<TDto>> GetByIdAsync(
@@ -27,19 +26,6 @@ public abstract class BaseQueryService<TEntity, TDto, TFilterParameters, TSortPa
         return dto is null
             ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found", ErrorCode.NotFound), ResultCode.NotFound)
             : Result<TDto>.Success(dto);
-    }
-
-    public virtual async Task<Result<PagedResult<TDto>>> GetAllAsync(
-        TFilterParameters? filterParameters,
-        TSortParameters sortParameters,
-        PaginationParameters paginationParameters,
-        CancellationToken ct)
-    {
-        var dtos = await db.Set<TEntity>()
-            .ProjectTo<TDto>(configurationProvider)
-            .PaginateAsync(paginationParameters, ct);
-
-        return Result<PagedResult<TDto>>.Success(dtos);
     }
 
     public virtual string EntityName => typeof(TEntity).Name;

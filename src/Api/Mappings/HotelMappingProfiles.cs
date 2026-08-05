@@ -2,6 +2,7 @@ using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
 using Application.Hotels.Filters;
 using Application.Hotels.Queries;
+using Application.Hotels.Sorts;
 using AutoMapper;
 using SharedKernel.Paginations;
 
@@ -36,6 +37,13 @@ public class HotelMappingProfiles
                         Address = src.Address,
                         MinRating = src.MinRating,
                         MaxRating = src.MaxRating
+                    }))
+            .ForMember(dst=>dst.HotelSortParameters,
+                opt=>opt.MapFrom(src =>
+                    new HotelSortParameters
+                    {
+                        HotelSortBy =  src.HotelSortBy ?? HotelSortBy.None,
+                        IsAscending = src.IsAscending ?? true
                     }));
     }
 }

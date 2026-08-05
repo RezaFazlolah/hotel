@@ -8,13 +8,13 @@ using SharedKernel.Common;
 namespace Infrastructure.Repositories;
 
 public class HotelRepository(AppDbContext db)
-    : BaseRepository<Guid, Hotel, HotelFilterParameters, HotelSortParameters>(db),
+    : BaseRepository<Guid, Hotel>(db),
         IHotelRepository
 {
     protected override IQueryable<Hotel> CustomContext()
-        => db.Hotels
-            .Include(h => h.Rooms)
-            .Include(h => h.Manager);
+        => db.Hotels;
+            // .Include(h => h.Rooms)
+            // .Include(h => h.Manager);
 
     public async Task<Result<Guid>> GetIdByManagerIdAsync(
         Guid managerId,
@@ -24,7 +24,7 @@ public class HotelRepository(AppDbContext db)
             .SingleOrDefaultAsync(h => h.ManagerId == managerId, ct);
 
         return hotelResult is null
-            ? Result<Guid>.Failure(new Error($"manager ${managerId} doesnt manage any hotel"))
+            ? Result<Guid>.Failure(new Error($"manager ${managerId} doesn't manage any hotel"))
             : Result<Guid>.Success(hotelResult.Id);
     }
 }

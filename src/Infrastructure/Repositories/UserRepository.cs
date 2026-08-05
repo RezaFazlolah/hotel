@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories;
 public class UserRepository(
     AppDbContext db,
     UserManager<User> userManager)
-    : BaseRepository<Guid, User, UserFilterParameters, UserSortParameters>(db),
+    : BaseRepository<Guid, User>(db),
         IUserRepository
 {
     public virtual async Task<bool> ExistsAsync(

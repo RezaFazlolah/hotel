@@ -5,12 +5,6 @@ namespace Application.Hotels.Sorts;
 public class HotelSortParameters
     : BaseSortParameters
 {
-    public HotelSortBy HotelSortBy { get; init; }
+    public HotelSortBy HotelSortBy { get; init; } =  HotelSortBy.None;
 }
 
-public enum HotelSortBy
-{
-    Name,
-    Address,
-    Rating
-}

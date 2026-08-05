@@ -7,26 +7,21 @@ using SharedKernel.Paginations;
 
 namespace Infrastructure.Repositories;
 
-public abstract class BaseRepository<TId, TEntity, TFilterParameters, TSortParameters>(AppDbContext db)
-    : IBaseRepository<TId, TEntity, TFilterParameters, TSortParameters>
-    where TId : IEquatable<TId>, new()
+public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
+    : IBaseRepository<TId, TEntity>
+    where TId : IEquatable<TId>
     where TEntity : class, IEntity<TId>
 {
-    public virtual async Task<Result<PagedResult<TEntity>>> GetAllAsync(
-        TFilterParameters? filterParameters,
-        TSortParameters sortParameters,
-        PaginationParameters paginationParameters,
-        CancellationToken ct)
-        => Result<PagedResult<TEntity>>.Success(
-            await CustomContext()
-                .PaginateAsync(paginationParameters, ct)
-        );
+    public virtual async Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct)
+        => Result<IReadOnlyList<TEntity>>.Success(
+            await CustomContext().ToListAsync(ct));
 
     public virtual async Task<Result<TEntity>> GetByIdAsync(
         TId id,
         CancellationToken ct)
     {
-        var entity = await CustomContext().SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
+        var entity = await db.Set<TEntity>()
+            .SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
         return entity is null
             ? Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
                 ResultCode.NotFound)

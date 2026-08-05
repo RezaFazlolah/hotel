@@ -6,8 +6,11 @@ public static class HotelSortExtensions
 {
     extension(IQueryable<Hotel> query)
     {
-        public IQueryable<Hotel> ApplySort(HotelSortParameters hotelSortParameters)
+        public IQueryable<Hotel> ApplySort(HotelSortParameters? hotelSortParameters)
         {
+            if (hotelSortParameters is null)
+                return query.OrderBy(h => h.Id);
+                
             return hotelSortParameters.HotelSortBy switch
             {
                 HotelSortBy.Name => hotelSortParameters.IsAscending

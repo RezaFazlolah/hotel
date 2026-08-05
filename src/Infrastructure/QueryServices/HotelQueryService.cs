@@ -7,15 +7,31 @@ using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
+using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
 
 public class HotelQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Hotel, HotelDto, HotelFilterParameters, HotelSortParameters>(db, configurationProvider),
+    : BaseQueryService<Hotel, HotelDto>(db, configurationProvider),
         IHotelQueryService
 {
+    public async Task<Result<PagedResult<HotelDto>>> GetAllAsync(
+        HotelFilterParameters? hotelFilterParameters,
+        HotelSortParameters? hotelSortParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+    {
+        var result = await db.Hotels
+            .ApplyFilter(hotelFilterParameters)
+            .ApplySort(hotelSortParameters)
+            .ProjectTo<HotelDto>(configurationProvider)
+            .PaginateAsync(paginationParameters, ct);
+        
+        return Result<PagedResult<HotelDto>>.Success(result);
+    }
+ 
     public async Task<Result<HotelDto?>> GetByManagerIdAsync(
         Guid managerId,
         CancellationToken ct)
@@ -25,17 +41,4 @@ public class HotelQueryService(
                 .ProjectTo<HotelDto>(configurationProvider)
                 .FirstOrDefaultAsync(h => h.ManagerId == managerId, ct));
     }
-
-    // public async Task<Result<PagedResult<HotelDto>>> GetAllAsync(
-    //     HotelFilterParameters? hotelFilterParameters,
-    //     PaginationParameters paginationParameters,
-    //     CancellationToken ct)
-    // {
-    //     var result = await db.Hotels
-    //         .ApplyFilter(hotelFilterParameters)
-    //         .ProjectTo<HotelDto>(configurationProvider)
-    //         .PaginateAsync(paginationParameters, ct);
-    //     
-    //     return Result<PagedResult<HotelDto>>.Success(result);
-    // }
 }

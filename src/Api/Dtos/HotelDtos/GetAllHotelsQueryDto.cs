@@ -1,3 +1,5 @@
+using Application.Hotels.Sorts;
+
 namespace Api.Dtos.HotelDtos;
 
 // Future: use inheritance for GetAllHotelsQueryDto, GetAllRoomsQueryDto, GetAllReservationsQueryDto 
@@ -14,5 +16,6 @@ public class GetAllHotelsQueryDto
     public decimal? MaxRating { get; set; }
     
     // sort
-    
+    public HotelSortBy? HotelSortBy { get; set; }
+    public bool? IsAscending { get; set; }
 }
