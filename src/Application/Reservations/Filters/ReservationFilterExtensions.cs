@@ -6,8 +6,7 @@ public static class ReservationFilterExtensions
 {
     extension(IQueryable<Reservation> query)
     {
-        public IQueryable<Reservation> ApplyFilter(
-            ReservationFilterParameters? reservationFilterParameters)
+        public IQueryable<Reservation> ApplyFilter(ReservationFilterParameters? reservationFilterParameters)
         {
             if(reservationFilterParameters is null)
                 return query;
