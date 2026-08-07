@@ -13,6 +13,7 @@ namespace Application.Rooms.Handlers;
 public class InsertRoomCommandHandler(
     IRoomRepository roomRepository,
     IHotelRepository hotelRepository,
+    IManagerRepository managerRepository,
     ICurrentUserService currentUserService,
     IMapper mapper)
     : IRequestHandler<InsertRoomCommand, Result<RoomDto>>
@@ -33,10 +34,8 @@ public class InsertRoomCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var managerIdResult = await hotelRepository.GetManagerIdAsync(request.HotelId, ct);
-            if (!managerIdResult.Succeeded
-                || managerIdResult.Value == null
-                || managerIdResult.Value != currentUserInfo.id)
+            var managerIdForHotelResult = await managerRepository.GetIdByHotelIdAsync(request.HotelId, ct);
+            if (!managerIdForHotelResult.Succeeded || managerIdForHotelResult.Value != currentUserInfo.id)
                 return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
         }
         else

@@ -36,7 +36,8 @@ public class ReservationQueryService(
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<ReservationDto>>.Success(await db.Reservations
-            .Where(r => r.Room.Hotel.ManagerId == managerId)
+            .Where(r => r.Room.Hotel.Manager != null
+                        && r.Room.Hotel.Manager.Id == managerId)
             .ProjectTo<ReservationDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct));
 

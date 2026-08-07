@@ -11,5 +11,5 @@ public class Hotel
     public decimal Rating { get; set; }
 
     public Manager? Manager { get; set; }
-    public ICollection<Room> Rooms => [];
+    public ICollection<Room> Rooms { get; } = [];
 }

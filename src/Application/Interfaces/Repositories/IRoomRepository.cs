@@ -19,11 +19,24 @@ public interface IRoomRepository
         Guid roomId,
         CancellationToken ct);
 
+    Task<Result<Guid?>> GetManagerIdAsync(
+        Guid roomId,
+        CancellationToken ct);
+    
     Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct);
 
     Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
         IEnumerable<Guid> hotelIds,
+        CancellationToken ct);
+
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByManagerIdAsync(
+        Guid managerId,
+        CancellationToken ct);
+    
+    Task<bool> IsRoomManagedByManagerAsync(
+        Guid roomId,
+        Guid managerId,
         CancellationToken ct);
 }

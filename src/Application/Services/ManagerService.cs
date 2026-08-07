@@ -1,32 +1,30 @@
 using Application.Interfaces.Repositories;
 using Domain.Interfaces;
-using SharedKernel.Common;
 
 namespace Application.Services;
 
 public class ManagerService(
-    IManagerRepository managerRepository,
     IRoomRepository roomRepository,
-    IHotelRepository hotelRepository)
+    IManagerRepository managerRepository)
     : UserService,
         IManagerService
 {
-    public async Task<Result<IEnumerable<Guid>>> GetAllRoomsIdAsync(
-        Guid managerId,
-        CancellationToken ct)
-    {
-        var hotelIdResult = await hotelRepository.GetIdByManagerIdAsync(managerId, ct);
-        if (!hotelIdResult.Succeeded)
-            return Result<IEnumerable<Guid>>.Failure(hotelIdResult.Errors);
-        var hotelId = hotelIdResult.Value;
-
-        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId, ct);
-        if (!roomIdsResult.Succeeded)
-            return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
-        var roomIds = roomIdsResult.Value;
-
-        return Result<IEnumerable<Guid>>.Success(roomIds);
-    }
+    // public async Task<Result<IEnumerable<Guid>>> GetAllRoomsIdAsync(
+    //     Guid managerId,
+    //     CancellationToken ct)
+    // {
+    //     var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+    //     if (!hotelIdResult.Succeeded)
+    //         return Result<IEnumerable<Guid>>.Failure(hotelIdResult.Errors);
+    //     var hotelId = hotelIdResult.Value;
+    //
+    //     var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId, ct);
+    //     if (!roomIdsResult.Succeeded)
+    //         return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
+    //     var roomIds = roomIdsResult.Value;
+    //
+    //     return Result<IEnumerable<Guid>>.Success(roomIds);
+    // }
 
     // Question: i don't know if this is the right place to implement this method or not?
     public async Task<bool> ManagesRoomAsync(
@@ -34,7 +32,7 @@ public class ManagerService(
         Guid roomId,
         CancellationToken ct)
     {
-        var managerHotelIdResult = await hotelRepository.GetIdByManagerIdAsync(managerId, ct); 
+        var managerHotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct); 
         if (!managerHotelIdResult.Succeeded)
             return false;
         var managerHotelId = managerHotelIdResult.Value;

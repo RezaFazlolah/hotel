@@ -24,4 +24,14 @@ public class ManagerRepository(
             ? Result<Guid?>.Failure(new Error($"manager {managerId} not found"))
             : Result<Guid?>.Success(manager.HotelId);
     }
+
+    public async Task<Result<Guid>> GetIdByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct)
+    {
+        var result = await db.Managers.FirstOrDefaultAsync(m => m.HotelId == hotelId, ct);
+        return result is null
+            ? Result<Guid>.Failure(new Error($"hotel {hotelId} not found or isn't managed by any manager"))
+            : Result<Guid>.Success(result.Id);
+    }
 }

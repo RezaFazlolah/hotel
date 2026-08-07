@@ -33,7 +33,7 @@ public class UpdateHotelCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelIdResult = await hotelRepository.GetIdByManagerIdAsync(currentUserInfo.id, ct); 
+            var hotelIdResult = await managerRepository.GetHotelIdAsync(currentUserInfo.id, ct); 
             if (!hotelIdResult.Succeeded)
                 return Result<HotelDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
             var hotelId = hotelIdResult.Value;

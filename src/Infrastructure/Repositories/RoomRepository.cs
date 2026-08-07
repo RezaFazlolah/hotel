@@ -75,6 +75,18 @@ public class RoomRepository(AppDbContext db)
         return Result<Guid>.Success(room.HotelId);
     }
 
+    public async Task<Result<Guid?>> GetManagerIdAsync(Guid roomId, CancellationToken ct)
+    {
+        var room = await db.Rooms
+            .Include(r => r.Hotel)
+            .ThenInclude(h => h.Manager)
+            .FirstOrDefaultAsync(r => r.Id == roomId, ct);
+
+        return room is null
+            ? Result<Guid?>.Failure(new Error($"room {roomId} not found"))
+            : Result<Guid?>.Success(room.Hotel.Manager?.Id);
+    }
+
     public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct)
@@ -94,4 +106,18 @@ public class RoomRepository(AppDbContext db)
                 .Select(r => r.Id)
                 .ToListAsync(ct)
         );
+
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByManagerIdAsync(Guid managerId, CancellationToken ct)
+        => Result<IReadOnlyList<Guid>>.Success(await db.Rooms
+            .Where(r => r.Hotel.Manager != null && r.Hotel.Manager.Id == managerId)
+            .Select(r => r.Id)
+            .ToListAsync(ct));
+
+    public async Task<bool> IsRoomManagedByManagerAsync(Guid roomId, Guid managerId, CancellationToken ct)
+    {
+        var managerIdResult = await GetManagerIdAsync(managerId, ct);
+        return !managerIdResult.Succeeded || managerIdResult.Value is null
+            ? false
+            : managerIdResult.Value.Equals(roomId);
+    }
 }
