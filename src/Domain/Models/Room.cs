@@ -13,5 +13,5 @@ public class Room
 
     public Guid HotelId { get; set; }
     public Hotel Hotel { get; set; } = null!;
-    public ICollection<Reservation> Reservations { get; } = [];
+    public ICollection<Reservation> Reservations => [];
 }

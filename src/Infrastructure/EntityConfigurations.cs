@@ -5,6 +5,17 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Infrastructure;
 
+public class HotelConfiguration
+    : IEntityTypeConfiguration<Hotel>
+{
+    public void Configure(EntityTypeBuilder<Hotel> builder)
+    {
+        builder.HasOne(h => h.Manager)
+            .WithOne(m => m.Hotel)
+            .HasForeignKey<Hotel>(h => h.ManagerId);
+    }
+}
+
 public class RoomConfiguration
     : IEntityTypeConfiguration<Room>
 {
@@ -16,17 +27,6 @@ public class RoomConfiguration
 
         builder.HasIndex(r => new { r.HotelId, r.Number })
             .IsUnique();
-    }
-}
-
-public class HotelConfiguration
-    : IEntityTypeConfiguration<Hotel>
-{
-    public void Configure(EntityTypeBuilder<Hotel> builder)
-    {
-        builder.HasOne(h => h.Manager)
-            .WithOne(m => m.Hotel)
-            .HasForeignKey<Hotel>(h => h.ManagerId);
     }
 }
 
