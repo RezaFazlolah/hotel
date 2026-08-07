@@ -17,7 +17,9 @@ public class UpdateHotelCommandHandler(
     IMapper mapper)
     : IRequestHandler<UpdateHotelCommand, Result<HotelDto>>
 {
-    public async Task<Result<HotelDto>> Handle(UpdateHotelCommand request, CancellationToken ct)
+    public async Task<Result<HotelDto>> Handle(
+        UpdateHotelCommand request,
+        CancellationToken ct)
     {
         var rootError = new Error($"update hotel {request.Id} failed");
 

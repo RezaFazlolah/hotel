@@ -16,7 +16,9 @@ public class InsertHotelCommandHandler(
     IMapper mapper)
     : IRequestHandler<InsertHotelCommand, Result<HotelDto>>
 {
-    public async Task<Result<HotelDto>> Handle(InsertHotelCommand request, CancellationToken ct)
+    public async Task<Result<HotelDto>> Handle(
+        InsertHotelCommand request,
+        CancellationToken ct)
     {
         var rootError = new Error($"insert hotel failed");
 

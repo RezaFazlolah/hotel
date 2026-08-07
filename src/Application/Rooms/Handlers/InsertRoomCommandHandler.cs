@@ -18,7 +18,9 @@ public class InsertRoomCommandHandler(
     IMapper mapper)
     : IRequestHandler<InsertRoomCommand, Result<RoomDto>>
 {
-    public async Task<Result<RoomDto>> Handle(InsertRoomCommand request, CancellationToken ct)
+    public async Task<Result<RoomDto>> Handle(
+        InsertRoomCommand request,
+        CancellationToken ct)
     {
         var rootError = new Error($"insert room failed");
 
@@ -34,27 +36,20 @@ public class InsertRoomCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var managerIdForHotelResult = await managerRepository.GetIdByHotelIdAsync(request.HotelId, ct);
-            if (!managerIdForHotelResult.Succeeded || managerIdForHotelResult.Value != currentUserInfo.id)
+            if (!await managerRepository.IsHotelManagedByManager(request.HotelId, currentUserInfo.id, ct))
                 return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
         }
         else
             return Result<RoomDto>.Forbidden(rootError);
 
-        var roomNumberExistsResult =
-            await roomRepository.RoomNumberExistsAsync(request.HotelId, request.Number, ct);
-        if (!roomNumberExistsResult.Succeeded)
-            return Result<RoomDto>.Failure(roomNumberExistsResult.Errors.Prepend(rootError));
-        var roomNumberExists = roomNumberExistsResult.Value;
-
-        if (roomNumberExists)
+        if (await roomRepository.RoomNumberExistsAsync(request.HotelId, request.Number, ct))
             return Result<RoomDto>.Failure([
                 rootError, new Error($"hotel {request.HotelId} already has room number {request.Number}")
             ]);
 
-        var roomCreateResult = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
-        return roomCreateResult.Succeeded
-            ? mapper.Map<Result<RoomDto>>(roomCreateResult)
-            : Result<RoomDto>.Failure(roomCreateResult.Errors.Prepend(rootError));
+        var roomInsertResult = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
+        return roomInsertResult.Succeeded
+            ? mapper.Map<Result<RoomDto>>(roomInsertResult)
+            : Result<RoomDto>.Failure(roomInsertResult.Errors.Prepend(rootError));
     }
 }

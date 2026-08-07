@@ -12,4 +12,9 @@ public interface IManagerRepository
     Task<Result<Guid>> GetIdByHotelIdAsync(
         Guid hotelId,
         CancellationToken ct);
+
+    Task<bool> IsHotelManagedByManager(
+        Guid hotelId,
+        Guid managerId,
+        CancellationToken ct);
 }

@@ -10,7 +10,7 @@ public interface IRoomRepository
         Guid hotelId,
         CancellationToken ct);
 
-    Task<Result<bool>> RoomNumberExistsAsync(
+    Task<bool> RoomNumberExistsAsync(
         Guid hotelId,
         int roomNumber,
         CancellationToken ct);

@@ -12,7 +12,7 @@ public class RoomRepository(AppDbContext db)
     public override async Task<Result<Room>> InsertAsync(
         Room room,
         CancellationToken ct)
-        => (await RoomNumberExistsAsync(room.HotelId, room.Number, ct)).Value
+        => await RoomNumberExistsAsync(room.HotelId, room.Number, ct)
             ? Result<Room>.Failure(new Error($"room number {room.Number} already exists"))
             : await base.InsertAsync(room, ct);
 
@@ -27,13 +27,7 @@ public class RoomRepository(AppDbContext db)
 
         if (room.Number != existingRoom.Number)
         {
-            var roomNumberExistsResult =
-                await RoomNumberExistsAsync(room.HotelId, room.Number, ct);
-            if (!roomNumberExistsResult.Succeeded)
-                return Result<Room>.Failure(
-                    roomNumberExistsResult.Errors.Prepend(new Error($"update room {room.Id} failed")));
-            var roomNumberExists = roomNumberExistsResult.Value;
-            if (roomNumberExists)
+            if (await RoomNumberExistsAsync(room.HotelId, room.Number, ct))
                 return Result<Room>.Failure(
                     new Error($"update room {room.Id} failed. room number {room.Number} already exists"));
         }
@@ -50,17 +44,12 @@ public class RoomRepository(AppDbContext db)
                 .ToListAsync(ct)
         );
 
-    public async Task<Result<bool>> RoomNumberExistsAsync(
+    public async Task<bool> RoomNumberExistsAsync(
         Guid hotelId,
         int roomNumber,
         CancellationToken ct)
-    {
-        if (!await ExistsAsync(hotelId, ct))
-            return Result<bool>.Failure(new Error($"hotel {hotelId} not found"));
-
-        var roomExists = await db.Rooms.AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber, ct);
-        return Result<bool>.Success(roomExists);
-    }
+        => await db.Rooms
+            .AnyAsync(r => r.HotelId == hotelId && r.Number == roomNumber, ct);
 
     // Performance: fetch only HotelId column instead of fetching all columns and returning only HotelId
     public async Task<Result<Guid>> GetHotelIdAsync(

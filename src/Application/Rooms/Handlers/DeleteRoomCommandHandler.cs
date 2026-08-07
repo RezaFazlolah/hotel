@@ -15,12 +15,13 @@ namespace Application.Rooms.Handlers;
 
 public class DeleteRoomCommandHandler(
     IRoomRepository roomRepository,
-    IManagerService managerService,
     ICurrentUserService currentUserService,
     IMapper mapper)
     : IRequestHandler<DeleteRoomCommand, Result<RoomDto>>
 {
-    public async Task<Result<RoomDto>> Handle(DeleteRoomCommand request, CancellationToken ct)
+    public async Task<Result<RoomDto>> Handle(
+        DeleteRoomCommand request,
+        CancellationToken ct)
     {
         var callerIdResult = currentUserService.Id;
         if (!callerIdResult.Succeeded)

@@ -13,7 +13,9 @@ public class GetHotelByIdQueryHandler(
     ICurrentUserService currentUserService)
     : IRequestHandler<GetHotelByIdQuery, Result<HotelDto>>
 {
-    public async Task<Result<HotelDto>> Handle(GetHotelByIdQuery request, CancellationToken ct)
+    public async Task<Result<HotelDto>> Handle(
+        GetHotelByIdQuery request,
+        CancellationToken ct)
     {
         var rootError = new Error("get hotel by id failed");
 

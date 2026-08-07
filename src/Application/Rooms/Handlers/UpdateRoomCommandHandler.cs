@@ -20,7 +20,9 @@ public class UpdateRoomCommandHandler(
     IMapper mapper)
     : IRequestHandler<UpdateRoomCommand, Result<RoomDto>>
 {
-    public async Task<Result<RoomDto>> Handle(UpdateRoomCommand request, CancellationToken ct)
+    public async Task<Result<RoomDto>> Handle(
+        UpdateRoomCommand request,
+        CancellationToken ct)
     {
         var callerIdResult = currentUserService.Id;
         if (!callerIdResult.Succeeded)

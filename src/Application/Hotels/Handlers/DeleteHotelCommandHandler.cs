@@ -16,7 +16,9 @@ public class DeleteHotelCommandHandler(
     IMapper mapper)
     : IRequestHandler<DeleteHotelCommand, Result<HotelDto>>
 {
-    public async Task<Result<HotelDto>> Handle(DeleteHotelCommand request, CancellationToken ct)
+    public async Task<Result<HotelDto>> Handle(
+        DeleteHotelCommand request,
+        CancellationToken ct)
     {
         var rolesResult = currentUserService.Roles;
         if (!rolesResult.Succeeded)
