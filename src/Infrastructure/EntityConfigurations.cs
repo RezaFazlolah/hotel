@@ -1,7 +1,6 @@
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Infrastructure;
 
@@ -10,9 +9,6 @@ public class HotelConfiguration
 {
     public void Configure(EntityTypeBuilder<Hotel> builder)
     {
-        builder.HasOne(h => h.Manager)
-            .WithOne(m => m.Hotel)
-            .HasForeignKey<Hotel>(h => h.ManagerId);
     }
 }
 
@@ -39,7 +35,7 @@ public class ReservationConfiguration
             .HasConversion<string>()
             .HasMaxLength(100);
 
-        // builder.HasIndex(r => new { r.CheckInDate, r.CheckOutDate });
+        // builder.HasIndex(r => new { r.Id, r.CheckInDate, r.CheckOutDate });
     }
 }
 
@@ -66,6 +62,10 @@ public class ManagerConfiguration
 {
     public void Configure(EntityTypeBuilder<Manager> builder)
     {
+        builder.HasOne(m => m.Hotel)
+            .WithOne(h => h.Manager)
+            .HasForeignKey<Manager>(m => m.HotelId);
+
         builder.ToTable("Managers");
     }
 }

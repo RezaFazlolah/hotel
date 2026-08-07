@@ -20,11 +20,11 @@ public class HotelMappingProfiles
 
         CreateMap<InsertHotelCommand, Hotel>()
             .ForMember(dst => dst.Id, opt => opt.Ignore())
-            .ForMember(dst => dst.Rooms, opt => opt.Ignore())
-            .ForMember(dst => dst.Manager, opt => opt.Ignore());
-        
+            .ForMember(dst => dst.Manager, opt => opt.Ignore())
+            .ForMember(dst => dst.Rooms, opt => opt.Ignore());
+
         CreateMap<UpdateHotelCommand, Hotel>()
-            .ForMember(dst => dst.Rooms, opt => opt.Ignore())
-            .ForMember(dst => dst.Manager, opt => opt.Ignore());
+            .ForMember(dst => dst.Manager, opt => opt.Ignore())
+            .ForMember(dst => dst.Rooms, opt => opt.Ignore());
     }
 }

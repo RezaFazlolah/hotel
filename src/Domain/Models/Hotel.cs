@@ -10,7 +10,6 @@ public class Hotel
     public string Address { get; set; } = string.Empty;
     public decimal Rating { get; set; }
 
-    public Guid? ManagerId { get; set; }
     public Manager? Manager { get; set; }
     public ICollection<Room> Rooms => [];
 }
