@@ -14,7 +14,6 @@ public class InsertRoomCommandHandler(
     IRoomRepository roomRepository,
     IHotelRepository hotelRepository,
     ICurrentUserService currentUserService,
-    IManagerRepository managerRepository,
     IMapper mapper)
     : IRequestHandler<InsertRoomCommand, Result<RoomDto>>
 {
@@ -34,12 +33,10 @@ public class InsertRoomCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(currentUserInfo.id, ct);
-            if (!hotelIdResult.Succeeded)
-                return Result<RoomDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
-            var hotelId = hotelIdResult.Value;
-
-            if (request.HotelId != hotelId)
+            var managerIdResult = await hotelRepository.GetManagerIdAsync(request.HotelId, ct);
+            if (!managerIdResult.Succeeded
+                || managerIdResult.Value == null
+                || managerIdResult.Value != currentUserInfo.id)
                 return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
         }
         else
@@ -56,9 +53,9 @@ public class InsertRoomCommandHandler(
                 rootError, new Error($"hotel {request.HotelId} already has room number {request.Number}")
             ]);
 
-        var result = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
-        return result.Succeeded
-            ? mapper.Map<Result<RoomDto>>(result)
-            : Result<RoomDto>.Failure(result.Errors.Prepend(rootError));
+        var roomCreateResult = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
+        return roomCreateResult.Succeeded
+            ? mapper.Map<Result<RoomDto>>(roomCreateResult)
+            : Result<RoomDto>.Failure(roomCreateResult.Errors.Prepend(rootError));
     }
 }

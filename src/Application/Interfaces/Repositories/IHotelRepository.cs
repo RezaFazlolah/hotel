@@ -11,4 +11,8 @@ public interface IHotelRepository
     Task<Result<Guid>> GetIdByManagerIdAsync(
         Guid managerId,
         CancellationToken ct);
+
+    Task<Result<Guid?>> GetManagerIdAsync(
+        Guid hotelId,
+        CancellationToken ct);
 }

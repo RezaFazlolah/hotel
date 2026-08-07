@@ -6,7 +6,8 @@ namespace Application.Services;
 
 public class ManagerService(
     IManagerRepository managerRepository,
-    IRoomRepository roomRepository)
+    IRoomRepository roomRepository,
+    IHotelRepository hotelRepository)
     : UserService,
         IManagerService
 {
@@ -14,15 +15,12 @@ public class ManagerService(
         Guid managerId,
         CancellationToken ct)
     {
-        var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+        var hotelIdResult = await hotelRepository.GetIdByManagerIdAsync(managerId, ct);
         if (!hotelIdResult.Succeeded)
             return Result<IEnumerable<Guid>>.Failure(hotelIdResult.Errors);
         var hotelId = hotelIdResult.Value;
 
-        if (hotelId is null)
-            return Result<IEnumerable<Guid>>.Success([]);
-
-        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId.Value, ct);
+        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId, ct);
         if (!roomIdsResult.Succeeded)
             return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
         var roomIds = roomIdsResult.Value;
@@ -36,13 +34,10 @@ public class ManagerService(
         Guid roomId,
         CancellationToken ct)
     {
-        var managerHotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+        var managerHotelIdResult = await hotelRepository.GetIdByManagerIdAsync(managerId, ct); 
         if (!managerHotelIdResult.Succeeded)
             return false;
         var managerHotelId = managerHotelIdResult.Value;
-
-        if (managerHotelId is null)
-            return false;
         
         var roomHotelIdResult = await roomRepository.GetHotelIdAsync(roomId, ct);
         if(!roomHotelIdResult.Succeeded)

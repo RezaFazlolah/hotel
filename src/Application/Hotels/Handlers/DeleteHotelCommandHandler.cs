@@ -33,7 +33,7 @@ public class DeleteHotelCommandHandler(
         if (roles.Contains(UserRole.Manager))
         {
             var managerId = currentUserService.Id.Value;
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
+            var hotelIdResult = await hotelRepository.GetIdByManagerIdAsync(managerId, ct); 
             if (!hotelIdResult.Succeeded)
                 return Result<HotelDto>.Failure(
                     hotelIdResult.Errors.Prepend(
