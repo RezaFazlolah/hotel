@@ -12,6 +12,7 @@ bin\\Debug/
 session*.md
 AGENTS.md
 /*.txt
+.~lock.*.odg
 
 # dotenv files
 .env
