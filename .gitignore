@@ -13,6 +13,7 @@ session*.md
 AGENTS.md
 /*.txt
 .~lock.*.odg
+[nN]otes/
 
 # dotenv files
 .env
