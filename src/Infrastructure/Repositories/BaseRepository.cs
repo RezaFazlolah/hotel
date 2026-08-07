@@ -62,8 +62,8 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
 
     // Question: do i need to check for duplicated IDs in a separate service?
     public virtual async Task<bool> ExistsAsync(
-            TId id,
-            CancellationToken ct)
+        TId id,
+        CancellationToken ct)
         => await db.Set<TEntity>().AnyAsync(e => e.Id.Equals(id), ct);
 
     public virtual string EntityName => typeof(TEntity).Name;

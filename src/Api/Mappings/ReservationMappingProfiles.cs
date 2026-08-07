@@ -2,6 +2,7 @@ using Api.Dtos.ReservationDtos;
 using Application.Reservations.Commands;
 using Application.Reservations.Filters;
 using Application.Reservations.Queries;
+using Application.Reservations.Sorts;
 using AutoMapper;
 using SharedKernel.Paginations;
 
@@ -39,6 +40,13 @@ public class ReservationMappingProfiles
                         MinTotalPrice = src.MinTotalPrice,
                         MaxTotalPrice = src.MaxTotalPrice,
                         Status = src.Status
+                    }))
+            .ForMember(dst => dst.ReservationSortParameters,
+                opt => opt.MapFrom(src =>
+                    new ReservationSortParameters
+                    {
+                        SortBy = src.SortBy ?? ReservationSortBy.None,
+                        IsAscending = src.IsAscending ?? true
                     }));
     }
 }

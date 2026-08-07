@@ -2,6 +2,7 @@ using Api.Dtos.RoomDtos;
 using Application.Rooms.Commands;
 using Application.Rooms.Filters;
 using Application.Rooms.Queries;
+using Application.Rooms.Sorts;
 using AutoMapper;
 using SharedKernel.Paginations;
 
@@ -38,6 +39,13 @@ public class RoomMappingProfiles
                         MinPricePerNight = src.MinPricePerNight,
                         MaxPricePerNight = src.MaxPricePerNight
                     }
-                ));
+                ))
+            .ForMember(dst => dst.RoomSortParameters,
+                opt => opt.MapFrom(src =>
+                    new RoomSortParameters
+                    {
+                        SortBy = src.SortBy ?? RoomSortBy.None,
+                        IsAscending = src.IsAscending ?? true
+                    }));
     }
 }

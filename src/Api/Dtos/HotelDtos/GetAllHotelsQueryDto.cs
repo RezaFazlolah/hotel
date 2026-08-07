@@ -8,14 +8,12 @@ public class GetAllHotelsQueryDto
     // pagination
     public int? PageNumber { get; set; }
     public int? PageSize { get; set; }
-
     // filter
     public string? Name { get; set; }
     public string? Address { get; set; }
     public decimal? MinRating { get; set; }
     public decimal? MaxRating { get; set; }
-    
     // sort
-    public HotelSortBy? HotelSortBy { get; set; }
+    public HotelSortBy? SortBy { get; set; }
     public bool? IsAscending { get; set; }
 }
