@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
 
-namespace Infrastructure.Services.Jwt;
+namespace Infrastructure.Jwt;
 
 public class JwtService(
     IOptions<JwtSettings> jwtOptions,
