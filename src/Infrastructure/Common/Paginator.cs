@@ -1,11 +1,12 @@
-using SharedKernel.Interfaces;
+using Application.Interfaces;
+using SharedKernel.Paginations;
 
-namespace SharedKernel.Paginations;
+namespace Infrastructure.Common;
 
 public class Paginator
     : IPaginator
 {
-    // Smell: Paginate method is implemented twice, SharedKernel/Paginations/Paginator.cs & SharedKernel/Paginations/PaginationExtensions.cs
+    // Smell: Paginate method is implemented twice, both here and PaginationExtensions.cs
     public PagedResult<T> Paginate<T>(
         IEnumerable<T> source,
         PaginationParameters paginationParameters,

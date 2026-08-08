@@ -1,4 +1,4 @@
-using SharedKernel.Filters;
+using Application.Common.Filters;
 
 namespace Application.Hotels.Filters;
 

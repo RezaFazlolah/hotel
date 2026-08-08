@@ -22,7 +22,7 @@ public static class PaginationExtensions
         }
     }
 
-    // Smell: Paginate method is implemented twice, SharedKernel/Paginations/Paginator.cs & SharedKernel/Paginations/PaginationExtensions.cs
+    // Smell: Paginate method is implemented twice, both here and Paginator.cs
     private static PagedResult<T> Paginate<T>(
         IEnumerable<T> source,
         PaginationParameters paginationParameters,
@@ -34,7 +34,7 @@ public static class PaginationExtensions
             PageNumber = paginationParameters.PageNumber,
             TotalCount = totalCount
         };
-
+    
         return new PagedResult<T>
         {
             Data = source.ToList(),

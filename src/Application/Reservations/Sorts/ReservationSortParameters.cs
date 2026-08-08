@@ -1,4 +1,4 @@
-using SharedKernel.Sorts;
+using Application.Common.Sorts;
 
 namespace Application.Reservations.Sorts;
 

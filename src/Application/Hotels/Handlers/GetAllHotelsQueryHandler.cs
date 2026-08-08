@@ -1,11 +1,11 @@
 using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
+using Application.Interfaces;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Interfaces;
 using SharedKernel.Paginations;
 
 namespace Application.Hotels.Handlers;

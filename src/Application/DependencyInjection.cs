@@ -1,13 +1,10 @@
 using Application.Common.Behaviors;
 using Application.Common.Configurations;
 using Application.Services;
-using AutoMapper;
 using Domain.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Interfaces;
-using SharedKernel.Paginations;
 
 namespace Application;
 
@@ -39,9 +36,7 @@ public static class DependencyInjection
                 .Bind(configuration.GetSection(PaginationSettings.SectionName))
                 .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
                 .ValidateOnStart();
-
-            services.AddSingleton<IPaginator, Paginator>();
-
+            
             return services;
         }
     }

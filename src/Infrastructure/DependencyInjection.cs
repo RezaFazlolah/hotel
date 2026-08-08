@@ -1,15 +1,17 @@
+using Application.Interfaces;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Models;
+using Infrastructure.Common;
+using Infrastructure.Jwt;
 using Infrastructure.QueryServices;
 using Infrastructure.Repositories;
-using Infrastructure.Services;
-using Infrastructure.Services.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using SharedKernel.Paginations;
 
 namespace Infrastructure;
 
@@ -43,6 +45,8 @@ public static class DependencyInjection
                 .ValidateOnStart();
             services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
 
+            services.AddSingleton<IPaginator, Paginator>();
+            
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGuestRepository, GuestRepository>();
             services.AddScoped<IManagerRepository, ManagerRepository>();
