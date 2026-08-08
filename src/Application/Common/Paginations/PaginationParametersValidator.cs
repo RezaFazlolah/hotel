@@ -1,9 +1,8 @@
-using Application.Common.Configurations;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using SharedKernel.Paginations;
 
-namespace Application.Common.Validators;
+namespace Application.Common.Paginations;
 
 public class PaginationParametersValidator
     : AbstractValidator<PaginationParameters>

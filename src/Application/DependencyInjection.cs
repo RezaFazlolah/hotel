@@ -1,5 +1,5 @@
 using Application.Common.Behaviors;
-using Application.Common.Configurations;
+using Application.Common.Paginations;
 using Application.Services;
 using Domain.Interfaces;
 using FluentValidation;
