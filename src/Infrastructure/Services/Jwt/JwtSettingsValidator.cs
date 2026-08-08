@@ -1,7 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 
-namespace SharedKernel.Configurations;
+namespace Infrastructure.Services.Jwt;
 
 public class JwtSettingsValidator
     : IValidateOptions<JwtSettings>

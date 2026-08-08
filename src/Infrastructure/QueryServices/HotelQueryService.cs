@@ -5,6 +5,7 @@ using Application.Interfaces.QueryServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
+using Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Paginations;

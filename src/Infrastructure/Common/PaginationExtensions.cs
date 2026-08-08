@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Paginations;
 
-namespace SharedKernel.Paginations;
+namespace Infrastructure.Common;
 
 public static class PaginationExtensions
 {
@@ -10,7 +11,7 @@ public static class PaginationExtensions
             PaginationParameters paginationParameters,
             CancellationToken ct)
         {
-            var totalCount = query.Count();
+            var totalCount = await query.CountAsync(ct);
 
             var data = await query
                 .Skip((paginationParameters.PageNumber - 1) * paginationParameters.PageSize)

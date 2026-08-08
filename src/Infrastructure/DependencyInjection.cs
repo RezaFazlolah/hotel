@@ -5,11 +5,11 @@ using Domain.Models;
 using Infrastructure.QueryServices;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
+using Infrastructure.Services.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using SharedKernel.Configurations;
 
 namespace Infrastructure;
 

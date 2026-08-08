@@ -1,4 +1,4 @@
-using Application.Configurations;
+using Application.Common.Configurations;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using SharedKernel.Paginations;

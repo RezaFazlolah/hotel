@@ -1,4 +1,4 @@
-namespace SharedKernel.Configurations;
+namespace Infrastructure.Services.Jwt;
 
 public class JwtSettings
 {

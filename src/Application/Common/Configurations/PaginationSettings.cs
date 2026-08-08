@@ -1,4 +1,4 @@
-namespace Application.Configurations;
+namespace Application.Common.Configurations;
 
 public class PaginationSettings
 {

@@ -1,5 +1,5 @@
 using Application.Common.Behaviors;
-using Application.Configurations;
+using Application.Common.Configurations;
 using Application.Services;
 using AutoMapper;
 using Domain.Interfaces;

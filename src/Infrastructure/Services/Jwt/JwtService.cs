@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
-using SharedKernel.Configurations;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Services.Jwt;
 
 public class JwtService(
     IOptions<JwtSettings> jwtOptions,

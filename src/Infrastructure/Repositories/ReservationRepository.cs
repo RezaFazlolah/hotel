@@ -1,7 +1,6 @@
 using Application.Interfaces.Repositories;
-using Application.Reservations.Filters;
-using Application.Reservations.Sorts;
 using Domain.Models;
+using Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
