@@ -19,11 +19,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    // Scalar
     app.MapOpenApi();
     app.MapScalarApiReference();
 
-    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
 }

@@ -9,23 +9,6 @@ public class ManagerService(
     : UserService,
         IManagerService
 {
-    // public async Task<Result<IEnumerable<Guid>>> GetAllRoomsIdAsync(
-    //     Guid managerId,
-    //     CancellationToken ct)
-    // {
-    //     var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
-    //     if (!hotelIdResult.Succeeded)
-    //         return Result<IEnumerable<Guid>>.Failure(hotelIdResult.Errors);
-    //     var hotelId = hotelIdResult.Value;
-    //
-    //     var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId, ct);
-    //     if (!roomIdsResult.Succeeded)
-    //         return Result<IEnumerable<Guid>>.Failure(roomIdsResult.Errors);
-    //     var roomIds = roomIdsResult.Value;
-    //
-    //     return Result<IEnumerable<Guid>>.Success(roomIds);
-    // }
-
     // Question: i don't know if this is the right place to implement this method or not?
     public async Task<bool> ManagesRoomAsync(
         Guid managerId,
