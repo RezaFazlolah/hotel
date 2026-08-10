@@ -2,8 +2,6 @@ using Application.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SharedKernel.Common;
 
 namespace Infrastructure.Repositories;
 
@@ -13,6 +11,9 @@ public class AdminRepository(
     : UserRepository(db, userManager),
         IAdminRepository
 {
-    public override async Task<bool> ExistsAsync(Guid adminId, CancellationToken ct)
-        => await db.Admins.AnyAsync(g => g.Id == adminId, ct);
+    public override async Task<bool> ExistsAsync(
+        Guid adminId,
+        CancellationToken ct)
+        => await db.Admins
+            .AnyAsync(a => a.Id == adminId, ct);
 }

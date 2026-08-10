@@ -36,13 +36,13 @@ public class InsertRoomCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            if (!await managerRepository.IsHotelManagedByManager(request.HotelId, currentUserInfo.id, ct))
+            if (!await managerRepository.ManagesHotel(currentUserInfo.id, request.HotelId, ct))
                 return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
         }
         else
             return Result<RoomDto>.Forbidden(rootError);
 
-        if (await roomRepository.RoomNumberExistsAsync(request.HotelId, request.Number, ct))
+        if (await roomRepository.NumberExistsAsync(request.HotelId, request.Number, ct))
             return Result<RoomDto>.Failure([
                 rootError, new Error($"hotel {request.HotelId} already has room number {request.Number}")
             ]);

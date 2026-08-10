@@ -17,10 +17,11 @@ public class ReservationRepository(
     public override async Task<bool> ExistsAsync(
         Guid id,
         CancellationToken ct)
-        => await db.Reservations.AnyAsync(r => r.Id == id && r.Status != ReservationStatus.Cancelled,
-            ct);
+        => await db.Reservations
+            .AnyAsync(r => r.Id == id
+                           && r.Status != ReservationStatus.Cancelled, ct);
 
-    // reservation is canceled, not deleted
+    // reservation is cancelled, not deleted
     public override Task<Result<Reservation>> DeleteAsync(Guid id, CancellationToken ct)
         => throw new NotSupportedException();
 

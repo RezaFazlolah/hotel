@@ -11,6 +11,9 @@ public class GuestRepository(
     : UserRepository(db, userManager),
         IGuestRepository
 {
-    public override async Task<bool> ExistsAsync(Guid guestId, CancellationToken ct)
-        => await db.Guests.AnyAsync(g => g.Id == guestId, ct);
+    public override async Task<bool> ExistsAsync(
+        Guid guestId,
+        CancellationToken ct)
+        => await db.Guests
+            .AnyAsync(g => g.Id == guestId, ct);
 }

@@ -10,7 +10,7 @@ public interface IRoomRepository
         Guid hotelId,
         CancellationToken ct);
 
-    Task<bool> RoomNumberExistsAsync(
+    Task<bool> NumberExistsAsync(
         Guid hotelId,
         int roomNumber,
         CancellationToken ct);
@@ -35,7 +35,7 @@ public interface IRoomRepository
         Guid managerId,
         CancellationToken ct);
     
-    Task<bool> IsRoomManagedByManagerAsync(
+    Task<bool> IsManagedByAsync(
         Guid roomId,
         Guid managerId,
         CancellationToken ct);
