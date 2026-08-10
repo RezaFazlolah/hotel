@@ -3,6 +3,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
+using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
@@ -20,10 +21,18 @@ public class ManagerRepository(
         Guid managerId,
         CancellationToken ct)
     {
-        var manager = await db.Managers.FirstOrDefaultAsync(m => m.Id == managerId, ct);
-        return manager is null
-            ? Result<Guid?>.Failure(new Error($"manager {managerId} not found"))
-            : Result<Guid?>.Success(manager.HotelId);
+        var result = await db.Managers
+            .Where(m => m.Id == managerId)
+            .Select(m => new
+            {
+                HotelId = m.HotelId
+            })
+            .FirstOrDefaultAsync(ct);
+
+        if (result is null)
+            return Result<Guid?>.Failure(new Error($"manager {managerId} not found", ErrorCode.NotFound),
+                ResultCode.NotFound);
+        return Result<Guid?>.Success(result.HotelId);
     }
 
     public async Task<bool> ManagesHotel(

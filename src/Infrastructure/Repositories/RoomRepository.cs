@@ -115,13 +115,26 @@ public class RoomRepository(AppDbContext db)
             .Where(r => r.Hotel.Manager != null && r.Hotel.Manager.Id == managerId)
             .Select(r => r.Id)
             .ToListAsync(ct));
+    
+    public async Task<bool> IsManagedByManagerAsync(
+            Guid roomId,
+            Guid managerId,
+            CancellationToken ct)
+        // => await db.Rooms
+        //     .AnyAsync(r => r.Id == roomId
+        //                    && r.Hotel.Manager != null
+        //                    && r.Hotel.Manager.Id == managerId, ct);
+        => await db.Managers
+            .AnyAsync(m => m.Id == managerId
+                           && m.Hotel != null
+                           && m.Hotel.Rooms.Any(r => r.Id == roomId), ct);
 
-    public async Task<bool> IsManagedByAsync(
+
+    public async Task<bool> BelongsToHotelAsync(
         Guid roomId,
-        Guid managerId,
+        Guid hotelId,
         CancellationToken ct)
         => await db.Rooms
             .AnyAsync(r => r.Id == roomId
-                           && r.Hotel.Manager != null
-                           && r.Hotel.Manager.Id == managerId, cancellationToken: ct);
+                           && r.HotelId == hotelId, ct);
 }

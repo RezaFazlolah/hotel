@@ -35,8 +35,13 @@ public interface IRoomRepository
         Guid managerId,
         CancellationToken ct);
     
-    Task<bool> IsManagedByAsync(
+    Task<bool> IsManagedByManagerAsync(
         Guid roomId,
         Guid managerId,
+        CancellationToken ct);
+
+    Task<bool> BelongsToHotelAsync(
+        Guid roomId,
+        Guid hotelId,
         CancellationToken ct);
 }
