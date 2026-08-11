@@ -1,8 +1,8 @@
 using Application.Interfaces.QueryServices;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Dtos;
 using Application.Rooms.Queries;
-using Domain.Interfaces;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -12,7 +12,7 @@ namespace Application.Rooms.Handlers;
 public class GetRoomByIdQueryHandler(
     IRoomQueryService roomQueryService,
     ICurrentUserService currentUserService,
-    IManagerService managerService)
+    IManagerRepository managerRepository)
     : IRequestHandler<GetRoomByIdQuery, Result<RoomDto>>
 {
     public async Task<Result<RoomDto>> Handle(
@@ -37,7 +37,7 @@ public class GetRoomByIdQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            return await managerService.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct)
+            return await managerRepository.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct)
                 ? roomDtoResult
                 : Result<RoomDto>.Failure([rootError, new Error("room not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);

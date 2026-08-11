@@ -116,19 +116,15 @@ public class RoomRepository(AppDbContext db)
             .Select(r => r.Id)
             .ToListAsync(ct));
     
+    // ManagerRepository.ManagesRoomAsync(Guid managerId, Guid roomId, CancellationToken ct) does the same thing
     public async Task<bool> IsManagedByManagerAsync(
             Guid roomId,
             Guid managerId,
             CancellationToken ct)
-        // => await db.Rooms
-        //     .AnyAsync(r => r.Id == roomId
-        //                    && r.Hotel.Manager != null
-        //                    && r.Hotel.Manager.Id == managerId, ct);
-        => await db.Managers
-            .AnyAsync(m => m.Id == managerId
-                           && m.Hotel != null
-                           && m.Hotel.Rooms.Any(r => r.Id == roomId), ct);
-
+        => await db.Rooms
+            .AnyAsync(r => r.Id == roomId
+                           && r.Hotel.Manager != null
+                           && r.Hotel.Manager.Id == managerId, ct);
 
     public async Task<bool> BelongsToHotelAsync(
         Guid roomId,

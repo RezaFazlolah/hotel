@@ -1,11 +1,8 @@
-using Application.Interfaces;
-using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Commands;
 using Application.Rooms.Dtos;
 using AutoMapper;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
@@ -16,7 +13,6 @@ namespace Application.Rooms.Handlers;
 public class UpdateRoomCommandHandler(
     IRoomRepository roomRepository,
     ICurrentUserService currentUserService,
-    IManagerService managerService,
     IMapper mapper)
     : IRequestHandler<UpdateRoomCommand, Result<RoomDto>>
 {

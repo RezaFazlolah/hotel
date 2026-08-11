@@ -3,7 +3,6 @@ using Application.Interfaces.Services;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
-using Domain.Interfaces;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -13,7 +12,7 @@ namespace Application.Reservations.Handlers;
 public class CancelReservationCommandHandler(
     ICurrentUserService currentUserService,
     IReservationRepository reservationRepository,
-    IManagerService  managerService,
+    IManagerRepository  managerRepository,
     IMapper mapper)
     : IRequestHandler<CancelReservationCommand, Result<ReservationDto>>
 {
@@ -38,7 +37,7 @@ public class CancelReservationCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            if(!await managerService.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
+            if(!await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
                 return Result<ReservationDto>.Failure([rootError,  new Error("reservation not found")]);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))

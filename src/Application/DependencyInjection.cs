@@ -15,8 +15,6 @@ public static class DependencyInjection
         public IServiceCollection AddApplicationServices(
             IConfiguration configuration)
         {
-            services.AddScoped<IManagerService, ManagerService>();
-
             services.AddScoped<IReservationService, ReservationService>();
 
             // Fluent Validation

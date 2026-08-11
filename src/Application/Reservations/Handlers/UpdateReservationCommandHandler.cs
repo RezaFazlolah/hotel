@@ -3,7 +3,6 @@ using Application.Interfaces.Services;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
-using Domain.Interfaces;
 using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
@@ -14,7 +13,7 @@ namespace Application.Reservations.Handlers;
 public class UpdateReservationCommandHandler(
     IReservationRepository reservationRepository,
     ICurrentUserService currentUserService,
-    IManagerService managerService,
+    IManagerRepository managerRepository,
     IMapper mapper)
     : IRequestHandler<UpdateReservationCommand, Result<ReservationDto>>
 {
@@ -39,7 +38,7 @@ public class UpdateReservationCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            if (!await managerService.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
+            if (!await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
                 return Result<ReservationDto>.Failure([rootError, new Error($"reservation not found")]);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))

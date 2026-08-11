@@ -1,8 +1,8 @@
 using Application.Interfaces.QueryServices;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
-using Domain.Interfaces;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -12,7 +12,7 @@ namespace Application.Reservations.Handlers;
 public class GetReservationByIdQueryHandler(
     IReservationQueryService reservationQueryService,
     ICurrentUserService currentUserService,
-    IManagerService managerService)
+    IManagerRepository managerRepository)
     : IRequestHandler<GetReservationByIdQuery, Result<ReservationDto>>
 {
     public async Task<Result<ReservationDto>> Handle(
@@ -38,7 +38,7 @@ public class GetReservationByIdQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            return await managerService.ManagesRoomAsync(currentUserInfo.id, reservationDto.RoomId, ct)
+            return await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservationDto.RoomId, ct)
                 ? reservationDtoResult
                 : Result<ReservationDto>.Failure([rootError, new Error("reservation not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);

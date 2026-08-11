@@ -42,4 +42,14 @@ public class ManagerRepository(
         => await db.Managers
             .AnyAsync(m => m.Id == managerId
                            && m.HotelId == hotelId, cancellationToken: ct);
+
+    // RoomRepository.IsManagedByManagerAsync(Guid roomId, Guid managerId, CancellationToken ct) does the same thing
+    public async Task<bool> ManagesRoomAsync(
+        Guid managerId,
+        Guid roomId,
+        CancellationToken ct)
+        => await db.Managers
+            .AnyAsync(m => m.Id == managerId
+                           && m.Hotel != null
+                           && m.Hotel.Rooms.Any(r => r.Id == roomId), ct);
 }
