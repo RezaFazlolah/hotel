@@ -4,20 +4,20 @@ using SharedKernel.Enums;
 namespace Api.Dtos.ReservationDtos;
 
 // Future: use inheritance for GetAllHotelsQueryDto, GetAllRoomsQueryDto, GetAllReservationsQueryDto 
-public class GetAllReservationsQueryDto
+public record GetAllReservationsQueryDto
 {
     // pagination
-    public int? PageNumber { get; set; }
-    public int? PageSize { get; set; }
+    public int? PageNumber { get; init; }
+    public int? PageSize { get; init; }
     // filter
-    public DateTimeOffset? MinCheckInDate { get; set; }
-    public DateTimeOffset? MaxCheckInDate { get; set; }
-    public DateTimeOffset? MinCheckOutDate { get; set; }
-    public DateTimeOffset? MaxCheckOutDate { get; set; }
-    public decimal? MinTotalPrice { get; set; }
-    public decimal? MaxTotalPrice { get; set; }
-    public ReservationStatus? Status { get; set; }
+    public DateTimeOffset? MinCheckInDate { get; init; }
+    public DateTimeOffset? MaxCheckInDate { get; init; }
+    public DateTimeOffset? MinCheckOutDate { get; init; }
+    public DateTimeOffset? MaxCheckOutDate { get; init; }
+    public decimal? MinTotalPrice { get; init; }
+    public decimal? MaxTotalPrice { get; init; }
+    public ReservationStatus? Status { get; init; }
     // sort
-    public ReservationSortBy? SortBy { get; set; }
-    public bool? IsAscending { get; set; }
+    public ReservationSortBy? SortBy { get; init; }
+    public bool? IsAscending { get; init; }
 }

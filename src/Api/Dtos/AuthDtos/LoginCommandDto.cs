@@ -1,7 +1,7 @@
 namespace Api.Dtos.AuthDtos;
 
-public class LoginCommandDto
+public record LoginCommandDto
 {
-    public required string PhoneNumber { get; set; }
-    public required string Password { get; set; }
+    public required string PhoneNumber { get; init; }
+    public required string Password { get; init; }
 }

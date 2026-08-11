@@ -1,8 +1,8 @@
 namespace Api.Dtos.HotelDtos;
 
-public class InsertHotelCommandDto
+public record InsertHotelCommandDto
 {
-    public required string Name { get; set; }
-    public required string Address { get; set; }
-    public float Rating { get; set; }
+    public required string Name { get; init; }
+    public required string Address { get; init; }
+    public float Rating { get; init; }
 }

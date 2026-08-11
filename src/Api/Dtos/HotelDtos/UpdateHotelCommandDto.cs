@@ -1,10 +1,10 @@
 namespace Api.Dtos.HotelDtos;
 
-public class UpdateHotelCommandDto
+public record UpdateHotelCommandDto
 {
-    public string? Name { get; set; }
-    public string? Address { get; set; }
-    public float? Rating { get; set; }
-    public Guid? ManagerId { get; set; }
+    public string? Name { get; init; }
+    public string? Address { get; init; }
+    public float? Rating { get; init; }
+    public Guid? ManagerId { get; init; }
     
 }

@@ -3,17 +3,17 @@ using Application.Hotels.Sorts;
 namespace Api.Dtos.HotelDtos;
 
 // Future: use inheritance for GetAllHotelsQueryDto, GetAllRoomsQueryDto, GetAllReservationsQueryDto 
-public class GetAllHotelsQueryDto
+public record GetAllHotelsQueryDto
 {
     // pagination
-    public int? PageNumber { get; set; }
-    public int? PageSize { get; set; }
+    public int? PageNumber { get; init; }
+    public int? PageSize { get; init; }
     // filter
-    public string? Name { get; set; }
-    public string? Address { get; set; }
-    public decimal? MinRating { get; set; }
-    public decimal? MaxRating { get; set; }
+    public string? Name { get; init; }
+    public string? Address { get; init; }
+    public decimal? MinRating { get; init; }
+    public decimal? MaxRating { get; init; }
     // sort
-    public HotelSortBy? SortBy { get; set; }
-    public bool? IsAscending { get; set; }
+    public HotelSortBy? SortBy { get; init; }
+    public bool? IsAscending { get; init; }
 }

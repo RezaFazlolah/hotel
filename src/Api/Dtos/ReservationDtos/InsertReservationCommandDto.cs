@@ -1,9 +1,9 @@
 namespace Api.Dtos.ReservationDtos;
 
-public class InsertReservationCommandDto
+public record InsertReservationCommandDto
 {
-    public required Guid GuestId { get; set; }
-    public required Guid RoomId { get; set; }
-    public required DateTimeOffset CheckInDate { get; set; }
-    public required DateTimeOffset CheckOutDate { get; set; }
+    public required Guid GuestId { get; init; }
+    public required Guid RoomId { get; init; }
+    public required DateTimeOffset CheckInDate { get; init; }
+    public required DateTimeOffset CheckOutDate { get; init; }
 }

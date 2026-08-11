@@ -1,7 +1,7 @@
 namespace Api.Dtos.ReservationDtos;
 
-public class UpdateReservationCommandDto
+public record UpdateReservationCommandDto
 {
-    public DateTimeOffset? CheckInDate { get; set; }
-    public DateTimeOffset? CheckOutDate { get; set; }
+    public DateTimeOffset? CheckInDate { get; init; }
+    public DateTimeOffset? CheckOutDate { get; init; }
 }

@@ -4,18 +4,18 @@ using SharedKernel.Enums;
 namespace Api.Dtos.RoomDtos;
 
 // Future: use inheritance for GetAllHotelsQueryDto, GetAllRoomsQueryDto, GetAllReservationsQueryDto 
-public class GetAllRoomsQueryDto
+public record GetAllRoomsQueryDto
 {
     // pagination
-    public int? PageNumber { get; set; }
-    public int? PageSize { get; set; }
+    public int? PageNumber { get; init; }
+    public int? PageSize { get; init; }
     // filter
-    public int? MinNumber { get; set; }
-    public int? MaxNumber { get; set; }
-    public RoomType? Type { get; set; }
-    public decimal? MinPricePerNight { get; set; }
-    public decimal? MaxPricePerNight { get; set; }
+    public int? MinNumber { get; init; }
+    public int? MaxNumber { get; init; }
+    public RoomType? Type { get; init; }
+    public decimal? MinPricePerNight { get; init; }
+    public decimal? MaxPricePerNight { get; init; }
     // sort
-    public RoomSortBy? SortBy { get; set; }
-    public bool? IsAscending { get; set; }
+    public RoomSortBy? SortBy { get; init; }
+    public bool? IsAscending { get; init; }
 }
