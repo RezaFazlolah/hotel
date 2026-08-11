@@ -1,8 +1,15 @@
 HOTEL MANAGEMENT SYSTEM
-using 
-  ASP.NET Core, 
-  EF Core & PostgreSQL, 
-  MediatR, 
-  AutoMapper, 
-  FluentValidation, 
-  Options Pattern
+using
+  ASP.NET Core,
+  Clean Architecture,
+  JWT,
+  RESTful API,
+  SOLID,
+  EF Core & PostgreSQL,
+  Docker,
+  MediatR,
+  AutoMapper,
+  FluentValidation,
+  Result Pattern,
+  Options Pattern,
+  
