@@ -12,6 +12,7 @@ namespace Application.Hotels.Handlers;
 
 public class InsertHotelCommandHandler(
     IHotelRepository hotelRepository,
+    IManagerRepository managerRepository,
     ICurrentUserService currentUserService,
     IMapper mapper)
     : IRequestHandler<InsertHotelCommand, Result<HotelDto>>
@@ -31,6 +32,19 @@ public class InsertHotelCommandHandler(
             return Result<HotelDto>.Forbidden(rootError);
 
         var hotel = mapper.Map<Hotel>(request);
+
+        if (request.ManagerId.HasValue)
+        {
+            var managerId = request.ManagerId.Value;
+            var managerResult = await managerRepository.GetByIdAsync(managerId, ct);
+            if (!managerResult.Succeeded)
+                return Result<HotelDto>.Failure(
+                    [rootError, new Error($"manager {managerId} not found", ErrorCode.NotFound)], ResultCode.NotFound);
+            var manager = (Manager)managerResult.Value;
+
+            hotel.Manager = manager;
+        }
+
         var result = await hotelRepository.InsertAsync(hotel, ct);
         return result.Succeeded
             ? mapper.Map<Result<HotelDto>>(result)

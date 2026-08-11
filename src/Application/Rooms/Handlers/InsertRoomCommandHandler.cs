@@ -31,8 +31,8 @@ public class InsertRoomCommandHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            if (!await hotelRepository.ExistsAsync(request.HotelId, ct))
-                return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
+            // if (!await hotelRepository.ExistsAsync(request.HotelId, ct))
+            //     return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {

@@ -17,10 +17,8 @@ namespace Application.Reservations.Handlers;
 // come back later
 public class InsertReservationCommandHandler(
     IReservationRepository reservationRepository,
-    IRoomRepository roomRepository,
-    IGuestRepository guestRepository,
+    IManagerRepository managerRepository,
     ICurrentUserService currentUserService,
-    IManagerService managerService,
     IReservationService reservationService,
     IMapper mapper)
     : IRequestHandler<InsertReservationCommand, Result<ReservationDto>>
@@ -38,41 +36,47 @@ public class InsertReservationCommandHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            var errors = new List<Error>();
-
-            var guestExists = await guestRepository.ExistsAsync(request.GuestId, ct);
-            if (!guestExists)
-                errors.Add(new Error($"guest not found"));
-
-            var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
-            if (!roomExists)
-                errors.Add(new Error($"room not found"));
-
-            if (errors.Any())
-                return Result<ReservationDto>.Failure(errors.Prepend(rootError));
+            // var errors = new List<Error>();
+            //
+            // var guestExists = await guestRepository.ExistsAsync(request.GuestId, ct);
+            // if (!guestExists)
+            //     errors.Add(new Error($"guest not found"));
+            //
+            // var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
+            // if (!roomExists)
+            //     errors.Add(new Error($"room not found"));
+            //
+            // if (errors.Any())
+            //     return Result<ReservationDto>.Failure(errors.Prepend(rootError));
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var errors = new List<Error>();
+            // var errors = new List<Error>();
+            //
+            // var guestExists = await guestRepository.ExistsAsync(request.GuestId, ct);
+            // if (!guestExists)
+            //     errors.Add(new Error($"guest not found"));
 
-            var guestExists = await guestRepository.ExistsAsync(request.GuestId, ct);
-            if (!guestExists)
-                errors.Add(new Error($"guest not found"));
+            // var managesRoom = await managerService.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct);
+            // if (!managesRoom)
+            //     errors.Add(new Error($"room not found"));
+            //
+            // if (errors.Any())
+            //     return Result<ReservationDto>.Failure(errors.Prepend(rootError));
 
-            var managesRoom = await managerService.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct);
-            if (!managesRoom)
-                errors.Add(new Error($"room not found"));
-
-            if (errors.Any())
-                return Result<ReservationDto>.Failure(errors.Prepend(rootError));
+            if (!await managerRepository.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct))
+                return Result<ReservationDto>.Failure(
+                    [rootError, new Error($"room {request.RoomId} not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
-            if (!roomExists)
-                return Result<ReservationDto>.Failure([rootError, new Error($"room not found")]);
+            // var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
+            // if (!roomExists)
+            //     return Result<ReservationDto>.Failure([rootError, new Error($"room not found")]);
 
-            // for Guest, ignore request's GuestId
+            // Future: InsertHotelCommandDto for guest, shouldn't take guestId as a parameter, unlike admin & manager
+            // for Guest, ignore request's GuestId.
             request = request with { GuestId = request.GuestId };
         }
         else
