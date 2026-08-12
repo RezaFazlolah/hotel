@@ -14,9 +14,12 @@ public class RoomMappingProfiles
     {
         CreateMap<Room, RoomDto>();
         // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
+        
         CreateMap<Result<Room>, Result<RoomDto>>();
+        
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
+       
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
         
         CreateMap<InsertRoomCommand, Room>()

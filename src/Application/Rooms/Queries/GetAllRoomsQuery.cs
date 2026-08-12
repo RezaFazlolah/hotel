@@ -10,7 +10,7 @@ namespace Application.Rooms.Queries;
 public record GetAllRoomsQuery
     : IRequest<Result<PagedResult<RoomDto>>>
 {
-    public required PaginationParameters PaginationParameters { get; init; }
-    public required RoomSortParameters RoomSortParameters { get; init; }
     public required RoomFilterParameters? RoomFilterParameters { get; init; }
+    public required RoomSortParameters RoomSortParameters { get; init; }
+    public required PaginationParameters PaginationParameters { get; init; }
 }

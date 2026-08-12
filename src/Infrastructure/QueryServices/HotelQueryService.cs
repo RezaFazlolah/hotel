@@ -29,17 +29,7 @@ public class HotelQueryService(
             .ApplySort(hotelSortParameters)
             .ProjectTo<HotelDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct);
-        
+
         return Result<PagedResult<HotelDto>>.Success(result);
-    }
- 
-    public async Task<Result<HotelDto?>> GetByManagerIdAsync(
-        Guid managerId,
-        CancellationToken ct)
-    {
-        return Result<HotelDto?>.Success(
-            await db.Hotels
-                .ProjectTo<HotelDto>(configurationProvider)
-                .FirstOrDefaultAsync(h => h.ManagerId == managerId, ct));
     }
 }

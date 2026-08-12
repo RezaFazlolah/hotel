@@ -1,6 +1,5 @@
 using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
-using Application.Interfaces;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
 using MediatR;
@@ -12,8 +11,8 @@ namespace Application.Hotels.Handlers;
 
 public class GetAllHotelsQueryHandler(
     IHotelQueryService hotelQueryService,
-    ICurrentUserService currentUserService,
-    IPaginator paginator)
+    IManagerQueryService managerQueryService,
+    ICurrentUserService currentUserService)
     : IRequestHandler<GetAllHotelsQuery, Result<PagedResult<HotelDto>>>
 {
     public async Task<Result<PagedResult<HotelDto>>> Handle(
@@ -27,30 +26,30 @@ public class GetAllHotelsQueryHandler(
             return Result<PagedResult<HotelDto>>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        Result<PagedResult<HotelDto>> result;
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.HotelSortParameters, request.PaginationParameters, ct);
+            result = await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.HotelSortParameters,
+                request.PaginationParameters, ct);
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Manager))
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelDtoResult = await hotelQueryService.GetByManagerIdAsync(currentUserInfo.id, ct);
-            if (!hotelDtoResult.Succeeded)
-                return Result<PagedResult<HotelDto>>.Failure(hotelDtoResult.Errors.Prepend(rootError));
-            var hotelDto = hotelDtoResult.Value;
-
-            return Result<PagedResult<HotelDto>>.Success(paginator.Paginate<HotelDto>(
-                hotelDto is null ? [] : [hotelDto],
-                request.PaginationParameters,
-                hotelDto is null ? 0 : 1));
+            result = await managerQueryService.GetAllHotelsAsync(currentUserInfo.id, request.HotelFilterParameters,
+                request.HotelSortParameters, request.PaginationParameters, ct);
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Guest))
+        else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.HotelSortParameters, request.PaginationParameters, ct);
+            result = await hotelQueryService.GetAllAsync(request.HotelFilterParameters, request.HotelSortParameters,
+                request.PaginationParameters, ct);
+        }
+        else
+        {
+            return Result<PagedResult<HotelDto>>.Forbidden(rootError);
         }
 
-        return Result<PagedResult<HotelDto>>.Failure([rootError, new Error($"forbidden request", ErrorCode.Forbidden)],
-            ResultCode.Forbidden);
+        return result.Succeeded
+            ? result
+            : Result<PagedResult<HotelDto>>.Failure(result.Errors.Prepend(rootError));
     }
 }

@@ -1,5 +1,6 @@
 using Application.Hotels.Commands;
 using Application.Hotels.Dtos;
+using Application.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Models;
 using SharedKernel.Common;
@@ -12,10 +13,15 @@ public class HotelMappingProfiles
 {
     public HotelMappingProfiles()
     {
-        CreateMap<Hotel, HotelDto>();
+        CreateMap<Hotel, HotelDto>()
+            .ForMember(dst => dst.ManagerId,
+                opt => opt.MapFrom(src => src.Manager != null ? src.Manager.Id : (Guid?)null));
+
         CreateMap<Result<Hotel>, Result<HotelDto>>();
+
         CreateMap<PagedResult<Hotel>, PagedResult<HotelDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
+
         CreateMap<Result<PagedResult<Hotel>>, Result<PagedResult<HotelDto>>>();
 
         CreateMap<InsertHotelCommand, Hotel>()

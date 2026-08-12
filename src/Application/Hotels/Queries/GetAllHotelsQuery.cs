@@ -10,7 +10,7 @@ namespace Application.Hotels.Queries;
 public record GetAllHotelsQuery
     : IRequest<Result<PagedResult<HotelDto>>>
 {
-    public HotelFilterParameters?  HotelFilterParameters { get; init; }
-    public required HotelSortParameters  HotelSortParameters { get; init; }
+    public HotelFilterParameters? HotelFilterParameters { get; init; }
+    public required HotelSortParameters HotelSortParameters { get; init; }
     public required PaginationParameters PaginationParameters { get; init; }
 }

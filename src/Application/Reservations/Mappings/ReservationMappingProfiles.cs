@@ -14,9 +14,12 @@ public class ReservationMappingProfiles
     {
         CreateMap<Reservation, ReservationDto>();
         // .ForMember(dst => dst.RoomDto, opt => opt.MapFrom(src => src.Room));
+        
         CreateMap<Result<Reservation>, Result<ReservationDto>>();
+        
         CreateMap<PagedResult<Reservation>, PagedResult<ReservationDto>>();
         // .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
+        
         CreateMap<Result<PagedResult<Reservation>>, Result<PagedResult<ReservationDto>>>();
 
         CreateMap<InsertReservationCommand, Reservation>()

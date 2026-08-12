@@ -1,6 +1,7 @@
 using Application.Hotels.Dtos;
 using Application.Hotels.Queries;
 using Application.Interfaces.QueryServices;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using MediatR;
 using SharedKernel.Common;
@@ -10,6 +11,7 @@ namespace Application.Hotels.Handlers;
 
 public class GetHotelByIdQueryHandler(
     IHotelQueryService hotelQueryService,
+    IManagerRepository managerRepository,
     ICurrentUserService currentUserService)
     : IRequestHandler<GetHotelByIdQuery, Result<HotelDto>>
 {
@@ -17,38 +19,34 @@ public class GetHotelByIdQueryHandler(
         GetHotelByIdQuery request,
         CancellationToken ct)
     {
-        var rootError = new Error("get hotel by id failed");
+        var rootError = new Error($"get hotel {request.HotelId} failed");
 
         var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
             return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
-        var hotelDtoResult = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
-        if (!hotelDtoResult.Succeeded)
-            return Result<HotelDto>.Failure(hotelDtoResult.Errors.Prepend(rootError));
-        var hotelDto = hotelDtoResult.Value;
-
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return hotelDtoResult;
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Manager))
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            return currentUserInfo.id == hotelDto.ManagerId
-                ? hotelDtoResult
-                : Result<HotelDto>.Failure(
-                    [rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
+            if (!await managerRepository.ManagesHotel(currentUserInfo.id, request.HotelId, ct))
+                return Result<HotelDto>.Failure([rootError, new Error("hotel not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Guest))
+        else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return hotelDtoResult;
+        }
+        else
+        {
+            return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
+                ResultCode.Forbidden);
         }
 
-        return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
-            ResultCode.Forbidden);
+        var result = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
+        return result.Succeeded
+            ? result
+            : Result<HotelDto>.Failure(result.Errors.Prepend(rootError));
     }
 }

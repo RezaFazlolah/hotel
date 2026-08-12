@@ -1,9 +1,39 @@
 using Application.Hotels.Dtos;
+using Application.Hotels.Filters;
+using Application.Hotels.Sorts;
+using Application.Interfaces.QueryServices;
+using Application.Users.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Domain.Models;
+using Infrastructure.Common;
+using SharedKernel.Common;
 using SharedKernel.Paginations;
 
 namespace Infrastructure.QueryServices;
 
-public interface ManagerQueryService
+public class ManagerQueryService(
+    AppDbContext db,
+    IConfigurationProvider configurationProvider)
+    : BaseQueryService<Manager, ManagerDto>(db, configurationProvider),
+        IManagerQueryService
 {
-    Task<PagedResult<HotelDto>> GetAllHotelsByManagerIdAsync();
+    public async Task<Result<PagedResult<HotelDto>>> GetAllHotelsAsync(
+        Guid managerId,
+        HotelFilterParameters? hotelFilterParameters,
+        HotelSortParameters hotelSortParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+    {
+        var result = await db.Managers
+            .Where(m => m.Id == managerId
+                        && m.Hotel != null)
+            .Select(m => m.Hotel!)
+            .ApplyFilter(hotelFilterParameters)
+            .ApplySort(hotelSortParameters)
+            .ProjectTo<HotelDto>(configurationProvider)
+            .PaginateAsync(paginationParameters, ct);
+
+        return Result<PagedResult<HotelDto>>.Success(result);
+    }
 }

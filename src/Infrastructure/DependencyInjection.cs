@@ -44,6 +44,7 @@ public static class DependencyInjection
                 .ValidateOnStart();
             services.AddSingleton<IValidateOptions<JwtSettings>, JwtSettingsValidator>();
 
+            services.AddScoped<IJwtService, JwtService>();
             services.AddSingleton<IPaginator, Paginator>();
             
             services.AddScoped<IUserRepository, UserRepository>();
@@ -51,8 +52,8 @@ public static class DependencyInjection
             services.AddScoped<IManagerRepository, ManagerRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
 
-            services.AddScoped<IJwtService, JwtService>();
-
+            services.AddScoped<IManagerQueryService, ManagerQueryService>();
+            
             services.AddScoped<IHotelRepository, HotelRepository>();
             services.AddScoped<IHotelQueryService, HotelQueryService>();
 
