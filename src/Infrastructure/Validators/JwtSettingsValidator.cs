@@ -1,7 +1,8 @@
 using System.Text;
+using Infrastructure.Configurations;
 using Microsoft.Extensions.Options;
 
-namespace Infrastructure.Jwt;
+namespace Infrastructure.Validators;
 
 public class JwtSettingsValidator
     : IValidateOptions<JwtSettings>

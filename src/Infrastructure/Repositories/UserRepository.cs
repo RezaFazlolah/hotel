@@ -2,6 +2,7 @@ using Application.Interfaces.Repositories;
 using Application.Users.Filters;
 using Application.Users.Sorts;
 using Domain.Models;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;

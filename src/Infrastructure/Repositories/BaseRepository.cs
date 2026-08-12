@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Domain.Interfaces;
+using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;

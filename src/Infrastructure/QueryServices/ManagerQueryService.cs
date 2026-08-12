@@ -7,6 +7,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Infrastructure.Common;
+using Infrastructure.Persistence;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
 

@@ -3,12 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.Services;
 using Domain.Models;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
 
-namespace Infrastructure.Jwt;
+namespace Infrastructure.Services;
 
 public class JwtService(
     IOptions<JwtSettings> jwtOptions,

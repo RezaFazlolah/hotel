@@ -4,6 +4,7 @@ using Application;
 using AutoMapper;
 using Domain;
 using Infrastructure;
+using Infrastructure.Persistence;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

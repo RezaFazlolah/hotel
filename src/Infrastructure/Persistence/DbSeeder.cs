@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Constants;
 using SharedKernel.Enums;
 
-namespace Infrastructure;
+namespace Infrastructure.Persistence;
 
 public static class DbSeeder
 {
