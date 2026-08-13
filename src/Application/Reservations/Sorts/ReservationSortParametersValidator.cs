@@ -1,7 +1,6 @@
-using Application.Reservations.Sorts;
 using FluentValidation;
 
-namespace Application.Reservations.Validators;
+namespace Application.Reservations.Sorts;
 
 public class ReservationSortParametersValidator
     : AbstractValidator<ReservationSortParameters>

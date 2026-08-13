@@ -1,10 +1,7 @@
-using Application.Common.Sorts;
-
 namespace Application.Hotels.Sorts;
 
 public class HotelSortParameters
-    : BaseSortParameters
 {
-    public HotelSortBy SortBy { get; init; } =  HotelSortBy.None;
+    public HotelSortBy SortBy { get; init; } = HotelSortBy.None;
+    public bool IsAscending { get; init; } = true;
 }
-

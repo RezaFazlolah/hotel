@@ -1,7 +1,6 @@
-using Application.Rooms.Sorts;
 using FluentValidation;
 
-namespace Application.Rooms.Validators;
+namespace Application.Rooms.Sorts;
 
 public class RoomSortParametersValidator
     : AbstractValidator<RoomSortParameters>

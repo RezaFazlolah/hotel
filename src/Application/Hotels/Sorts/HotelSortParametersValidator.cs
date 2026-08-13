@@ -1,7 +1,6 @@
-using Application.Hotels.Sorts;
 using FluentValidation;
 
-namespace Application.Hotels.Validators;
+namespace Application.Hotels.Sorts;
 
 public class HotelSortParametersValidator
     : AbstractValidator<HotelSortParameters>
