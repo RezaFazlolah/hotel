@@ -22,7 +22,7 @@ public abstract class BaseQueryService<TEntity, TDto>(
         var dto = await db.Set<TEntity>()
             .Where(e => e.Id == id)
             .ProjectTo<TDto>(configurationProvider)
-            .SingleOrDefaultAsync(ct);
+            .FirstOrDefaultAsync(ct);
 
         return dto is null
             ? Result<TDto>.Failure(new Error($"{EntityName} {id} not found", ErrorCode.NotFound), ResultCode.NotFound)

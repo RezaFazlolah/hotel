@@ -45,8 +45,6 @@ public class GetHotelByIdQueryHandler(
         }
 
         var result = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
-        return result.Succeeded
-            ? result
-            : Result<HotelDto>.Failure(result.Errors.Prepend(rootError));
+        return Result<HotelDto>.Handle(result, rootError, ResultCode.NotFound);
     }
 }

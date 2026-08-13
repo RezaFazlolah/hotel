@@ -45,7 +45,12 @@ public class Result<T>
         var errors = error is null
             ? baseError
             : baseError.Prepend(error);
-        
+
         return Result<T>.Failure(errors, ResultCode.Forbidden);
     }
+
+    public static Result<T> Handle(Result<T> result, Error error, ResultCode resultCode = ResultCode.Default)
+        => result.Succeeded
+            ? result
+            : Failure(result.Errors.Prepend(error), resultCode);
 }

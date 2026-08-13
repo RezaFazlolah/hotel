@@ -48,8 +48,6 @@ public class GetAllHotelsQueryHandler(
             return Result<PagedResult<HotelDto>>.Forbidden(rootError);
         }
 
-        return result.Succeeded
-            ? result
-            : Result<PagedResult<HotelDto>>.Failure(result.Errors.Prepend(rootError));
+        return Result<PagedResult<HotelDto>>.Handle(result, rootError);
     }
 }
