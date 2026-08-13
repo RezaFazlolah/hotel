@@ -13,7 +13,7 @@ public static class DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddApiServices(IConfiguration configuration)
+        public IServiceCollection AddApiServices()
         {
             // scalar
             services.AddOpenApi();

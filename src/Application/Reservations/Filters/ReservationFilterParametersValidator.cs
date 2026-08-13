@@ -1,7 +1,6 @@
-using Application.Reservations.Filters;
 using FluentValidation;
 
-namespace Application.Reservations.Validators;
+namespace Application.Reservations.Filters;
 
 public class ReservationFilterParametersValidator
     : AbstractValidator<ReservationFilterParameters>

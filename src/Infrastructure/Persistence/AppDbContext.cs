@@ -14,7 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Guest> Guests { get; set; }
     public DbSet<Manager> Managers { get; set; }
     public DbSet<Admin> Admins { get; set; }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -1,7 +1,6 @@
-using Application.Hotels.Filters;
 using FluentValidation;
 
-namespace Application.Hotels.Validators;
+namespace Application.Hotels.Filters;
 
 public class HotelFilterParametersValidator
     : AbstractValidator<HotelFilterParameters>
@@ -21,6 +20,6 @@ public class HotelFilterParametersValidator
         RuleFor(x=>x.MinRating)
             .LessThanOrEqualTo(x=>x.MaxRating)
             .When(x => x.MinRating.HasValue && x.MaxRating.HasValue)
-            .WithMessage("MinRating must be less than or equal to MaxRating");
+            .WithMessage("MaxRating must be greated than or equal to MinRating");
     }
 }

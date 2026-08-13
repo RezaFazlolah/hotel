@@ -15,8 +15,6 @@ public static class DependencyInjection
         public IServiceCollection AddApplicationServices(
             IConfiguration configuration)
         {
-            services.AddScoped<IReservationService, ReservationService>();
-
             // Fluent Validation
             services.AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>();
 
@@ -34,6 +32,8 @@ public static class DependencyInjection
                 .Bind(configuration.GetSection(PaginationSettings.SectionName))
                 .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
                 .ValidateOnStart();
+            
+            services.AddScoped<IReservationService, ReservationService>();
             
             return services;
         }
