@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Api.Services;
 using Application.Interfaces.Services;
 using Infrastructure.Configurations;
@@ -44,7 +45,8 @@ public static class DependencyInjection
             // AutoMapper
             services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             // auth
             services.AddAuthentication(options =>
