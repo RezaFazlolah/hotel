@@ -20,6 +20,7 @@ public abstract class BaseQueryService<TEntity, TDto>(
         CancellationToken ct)
     {
         var dto = await db.Set<TEntity>()
+            .AsNoTracking()
             .Where(e => e.Id == id)
             .ProjectTo<TDto>(configurationProvider)
             .FirstOrDefaultAsync(ct);

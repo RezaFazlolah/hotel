@@ -8,6 +8,7 @@ using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Infrastructure.Common;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
 
@@ -27,6 +28,7 @@ public class ManagerQueryService(
         CancellationToken ct)
     {
         var result = await db.Managers
+            .AsNoTracking()
             .Where(m => m.Id == managerId
                         && m.Hotel != null)
             .Select(m => m.Hotel!)

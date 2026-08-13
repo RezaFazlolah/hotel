@@ -26,6 +26,7 @@ public class HotelQueryService(
         CancellationToken ct)
     {
         var result = await db.Hotels
+            .AsNoTracking()
             .ApplyFilter(hotelFilterParameters)
             .ApplySort(hotelSortParameters)
             .ProjectTo<HotelDto>(configurationProvider)

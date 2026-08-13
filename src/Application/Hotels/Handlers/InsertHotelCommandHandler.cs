@@ -41,7 +41,11 @@ public class InsertHotelCommandHandler(
                 return Result<HotelDto>.Failure(
                     [rootError, new Error($"manager {managerId} not found", ErrorCode.NotFound)], ResultCode.NotFound);
             var manager = (Manager)managerResult.Value;
-
+            
+            if(manager.HotelId!=null)
+                return Result<HotelDto>.Failure(
+                    [rootError, new Error($"manager {managerId} already manages another hotel", ErrorCode.NotFound)], ResultCode.NotFound);
+            
             hotel.Manager = manager;
         }
 

@@ -28,7 +28,7 @@ public static class DependencyInjection
             {
                 // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
                 options.UseSqlite(configuration.GetConnectionString("Sqlite"));
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                // options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
             services.AddIdentityCore<User>(options =>

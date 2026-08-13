@@ -7,6 +7,7 @@ using AutoMapper.QueryableExtensions;
 using Domain.Models;
 using Infrastructure.Common;
 using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Paginations;
 
@@ -25,6 +26,7 @@ public class ReservationQueryService(
         CancellationToken ct)
     {
         var result = await db.Reservations
+            .AsNoTracking()
             .ApplyFilter(reservationFilterParameters)
             .ApplySort(reservationSortParameters)
             .ProjectTo<ReservationDto>(configurationProvider)
@@ -38,6 +40,7 @@ public class ReservationQueryService(
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<ReservationDto>>.Success(await db.Reservations
+            .AsNoTracking()
             .Where(r => r.Room.Hotel.Manager != null
                         && r.Room.Hotel.Manager.Id == managerId)
             .ProjectTo<ReservationDto>(configurationProvider)
@@ -48,6 +51,7 @@ public class ReservationQueryService(
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<ReservationDto>>.Success(await db.Reservations
+            .AsNoTracking()
             .Where(r => r.GuestId == guestId)
             .ProjectTo<ReservationDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct));
