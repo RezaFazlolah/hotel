@@ -34,4 +34,22 @@ public class HotelQueryService(
 
         return Result<PagedResult<HotelDto>>.Success(result);
     }
+
+    public async Task<Result<PagedResult<HotelDto>>> GetAllByManagerAsync(Guid managerId,
+        HotelFilterParameters? filterParameters,
+        HotelSortParameters sortParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct)
+    {
+        var result = await db.Hotels
+            .AsNoTracking()
+            .Where(h => h.Manager != null
+                        && h.Manager.Id == managerId)
+            .ApplyFilter(filterParameters)
+            .ApplySort(sortParameters)
+            .ProjectTo<HotelDto>(configurationProvider)
+            .PaginateAsync(paginationParameters, ct);
+
+        return Result<PagedResult<HotelDto>>.Success(result);
+    }
 }

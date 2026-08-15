@@ -11,7 +11,6 @@ namespace Application.Hotels.Handlers;
 
 public class GetAllHotelsQueryHandler(
     IHotelQueryService hotelQueryService,
-    IManagerQueryService managerQueryService,
     ICurrentUserService currentUserService)
     : IRequestHandler<GetAllHotelsQuery, Result<PagedResult<HotelDto>>>
 {
@@ -35,7 +34,7 @@ public class GetAllHotelsQueryHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            result = await managerQueryService.GetAllHotelsAsync(currentUserInfo.id, request.HotelFilterParameters,
+            result = await hotelQueryService.GetAllByManagerAsync(currentUserInfo.id, request.HotelFilterParameters,
                 request.HotelSortParameters, request.PaginationParameters, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))

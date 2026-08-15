@@ -14,4 +14,11 @@ public interface IHotelQueryService
         HotelSortParameters? hotelSortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
+
+    Task<Result<PagedResult<HotelDto>>> GetAllByManagerAsync(
+        Guid managerId,
+        HotelFilterParameters? filterParameters,
+        HotelSortParameters sortParameters,
+        PaginationParameters paginationParameters,
+        CancellationToken ct);
 }

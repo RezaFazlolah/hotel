@@ -25,26 +25,29 @@ public class GetAllRoomsQueryHandler(
             return Result<PagedResult<RoomDto>>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        Result<PagedResult<RoomDto>> result;
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
+            result = await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.RoomSortParameters,
+                request.PaginationParameters, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var managerResult = await roomQueryService.GetAllByManagerAsync(currentUserInfo.id,
+            result = await roomQueryService.GetAllByManagerAsync(currentUserInfo.id,
                 request.RoomFilterParameters,
                 request.RoomSortParameters, request.PaginationParameters, ct);
-            return Result<PagedResult<RoomDto>>.Handle(managerResult, rootError);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
+            result = await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.RoomSortParameters,
+                request.PaginationParameters, ct);
         }
         else
         {
             return Result<PagedResult<RoomDto>>.Forbidden(rootError);
         }
 
-        var result = await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.RoomSortParameters,
-            request.PaginationParameters, ct);
         return Result<PagedResult<RoomDto>>.Handle(result, rootError);
     }
 }

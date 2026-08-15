@@ -20,23 +20,4 @@ public class ManagerQueryService(
     : BaseQueryService<Manager, ManagerDto>(db, configurationProvider),
         IManagerQueryService
 {
-    public async Task<Result<PagedResult<HotelDto>>> GetAllHotelsAsync(
-        Guid managerId,
-        HotelFilterParameters? hotelFilterParameters,
-        HotelSortParameters hotelSortParameters,
-        PaginationParameters paginationParameters,
-        CancellationToken ct)
-    {
-        var result = await db.Managers
-            .AsNoTracking()
-            .Where(m => m.Id == managerId
-                        && m.Hotel != null)
-            .Select(m => m.Hotel!)
-            .ApplyFilter(hotelFilterParameters)
-            .ApplySort(hotelSortParameters)
-            .ProjectTo<HotelDto>(configurationProvider)
-            .PaginateAsync(paginationParameters, ct);
-
-        return Result<PagedResult<HotelDto>>.Success(result);
-    }
 }
