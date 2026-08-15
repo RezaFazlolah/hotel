@@ -26,17 +26,23 @@ public class GetHotelByIdQueryHandler(
             return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        Result<HotelDto> result;
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
+            result = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             if (!await managerRepository.ManagesHotel(currentUserInfo.id, request.HotelId, ct))
                 return Result<HotelDto>.Failure([rootError, new Error("hotel not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
+
+            result = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
+            result = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
         }
         else
         {
@@ -44,7 +50,6 @@ public class GetHotelByIdQueryHandler(
                 ResultCode.Forbidden);
         }
 
-        var result = await hotelQueryService.GetByIdAsync(request.HotelId, ct);
         return Result<HotelDto>.Handle(result, rootError, ResultCode.NotFound);
     }
 }

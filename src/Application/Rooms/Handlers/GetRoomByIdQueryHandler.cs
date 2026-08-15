@@ -26,24 +26,29 @@ public class GetRoomByIdQueryHandler(
             return Result<RoomDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        Result<RoomDto> result;
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
+            result = await roomQueryService.GetByIdAsync(request.RoomId, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             if (!await managerRepository.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct))
                 return Result<RoomDto>.Failure([rootError, new Error("room not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
+
+            result = await roomQueryService.GetByIdAsync(request.RoomId, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
+            result = await roomQueryService.GetByIdAsync(request.RoomId, ct);
         }
         else
         {
             return Result<RoomDto>.Forbidden(rootError);
         }
 
-        var result = await roomQueryService.GetByIdAsync(request.RoomId, ct);
         return Result<RoomDto>.Handle(result, rootError);
     }
 }

@@ -41,6 +41,11 @@ public class HotelQueryService(
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
+        await db.Reservations
+            .Where(r => r.Room.Hotel.Manager != null
+                        && r.Room.Hotel.Manager.Id == managerId)
+            .ToListAsync(ct);
+
         var result = await db.Hotels
             .AsNoTracking()
             .Where(h => h.Manager != null
