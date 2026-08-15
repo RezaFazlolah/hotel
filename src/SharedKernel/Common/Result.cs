@@ -9,14 +9,20 @@ public class Result
     public string? Message { get; init; }
     public ResultCode Code { get; init; }
 
-    public static Result Success(ResultCode resultCode = ResultCode.Default, string? message = null) =>
-        new() { Succeeded = true, Code = resultCode, Message = message };
+    public static Result Success(
+        ResultCode resultCode = ResultCode.Default,
+        string? message = null)
+        => new() { Succeeded = true, Code = resultCode, Message = message };
 
-    public static Result Failure(IEnumerable<Error> errors, ResultCode resultCode = ResultCode.Default,
-        string? message = null) =>
-        new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
+    public static Result Failure(
+        IEnumerable<Error> errors,
+        ResultCode resultCode = ResultCode.Default,
+        string? message = null)
+        => new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
 
-    public static Result Failure(Error error, ResultCode resultCode = ResultCode.Default,
+    public static Result Failure(
+        Error error,
+        ResultCode resultCode = ResultCode.Default,
         string? message = null)
         => Failure([error], resultCode, message);
 }
@@ -29,14 +35,21 @@ public class Result<T>
     public string? Message { get; init; }
     public ResultCode Code { get; init; }
 
-    public static Result<T> Success(T value, ResultCode resultCode = ResultCode.Default, string? message = null) =>
-        new() { Succeeded = true, Value = value, Code = resultCode, Message = message };
+    public static Result<T> Success(T value,
+        ResultCode resultCode = ResultCode.Default,
+        string? message = null)
+        => new() { Succeeded = true, Value = value, Code = resultCode, Message = message };
 
-    public static Result<T> Failure(IEnumerable<Error> errors, ResultCode resultCode = ResultCode.Default,
-        string? message = null) =>
-        new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
+    public static Result<T> Failure(
+        IEnumerable<Error> errors,
+        ResultCode resultCode = ResultCode.Default,
+        string? message = null)
+        => new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
 
-    public static Result<T> Failure(Error error, ResultCode resultCode = ResultCode.Default, string? message = null)
+    public static Result<T> Failure(
+        Error error,
+        ResultCode resultCode = ResultCode.Default,
+        string? message = null)
         => Failure([error], resultCode, message);
 
     public static Result<T> Forbidden(Error? error)
@@ -49,7 +62,10 @@ public class Result<T>
         return Result<T>.Failure(errors, ResultCode.Forbidden);
     }
 
-    public static Result<T> Handle(Result<T> result, Error error, ResultCode resultCode = ResultCode.Default)
+    public static Result<T> Handle(
+        Result<T> result,
+        Error error,
+        ResultCode resultCode = ResultCode.Default)
         => result.Succeeded
             ? result
             : Failure(result.Errors.Prepend(error), resultCode);

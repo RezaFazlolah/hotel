@@ -27,23 +27,24 @@ public class GetAllRoomsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.RoomSortParameters,
-                request.PaginationParameters, ct);
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Manager))
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            return await roomQueryService.GetAllByManagerIdAsync(currentUserInfo.id, request.PaginationParameters, ct);
+            var managerResult = await roomQueryService.GetAllByManagerAsync(currentUserInfo.id,
+                request.RoomFilterParameters,
+                request.RoomSortParameters, request.PaginationParameters, ct);
+            return Result<PagedResult<RoomDto>>.Handle(managerResult, rootError);
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Guest))
+        else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.RoomSortParameters,
-                request.PaginationParameters, ct);
+        }
+        else
+        {
+            return Result<PagedResult<RoomDto>>.Forbidden(rootError);
         }
 
-        return Result<PagedResult<RoomDto>>.Failure([
-            rootError, new Error($"forbidden request", ErrorCode.Forbidden)
-        ]);
+        var result = await roomQueryService.GetAllAsync(request.RoomFilterParameters, request.RoomSortParameters,
+            request.PaginationParameters, ct);
+        return Result<PagedResult<RoomDto>>.Handle(result, rootError);
     }
 }

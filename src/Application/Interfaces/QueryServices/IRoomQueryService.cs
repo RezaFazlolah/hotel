@@ -14,14 +14,16 @@ public interface IRoomQueryService
         RoomSortParameters? hotelSortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
-    
+
     Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<RoomDto>>> GetAllByManagerIdAsync(
+    Task<Result<PagedResult<RoomDto>>> GetAllByManagerAsync(
         Guid managerId,
+        RoomFilterParameters? filterParameters,
+        RoomSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 }

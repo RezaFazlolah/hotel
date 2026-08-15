@@ -46,8 +46,10 @@ public class RoomQueryService(
                 .ProjectTo<RoomDto>(configurationProvider)
                 .PaginateAsync(paginationParameters, ct));
 
-    public async Task<Result<PagedResult<RoomDto>>> GetAllByManagerIdAsync(
+    public async Task<Result<PagedResult<RoomDto>>> GetAllByManagerAsync(
         Guid managerId,
+        RoomFilterParameters? filterParameters,
+        RoomSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<RoomDto>>.Success(
@@ -55,6 +57,8 @@ public class RoomQueryService(
                 .AsNoTracking()
                 .Where(r => r.Hotel.Manager != null
                             && r.Hotel.Manager.Id == managerId)
+                .ApplyFilter(filterParameters)
+                .ApplySort(sortParameters)
                 .ProjectTo<RoomDto>(configurationProvider)
                 .PaginateAsync(paginationParameters, ct));
 }
