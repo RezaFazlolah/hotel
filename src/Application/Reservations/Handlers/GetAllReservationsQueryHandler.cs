@@ -2,6 +2,7 @@ using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
 using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
+using AutoMapper;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -11,7 +12,8 @@ namespace Application.Reservations.Handlers;
 
 public class GetAllReservationsQueryHandler(
     ICurrentUserService currentUserService,
-    IReservationQueryService reservationQueryService)
+    IReservationQueryService reservationQueryService,
+    IMapper mapper)
     : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<ReservationDto>>>
 {
     public async Task<Result<PagedResult<ReservationDto>>> Handle(
@@ -26,24 +28,31 @@ public class GetAllReservationsQueryHandler(
                 currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
+        Result<PagedResult<ReservationDto>> result;
+
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            return await reservationQueryService.GetAllAsync(request.ReservationFilterParameters, request.ReservationSortParameters, request.PaginationParameters, ct);
+            result = await reservationQueryService.GetAllAsync(request.ReservationFilterParameters,
+                request.ReservationSortParameters, request.PaginationParameters, ct);
         }
-
-        if (currentUserInfo.roles.Contains(UserRole.Manager))
+        else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            return await reservationQueryService.GetAllByManagerAsync(currentUserInfo.id, request.PaginationParameters, ct);
-        }
-
-        if (currentUserInfo.roles.Contains(UserRole.Guest))
-        {
-            return await reservationQueryService.GetAllByGuestAsync(currentUserInfo.id,
+            result = await reservationQueryService.GetAllByManagerAsync(currentUserInfo.id,
+                request.ReservationFilterParameters, request.ReservationSortParameters,
                 request.PaginationParameters, ct);
         }
+        else if (currentUserInfo.roles.Contains(UserRole.Guest))
+        {
+            result = await reservationQueryService.GetAllByGuestAsync(currentUserInfo.id,
+                request.ReservationFilterParameters, request.ReservationSortParameters,
+                request.PaginationParameters, ct);
+        }
+        else
+        {
+            return Result<PagedResult<ReservationDto>>.Forbidden(rootError);
+        }
 
-        return Result<PagedResult<ReservationDto>>.Failure([
-            rootError, new Error("forbidden request", ErrorCode.Forbidden)
-        ]);
+        var resultDto = mapper.Map<Result<PagedResult<ReservationDto>>>(result);
+        return Result<PagedResult<ReservationDto>>.Handle(resultDto, rootError);
     }
 }

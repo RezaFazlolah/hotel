@@ -35,7 +35,7 @@ public interface IRoomRepository
         Guid managerId,
         CancellationToken ct);
     
-    // IManagerRepository.ManagesRoomAsync(Guid managerId, Guid roomId, CancellationToken ct) does the same thing
+    // same as IManagerRepository.ManagesRoomAsync(Guid managerId, Guid roomId, CancellationToken ct)
     Task<bool> IsManagedByManagerAsync(
         Guid roomId,
         Guid managerId,

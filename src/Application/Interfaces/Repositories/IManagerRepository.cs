@@ -14,9 +14,15 @@ public interface IManagerRepository
         Guid hotelId,
         CancellationToken ct);
 
-    // IRoomRepository.IsManagedByManagerAsync(Guid roomId, Guid managerId, CancellationToken ct) does the same thing
+    // same as IRoomRepository.IsManagedByManagerAsync(Guid roomId, Guid managerId, CancellationToken ct)
     Task<bool> ManagesRoomAsync(
         Guid managerId,
         Guid roomId,
+        CancellationToken ct);
+    
+    // same as IRoomRepository.IsManagedByManagerAsync(Guid roomId, Guid managerId, CancellationToken ct)
+    Task<bool> ManagesReservationAsync(
+        Guid managerId,
+        Guid reservationId,
         CancellationToken ct);
 }

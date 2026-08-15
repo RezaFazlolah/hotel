@@ -20,15 +20,15 @@ public class ReservationQueryService(
         IReservationQueryService
 {
     public async Task<Result<PagedResult<ReservationDto>>> GetAllAsync(
-        ReservationFilterParameters? reservationFilterParameters,
-        ReservationSortParameters? reservationSortParameters,
+        ReservationFilterParameters? filterParameters,
+        ReservationSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
         var result = await db.Reservations
             .AsNoTracking()
-            .ApplyFilter(reservationFilterParameters)
-            .ApplySort(reservationSortParameters)
+            .ApplyFilter(filterParameters)
+            .ApplySort(sortParameters)
             .ProjectTo<ReservationDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct);
 
@@ -37,22 +37,30 @@ public class ReservationQueryService(
 
     public async Task<Result<PagedResult<ReservationDto>>> GetAllByManagerAsync(
         Guid managerId,
+        ReservationFilterParameters? filterParameters,
+        ReservationSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<ReservationDto>>.Success(await db.Reservations
             .AsNoTracking()
             .Where(r => r.Room.Hotel.Manager != null
                         && r.Room.Hotel.Manager.Id == managerId)
+            .ApplyFilter(filterParameters)
+            .ApplySort(sortParameters)
             .ProjectTo<ReservationDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct));
 
     public async Task<Result<PagedResult<ReservationDto>>> GetAllByGuestAsync(
         Guid guestId,
+        ReservationFilterParameters? filterParameters,
+        ReservationSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => Result<PagedResult<ReservationDto>>.Success(await db.Reservations
             .AsNoTracking()
             .Where(r => r.GuestId == guestId)
+            .ApplyFilter(filterParameters)
+            .ApplySort(sortParameters)
             .ProjectTo<ReservationDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct));
 }

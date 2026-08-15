@@ -118,4 +118,14 @@ public class ReservationRepository(
                 .Where(r => r.GuestId == guestId)
                 .PaginateAsync(paginationParameters, ct)
         );
+
+    // same as ManagerRepository.ManagesReservationAsync(Guid managerId, Guid reservationId, CancellationToken ct)
+    public async Task<bool> IsManagedByManager(
+        Guid reservationId,
+        Guid managerId,
+        CancellationToken ct)
+        => await db.Reservations
+            .AnyAsync(r => r.Id == reservationId
+                           && r.Room.Hotel.Manager != null
+                           && r.Room.Hotel.Manager.Id == managerId, ct);
 }

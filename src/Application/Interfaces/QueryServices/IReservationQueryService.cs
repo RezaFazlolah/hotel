@@ -10,18 +10,22 @@ public interface IReservationQueryService
     : IBaseQueryService<ReservationDto>
 {
     Task<Result<PagedResult<ReservationDto>>> GetAllAsync(
-        ReservationFilterParameters? hotelFilterParameters,
-        ReservationSortParameters? hotelSortParameters,
+        ReservationFilterParameters? filterParameters,
+        ReservationSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
-    
+
     Task<Result<PagedResult<ReservationDto>>> GetAllByManagerAsync(
         Guid managerId,
+        ReservationFilterParameters? filterParameters,
+        ReservationSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
     Task<Result<PagedResult<ReservationDto>>> GetAllByGuestAsync(
         Guid guestId,
+        ReservationFilterParameters? filterParameters,
+        ReservationSortParameters sortParameters,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 }

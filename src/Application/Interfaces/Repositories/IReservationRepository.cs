@@ -48,4 +48,10 @@ public interface IReservationRepository
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
+
+    // same as IManagerRepository.ManagesReservationAsync(Guid managerId, Guid reservationId, CancellationToken ct)
+    Task<bool> IsManagedByManager(
+        Guid reservationId,
+        Guid managerId,
+        CancellationToken ct);
 }

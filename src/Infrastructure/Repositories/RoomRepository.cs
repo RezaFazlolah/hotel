@@ -117,7 +117,7 @@ public class RoomRepository(AppDbContext db)
             .Select(r => r.Id)
             .ToListAsync(ct));
     
-    // ManagerRepository.ManagesRoomAsync(Guid managerId, Guid roomId, CancellationToken ct) does the same thing
+    // same as ManagerRepository.ManagesRoomAsync(Guid managerId, Guid roomId, CancellationToken ct)
     public async Task<bool> IsManagedByManagerAsync(
             Guid roomId,
             Guid managerId,
