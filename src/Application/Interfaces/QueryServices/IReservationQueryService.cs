@@ -15,12 +15,12 @@ public interface IReservationQueryService
         PaginationParameters paginationParameters,
         CancellationToken ct);
     
-    Task<Result<PagedResult<ReservationDto>>> GetAllByManagerIdAsync(
+    Task<Result<PagedResult<ReservationDto>>> GetAllByManagerAsync(
         Guid managerId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<ReservationDto>>> GetAllByGuestIdAsync(
+    Task<Result<PagedResult<ReservationDto>>> GetAllByGuestAsync(
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct);

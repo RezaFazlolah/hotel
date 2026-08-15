@@ -51,12 +51,12 @@ public class ReservationRepository(
                 && r.GuestId != guestId,
             ct);
 
-    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelIdAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelAsync(
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
-        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdAsync(hotelId, ct);
+        var roomIdsResult = await roomRepository.GetAllIdsByHotelAsync(hotelId, ct);
         if (!roomIdsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
@@ -71,14 +71,14 @@ public class ReservationRepository(
         );
     }
 
-    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelIdsAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelsAsync(
         IEnumerable<Guid> hotelIds,
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
         var hotelsIdAsList = hotelIds.ToList();
 
-        var roomIdsResult = await roomRepository.GetAllIdsByHotelIdsAsync(hotelsIdAsList, ct);
+        var roomIdsResult = await roomRepository.GetAllIdsByHotelsAsync(hotelsIdAsList, ct);
         if (!roomIdsResult.Succeeded)
             return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
@@ -93,13 +93,13 @@ public class ReservationRepository(
         );
     }
 
-    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomIdAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomAsync(
         Guid roomId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
-        => await GetAllByRoomIdsAsync([roomId], paginationParameters, ct);
+        => await GetAllByRoomsAsync([roomId], paginationParameters, ct);
 
-    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomIdsAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomsAsync(
         IEnumerable<Guid> roomsId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
@@ -109,7 +109,7 @@ public class ReservationRepository(
                 .PaginateAsync(paginationParameters, ct)
         );
 
-    public async Task<Result<PagedResult<Reservation>>> GetAllByGuestIdAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByGuestAsync(
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct)

@@ -15,7 +15,7 @@ public interface IRoomQueryService
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(
+    Task<Result<PagedResult<RoomDto>>> GetAllByHotelAsync(
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct);

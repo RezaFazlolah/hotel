@@ -24,27 +24,27 @@ public interface IReservationRepository
         DateTimeOffset checkOutDate,
         CancellationToken ct);
 
-    Task<Result<PagedResult<Reservation>>> GetAllByHotelIdAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByHotelAsync(
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<Reservation>>> GetAllByHotelIdsAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByHotelsAsync(
         IEnumerable<Guid> hotelIds,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<Reservation>>> GetAllByRoomIdAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByRoomAsync(
         Guid roomId,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<Reservation>>> GetAllByRoomIdsAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByRoomsAsync(
         IEnumerable<Guid> roomIds,
         PaginationParameters paginationParameters,
         CancellationToken ct);
 
-    Task<Result<PagedResult<Reservation>>> GetAllByGuestIdAsync(
+    Task<Result<PagedResult<Reservation>>> GetAllByGuestAsync(
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct);

@@ -35,7 +35,7 @@ public class RoomQueryService(
         return Result<PagedResult<RoomDto>>.Success(result);
     }
 
-    public async Task<Result<PagedResult<RoomDto>>> GetAllByHotelIdAsync(
+    public async Task<Result<PagedResult<RoomDto>>> GetAllByHotelAsync(
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct)

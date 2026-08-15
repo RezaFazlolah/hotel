@@ -37,7 +37,7 @@ public class RoomRepository(AppDbContext db)
         return await base.UpdateAsync(room, ct);
     }
 
-    public async Task<Result<IReadOnlyList<Room>>> GetAllByHotelIdAsync(
+    public async Task<Result<IReadOnlyList<Room>>> GetAllByHotelAsync(
         Guid hotelId,
         CancellationToken ct)
         => Result<IReadOnlyList<Room>>.Success(
@@ -89,7 +89,7 @@ public class RoomRepository(AppDbContext db)
         return Result<Guid?>.Success(result.ManagerId);
     }
 
-    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelAsync(
         Guid hotelId,
         CancellationToken ct)
         => Result<IReadOnlyList<Guid>>.Success(
@@ -99,7 +99,7 @@ public class RoomRepository(AppDbContext db)
                 .ToListAsync(ct)
         );
 
-    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelsAsync(
         IEnumerable<Guid> hotelIds,
         CancellationToken ct)
         => Result<IReadOnlyList<Guid>>.Success(
@@ -109,7 +109,7 @@ public class RoomRepository(AppDbContext db)
                 .ToListAsync(ct)
         );
 
-    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByManagerIdAsync(
+    public async Task<Result<IReadOnlyList<Guid>>> GetAllIdsByManagerAsync(
         Guid managerId,
         CancellationToken ct)
         => Result<IReadOnlyList<Guid>>.Success(await db.Rooms

@@ -37,7 +37,7 @@ public class UpdateRoomCommandHandler(
         }
         else if (callerRoles.Contains(UserRole.Manager))
         {
-            var roomsIdResult = await roomRepository.GetAllIdsByManagerIdAsync(callerId, ct);
+            var roomsIdResult = await roomRepository.GetAllIdsByManagerAsync(callerId, ct);
             if (!roomsIdResult.Succeeded)
                 return Result<RoomDto>.Failure(roomsIdResult.Errors);
             var roomsId = roomsIdResult.Value;

@@ -35,7 +35,7 @@ public class ReservationQueryService(
         return Result<PagedResult<ReservationDto>>.Success(result);
     }
 
-    public async Task<Result<PagedResult<ReservationDto>>> GetAllByManagerIdAsync(
+    public async Task<Result<PagedResult<ReservationDto>>> GetAllByManagerAsync(
         Guid managerId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
@@ -46,7 +46,7 @@ public class ReservationQueryService(
             .ProjectTo<ReservationDto>(configurationProvider)
             .PaginateAsync(paginationParameters, ct));
 
-    public async Task<Result<PagedResult<ReservationDto>>> GetAllByGuestIdAsync(
+    public async Task<Result<PagedResult<ReservationDto>>> GetAllByGuestAsync(
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct)

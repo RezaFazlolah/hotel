@@ -33,12 +33,12 @@ public class GetAllReservationsQueryHandler(
 
         if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            return await reservationQueryService.GetAllByManagerIdAsync(currentUserInfo.id, request.PaginationParameters, ct);
+            return await reservationQueryService.GetAllByManagerAsync(currentUserInfo.id, request.PaginationParameters, ct);
         }
 
         if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            return await reservationQueryService.GetAllByGuestIdAsync(currentUserInfo.id,
+            return await reservationQueryService.GetAllByGuestAsync(currentUserInfo.id,
                 request.PaginationParameters, ct);
         }
 

@@ -37,19 +37,22 @@ public class InsertRoomCommandHandler(
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             if (!await managerRepository.ManagesHotel(currentUserInfo.id, request.HotelId, ct))
-                return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found")]);
+                return Result<RoomDto>.Failure(
+                    [rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
         }
         else
+        {
             return Result<RoomDto>.Forbidden(rootError);
+        }
 
         if (await roomRepository.NumberExistsAsync(request.HotelId, request.Number, ct))
             return Result<RoomDto>.Failure([
                 rootError, new Error($"hotel {request.HotelId} already has room number {request.Number}")
             ]);
 
-        var roomInsertResult = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
-        return roomInsertResult.Succeeded
-            ? mapper.Map<Result<RoomDto>>(roomInsertResult)
-            : Result<RoomDto>.Failure(roomInsertResult.Errors.Prepend(rootError));
+        var result = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
+        var resultDto = mapper.Map<Result<RoomDto>>(result);
+        return Result<RoomDto>.Handle(resultDto, rootError);
     }
 }

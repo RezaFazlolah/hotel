@@ -50,8 +50,7 @@ public class InsertHotelCommandHandler(
         }
 
         var result = await hotelRepository.InsertAsync(hotel, ct);
-        return result.Succeeded
-            ? mapper.Map<Result<HotelDto>>(result)
-            : Result<HotelDto>.Failure(result.Errors.Prepend(rootError));
+        var resultDto = mapper.Map<Result<HotelDto>>(result);
+        return Result<HotelDto>.Handle(resultDto, rootError);
     }
 }

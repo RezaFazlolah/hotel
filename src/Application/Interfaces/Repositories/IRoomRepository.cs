@@ -6,7 +6,7 @@ namespace Application.Interfaces.Repositories;
 public interface IRoomRepository
     : IBaseRepository<Guid, Room>
 {
-    Task<Result<IReadOnlyList<Room>>> GetAllByHotelIdAsync(
+    Task<Result<IReadOnlyList<Room>>> GetAllByHotelAsync(
         Guid hotelId,
         CancellationToken ct);
 
@@ -23,15 +23,15 @@ public interface IRoomRepository
         Guid roomId,
         CancellationToken ct);
     
-    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdAsync(
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelAsync(
         Guid hotelId,
         CancellationToken ct);
 
-    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelIdsAsync(
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByHotelsAsync(
         IEnumerable<Guid> hotelIds,
         CancellationToken ct);
 
-    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByManagerIdAsync(
+    Task<Result<IReadOnlyList<Guid>>> GetAllIdsByManagerAsync(
         Guid managerId,
         CancellationToken ct);
     
