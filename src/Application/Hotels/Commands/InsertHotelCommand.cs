@@ -11,4 +11,5 @@ public record InsertHotelCommand
     public required string Address { get; init; }
     public float Rating { get; init; }
     public Guid? ManagerId { get; init; }
+    public IEnumerable<Guid> RoomIds { get; init; } = [];
 }

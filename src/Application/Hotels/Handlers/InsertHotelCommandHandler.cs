@@ -12,6 +12,7 @@ namespace Application.Hotels.Handlers;
 
 public class InsertHotelCommandHandler(
     IHotelRepository hotelRepository,
+    IRoomRepository roomRepository,
     IManagerRepository managerRepository,
     ICurrentUserService currentUserService,
     IMapper mapper)
@@ -47,6 +48,20 @@ public class InsertHotelCommandHandler(
                     [rootError, new Error($"manager {managerId} already manages another hotel")]);
 
             hotel.Manager = manager;
+        }
+
+        var roomIds = request.RoomIds.ToList();
+        if (roomIds.Count > 0)
+        {
+            foreach (var roomId in roomIds)
+            {
+                var roomResult = await roomRepository.GetByIdAsync(roomId, ct);
+                if (!roomResult.Succeeded)
+                    return Result<HotelDto>.Failure(roomResult.Errors.Prepend(rootError), ResultCode.NotFound);
+                var room = roomResult.Value;
+
+                hotel.Rooms.Add(room);
+            }
         }
 
         var result = await hotelRepository.InsertAsync(hotel, ct);
