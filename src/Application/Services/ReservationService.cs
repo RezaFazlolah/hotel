@@ -19,8 +19,13 @@ public class ReservationService(
                 roomResult.Errors.Prepend(new Error($"calculate reservation {reservation.Id} price failed")));
         var room = roomResult.Value;
 
-        var reservationTotalPrice =
-            (reservation.CheckOutDate.Date - reservation.CheckInDate.Date).Days * room.PricePerNight;
+        var reservationTotalPrice = CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate, room.PricePerNight);
         return Result<decimal>.Success(reservationTotalPrice);
     }
+
+    public decimal CalculatePrice(
+        DateTimeOffset checkInDate,
+        DateTimeOffset checkOutDate,
+        decimal pricePerNight)
+        => (checkOutDate.Date - checkInDate.Date).Days * pricePerNight;
 }

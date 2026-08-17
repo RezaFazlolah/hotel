@@ -8,7 +8,7 @@ public class Result
     public IEnumerable<Error> Errors { get; init; } = [];
     public string? Message { get; init; }
     public ResultCode Code { get; init; }
-
+    
     public static Result Success(
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
@@ -34,7 +34,7 @@ public class Result<T>
     public IEnumerable<Error> Errors { get; init; } = [];
     public string? Message { get; init; }
     public ResultCode Code { get; init; }
-
+    
     public static Result<T> Success(T value,
         ResultCode resultCode = ResultCode.Default,
         string? message = null)

@@ -1,3 +1,4 @@
+using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ public static class DbSeeder
     {
         var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
+        var reservationService = serviceProvider.GetRequiredService<IReservationService>();
         var db = serviceProvider.GetRequiredService<AppDbContext>();
 
         // roles
@@ -51,7 +53,7 @@ public static class DbSeeder
             }
         }
 
-        // hotel
+        // hotels
         var hotels = new List<Hotel>
         {
             new() { Name = "Parsian", Address = "Hamadan", Rating = 3.8m, Manager = (Manager?)users[2].user },
@@ -62,11 +64,7 @@ public static class DbSeeder
         if (!db.Hotels.Any())
             await db.Hotels.AddRangeAsync(hotels);
 
-        // room
-        var hotelIds = await db.Hotels
-            .Select(h => h.Id)
-            .ToListAsync();
-
+        // rooms
         var rooms = new List<Room>
         {
             new() { Number = 101, Type = RoomType.Normal, PricePerNight = 100, Hotel = hotels[0] },
@@ -79,6 +77,48 @@ public static class DbSeeder
 
         if (!db.Rooms.Any())
             await db.Rooms.AddRangeAsync(rooms);
+
+        // reservations
+        var reservations = new List<Reservation>
+        {
+            new()
+            {
+                CheckInDate = DateTimeOffset.Parse("2026-08-20T14:00:00+03:30"),
+                CheckOutDate = DateTimeOffset.Parse("2026-08-22T14:00:00+03:30"),
+                Status = ReservationStatus.Confirmed,
+                GuestId = Guid.Empty,
+                Guest = (Guest)users[0].user,
+                RoomId = Guid.Empty,
+                Room = rooms[0]
+            },
+            new()
+            {
+                CheckInDate = DateTimeOffset.Parse("2026-08-21T14:00:00+03:30"),
+                CheckOutDate = DateTimeOffset.Parse("2026-08-24T14:00:00+03:30"),
+                Status = ReservationStatus.Confirmed,
+                GuestId = Guid.Empty,
+                Guest = (Guest)users[0].user,
+                RoomId = Guid.Empty,
+                Room = rooms[3]
+            },
+            new()
+            {
+                CheckInDate = DateTimeOffset.Parse("2026-08-23T14:00:00+03:30"),
+                CheckOutDate = DateTimeOffset.Parse("2026-08-26T14:00:00+03:30"),
+                Status = ReservationStatus.Confirmed,
+                GuestId = Guid.Empty,
+                Guest = (Guest)users[1].user,
+                RoomId = Guid.Empty,
+                Room = rooms[0]
+            }
+        };
+
+        foreach (var reservation in reservations)
+            reservation.TotalPrice = reservationService.CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate,
+                reservation.Room.PricePerNight);
+
+        if (!db.Reservations.Any())
+            await db.Reservations.AddRangeAsync(reservations);
 
         await db.SaveChangesAsync();
     }
