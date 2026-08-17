@@ -31,18 +31,12 @@ public class ReservationRepository(
         DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct)
-    {
-        return false;
-        
-        var result = await db.Reservations
+        => await db.Reservations
             .AnyAsync(r =>
                     r.RoomId == roomId
                     && r.Status != ReservationStatus.Cancelled
                     && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
                 ct);
-
-        return result;
-    }
 
     public async Task<bool> IsRoomReservedAsync(
         Guid roomId,
