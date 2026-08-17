@@ -9,6 +9,6 @@ public class ReservationSortParametersValidator
     {
         RuleFor(x => x.SortBy)
             .IsInEnum()
-            .WithMessage("Reservation sort by is not valid");
+            .WithMessage("SortBy is not valid");
     }
 }

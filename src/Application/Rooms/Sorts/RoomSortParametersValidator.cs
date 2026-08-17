@@ -9,6 +9,6 @@ public class RoomSortParametersValidator
     {
         RuleFor(x => x.SortBy)
             .IsInEnum()
-            .WithMessage("Room sort by is not valid");
+            .WithMessage("SortBy is not valid");
     }
 }
