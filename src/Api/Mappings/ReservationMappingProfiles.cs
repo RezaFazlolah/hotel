@@ -43,10 +43,13 @@ public class ReservationMappingProfiles
                     }))
             .ForMember(dst => dst.ReservationSortParameters,
                 opt => opt.MapFrom(src =>
-                    new ReservationSortParameters
-                    {
-                        SortBy = src.SortBy ?? ReservationSortBy.None,
-                        IsAscending = src.IsAscending ?? true
-                    }));
+                    src.SortBy.HasValue && src.IsAscending.HasValue
+                        ? new ReservationSortParameters
+                        {
+                            SortBy = src.SortBy.Value,
+                            IsAscending = src.IsAscending.Value
+                        }
+                        : new ReservationSortParameters()
+                ));
     }
 }

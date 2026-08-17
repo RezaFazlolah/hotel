@@ -42,10 +42,13 @@ public class RoomMappingProfiles
                 ))
             .ForMember(dst => dst.RoomSortParameters,
                 opt => opt.MapFrom(src =>
-                    new RoomSortParameters
-                    {
-                        SortBy = src.SortBy ?? RoomSortBy.None,
-                        IsAscending = src.IsAscending ?? true
-                    }));
+                    src.SortBy.HasValue && src.IsAscending.HasValue
+                        ? new RoomSortParameters
+                        {
+                            SortBy = src.SortBy.Value,
+                            IsAscending = src.IsAscending.Value
+                        }
+                        : new RoomSortParameters()
+                ));
     }
 }

@@ -38,12 +38,15 @@ public class HotelMappingProfiles
                         MinRating = src.MinRating,
                         MaxRating = src.MaxRating
                     }))
-            .ForMember(dst=>dst.HotelSortParameters,
-                opt=>opt.MapFrom(src =>
-                    new HotelSortParameters
-                    {
-                        SortBy =  src.SortBy ?? HotelSortBy.None,
-                        IsAscending = src.IsAscending ?? true
-                    }));
+            .ForMember(dst => dst.HotelSortParameters,
+                opt => opt.MapFrom(src =>
+                    src.SortBy.HasValue && src.IsAscending.HasValue
+                        ? new HotelSortParameters
+                        {
+                            SortBy = src.SortBy.Value,
+                            IsAscending = src.IsAscending.Value
+                        }
+                        : new HotelSortParameters()
+                ));
     }
 }
