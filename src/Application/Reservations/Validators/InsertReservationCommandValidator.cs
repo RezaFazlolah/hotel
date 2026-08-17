@@ -8,8 +8,12 @@ public class InsertReservationCommandValidator
 {
     public InsertReservationCommandValidator()
     {
+        RuleFor(x => x.CheckInDate)
+            .GreaterThanOrEqualTo(x => DateTimeOffset.Now)
+            .WithMessage("time travel hasn't been invented yet. CheckInDate cant be in the past");
+        
         RuleFor(c => c.CheckOutDate)
-            .GreaterThanOrEqualTo(c => c.CheckInDate)
+            .GreaterThan(c => c.CheckInDate)
             .WithMessage("CheckOutDate must be after CheckInDate.");
     }
 }

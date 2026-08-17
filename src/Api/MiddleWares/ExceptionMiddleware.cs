@@ -3,7 +3,9 @@ using System.Text.Json;
 
 namespace Api.MiddleWares;
 
-public class ExceptionMiddleware(RequestDelegate next)
+public class ExceptionMiddleware(
+    RequestDelegate next,
+    ILogger logger)
 {
     public async Task InvokeAsync(HttpContext context)
     {
@@ -28,8 +30,10 @@ public class ExceptionMiddleware(RequestDelegate next)
                 Details = errors
             }));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            logger.LogError(ex, "Unhandled exception processing {Method} {Path}", context.Request.Method,
+                context.Request.Path);
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsync("An unexpected error occurred");
         }

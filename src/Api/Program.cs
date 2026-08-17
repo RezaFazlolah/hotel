@@ -6,36 +6,66 @@ using Domain;
 using Infrastructure;
 using Infrastructure.Persistence;
 using Scalar.AspNetCore;
+using Serilog;
+using Serilog.Events;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.Hosting.LifeTime", LogEventLevel.Information)
+    // .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddDomainServices();
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddApiServices();
-
-var app = builder.Build();
-
-app.UseMiddleware<ExceptionMiddleware>();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    var builder = WebApplication.CreateBuilder(args);
 
-    app.UseSwagger();
-    app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .WriteTo.Console()
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));
+
+    builder.Services.AddDomainServices();
+    builder.Services.AddApplicationServices(builder.Configuration);
+    builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddApiServices();
+
+    var app = builder.Build();
+
+    app.UseMiddleware<ExceptionMiddleware>();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
+    }
+
+    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
+        await DbSeeder.SeedAsync(scope.ServiceProvider);
+    }
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
+catch (Exception ex) when(ex is not HostAbortedException)
 {
-    scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
-    await DbSeeder.SeedAsync(scope.ServiceProvider);
-}
+    Log.Fatal(ex, "Application terminated unexpectedly");
 
-app.Run();
+}
+finally
+{
+    Log.CloseAndFlush();
+}

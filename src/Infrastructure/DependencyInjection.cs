@@ -26,9 +26,9 @@ public static class DependencyInjection
             // Future: use options pattern for fetching connection string
             services.AddDbContext<AppDbContext>(options =>
             {
-                // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-                options.UseSqlite(configuration.GetConnectionString("Sqlite"));
-                // options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));
+                // options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                // options.UseSqlite(configuration.GetConnectionString("SQLite"));
             });
 
             services.AddIdentityCore<User>(options =>

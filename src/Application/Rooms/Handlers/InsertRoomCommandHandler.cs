@@ -50,12 +50,15 @@ public class InsertRoomCommandHandler(
             return Result<RoomDto>.Forbidden(rootError);
         }
 
-        if (await roomRepository.NumberExistsAsync(request.HotelId, request.Number, ct))
+        var roomNumberExists = await roomRepository.NumberExistsAsync(request.HotelId, request.Number, ct);
+        if (roomNumberExists)
             return Result<RoomDto>.Failure([
                 rootError, new Error($"hotel {request.HotelId} already has room number {request.Number}")
             ]);
 
-        var result = await roomRepository.InsertAsync(mapper.Map<Room>(request), ct);
+        var room = mapper.Map<Room>(request);
+        
+        var result = await roomRepository.InsertAsync(room, ct);
         var resultDto = mapper.Map<Result<RoomDto>>(result);
         return Result<RoomDto>.Handle(resultDto, rootError);
     }
