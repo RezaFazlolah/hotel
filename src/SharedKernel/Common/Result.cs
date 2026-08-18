@@ -2,13 +2,21 @@ using SharedKernel.Enums;
 
 namespace SharedKernel.Common;
 
-public class Result
+public abstract class BaseResult
 {
     public bool Succeeded { get; init; }
     public IEnumerable<Error> Errors { get; init; } = [];
     public string? Message { get; init; }
     public ResultCode Code { get; init; }
-    
+}
+
+public class Result
+    : BaseResult
+{
+    private Result()
+    {
+    }
+
     public static Result Success(
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
@@ -25,16 +33,41 @@ public class Result
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
         => Failure([error], resultCode, message);
+
+    public static Result Forbidden(Error? error)
+    {
+        var baseError = new[] { new Error("forbidden request", ErrorCode.Forbidden) };
+        var errors = error is null
+            ? baseError
+            : baseError.Prepend(error);
+
+        return Failure(errors, ResultCode.Forbidden);
+    }
+
+    public static Result Handle(
+        Result result,
+        Error error,
+        ResultCode resultCode = ResultCode.Default)
+        => result.Succeeded
+            ? result
+            : Failure(result.Errors.Prepend(error), resultCode);
 }
 
 public class Result<T>
+    : BaseResult
 {
-    public bool Succeeded { get; init; }
-    public T Value { get; init; }
-    public IEnumerable<Error> Errors { get; init; } = [];
-    public string? Message { get; init; }
-    public ResultCode Code { get; init; }
-    
+    public T Value
+    {
+        get => Succeeded
+            ? field
+            : throw new InvalidOperationException();
+        init;
+    } = default!;
+
+    private Result()
+    {
+    }
+
     public static Result<T> Success(T value,
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
@@ -59,7 +92,7 @@ public class Result<T>
             ? baseError
             : baseError.Prepend(error);
 
-        return Result<T>.Failure(errors, ResultCode.Forbidden);
+        return Failure(errors, ResultCode.Forbidden);
     }
 
     public static Result<T> Handle(
