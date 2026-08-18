@@ -60,7 +60,7 @@ public class Result<T>
     {
         get => Succeeded
             ? field
-            : throw new InvalidOperationException();
+            : throw new InvalidOperationException("Result did not succeed");
         init;
     } = default!;
 
