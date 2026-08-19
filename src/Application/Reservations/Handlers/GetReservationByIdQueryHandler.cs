@@ -26,36 +26,32 @@ public class GetReservationByIdQueryHandler(
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
-        Result<ReservationDto> result;
+        if (!currentUserService.IsAuthenticated())
+            return Result<ReservationDto>.Forbidden(rootError);
 
-        // var reservationDtoResult = await reservationQueryService.GetByIdAsync(request.Id, ct);
-        // if (!reservationDtoResult.Succeeded)
-        // return Result<ReservationDto>.Failure(reservationDtoResult.Errors.Prepend(rootError));
-        // var reservationDto = reservationDtoResult.Value;
+        var reservationResult = await reservationQueryService.GetByIdAsync(request.Id, ct);
+        if (!reservationResult.Succeeded)
+            return Result<ReservationDto>.Failure(reservationResult.Errors.Prepend(rootError));
+        var reservation = reservationResult.Value;
 
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
-            result = await reservationQueryService.GetByIdAsync(request.Id, ct);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            // return await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservationDto.RoomId, ct)
-            //     ? reservationDtoResult
-            //     : Result<ReservationDto>.Failure([rootError, new Error("reservation not found", ErrorCode.NotFound)],
-            //         ResultCode.NotFound);
+            if (!await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
+            {
+                return Result<ReservationDto>.Failure([rootError, new Error("reservation not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
+            }
         }
-        else if (currentUserInfo.roles.Contains(UserRole.Guest))
+        else // if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
-            // return reservationDto.GuestId == currentUserInfo.id
-            //     ? reservationDtoResult
-            //     : Result<ReservationDto>.Failure([rootError, new Error("reservation not found")]);
-        }
-        else
-        {
-            return Result<ReservationDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)],
-                ResultCode.Forbidden);
+            if (reservation.GuestId != currentUserInfo.id)
+                return Result<ReservationDto>.Failure([rootError, new Error("reservation not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
         }
 
-        throw new NotImplementedException();
+        return reservationResult;
     }
 }

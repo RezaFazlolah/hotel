@@ -6,23 +6,23 @@ public static class RoomFilterExtensions
 {
     public static IQueryable<Room> ApplyFilter(
         this IQueryable<Room> query,
-        RoomFilterParameters? roomFilterParameters)
+        RoomFilterParameters? filterParameters)
     {
-        if(roomFilterParameters is null)
+        if(filterParameters is null)
             return query;
         
-        if (roomFilterParameters.MinNumber.HasValue)
-            query = query.Where(r => roomFilterParameters.MinNumber.Value <= r.Number);
-        if (roomFilterParameters.MaxNumber.HasValue)
-            query = query.Where(r => r.Number <= roomFilterParameters.MaxNumber.Value);
+        if (filterParameters.MinNumber.HasValue)
+            query = query.Where(r => filterParameters.MinNumber.Value <= r.Number);
+        if (filterParameters.MaxNumber.HasValue)
+            query = query.Where(r => r.Number <= filterParameters.MaxNumber.Value);
         
-        if(roomFilterParameters.Type.HasValue)
-            query = query.Where(r => r.Type == roomFilterParameters.Type);
+        if(filterParameters.Type.HasValue)
+            query = query.Where(r => r.Type == filterParameters.Type);
 
-        if (roomFilterParameters.MinPricePerNight.HasValue)
-            query = query.Where(r => roomFilterParameters.MinPricePerNight.Value <= r.PricePerNight);
-        if (roomFilterParameters.MaxPricePerNight.HasValue)
-            query = query.Where(r => r.PricePerNight <= roomFilterParameters.MaxPricePerNight.Value);
+        if (filterParameters.MinPricePerNight.HasValue)
+            query = query.Where(r => filterParameters.MinPricePerNight.Value <= r.PricePerNight);
+        if (filterParameters.MaxPricePerNight.HasValue)
+            query = query.Where(r => r.PricePerNight <= filterParameters.MaxPricePerNight.Value);
         
         return query;
     }

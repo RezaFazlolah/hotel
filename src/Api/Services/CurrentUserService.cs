@@ -51,7 +51,7 @@ public class CurrentUserService(
             return Result<(Guid id, IReadOnlyList<UserRole> roles)>.Success((currentUserId, currentUserRoles));
         }
     }
-    
+
     public async Task<Result<User>> GetCurrentUserAsync(CancellationToken ct)
     {
         var currentUserIdResult = this.Id;
@@ -60,5 +60,13 @@ public class CurrentUserService(
         var currentUserId = currentUserIdResult.Value;
 
         return await userRepository.GetByIdAsync(currentUserId, CancellationToken.None);
+    }
+
+    public bool IsAuthenticated()
+    {
+        var rolesResult = Roles;
+        return rolesResult.Succeeded
+            ? rolesResult.Value.Any(r => Enum.IsDefined<UserRole>(r))
+            : false;
     }
 }

@@ -10,4 +10,5 @@ public interface ICurrentUserService
     Result<IReadOnlyList<UserRole>> Roles { get; }
     Result<(Guid id, IReadOnlyList<UserRole> roles)> Info { get; }
     Task<Result<User>> GetCurrentUserAsync(CancellationToken ct);
+    bool IsAuthenticated();
 }

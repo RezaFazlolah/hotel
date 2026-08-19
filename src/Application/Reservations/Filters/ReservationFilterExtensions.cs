@@ -6,28 +6,28 @@ public static class ReservationFilterExtensions
 {
     extension(IQueryable<Reservation> query)
     {
-        public IQueryable<Reservation> ApplyFilter(ReservationFilterParameters? reservationFilterParameters)
+        public IQueryable<Reservation> ApplyFilter(ReservationFilterParameters? filterParameters)
         {
-            if(reservationFilterParameters is null)
+            if(filterParameters is null)
                 return query;
             
-            if (reservationFilterParameters.MinCheckInDate.HasValue)
-                query = query.Where(r => reservationFilterParameters.MinCheckInDate.Value <= r.CheckInDate);
-            if (reservationFilterParameters.MaxCheckInDate.HasValue)
-                query = query.Where(r => r.CheckInDate <= reservationFilterParameters.MaxCheckInDate.Value);
+            if (filterParameters.MinCheckInDate.HasValue)
+                query = query.Where(r => filterParameters.MinCheckInDate.Value <= r.CheckInDate);
+            if (filterParameters.MaxCheckInDate.HasValue)
+                query = query.Where(r => r.CheckInDate <= filterParameters.MaxCheckInDate.Value);
 
-            if (reservationFilterParameters.MinCheckOutDate.HasValue)
-                query = query.Where(r => reservationFilterParameters.MinCheckOutDate.Value <= r.CheckOutDate);
-            if (reservationFilterParameters.MaxCheckOutDate.HasValue)
-                query = query.Where(r => r.CheckOutDate <= reservationFilterParameters.MaxCheckOutDate.Value);
+            if (filterParameters.MinCheckOutDate.HasValue)
+                query = query.Where(r => filterParameters.MinCheckOutDate.Value <= r.CheckOutDate);
+            if (filterParameters.MaxCheckOutDate.HasValue)
+                query = query.Where(r => r.CheckOutDate <= filterParameters.MaxCheckOutDate.Value);
 
-            if (reservationFilterParameters.MinTotalPrice.HasValue)
-                query = query.Where(r => reservationFilterParameters.MinTotalPrice.Value <= r.TotalPrice);
-            if (reservationFilterParameters.MaxTotalPrice.HasValue)
-                query = query.Where(r => r.TotalPrice <= reservationFilterParameters.MaxTotalPrice.Value);
+            if (filterParameters.MinTotalPrice.HasValue)
+                query = query.Where(r => filterParameters.MinTotalPrice.Value <= r.TotalPrice);
+            if (filterParameters.MaxTotalPrice.HasValue)
+                query = query.Where(r => r.TotalPrice <= filterParameters.MaxTotalPrice.Value);
 
-            if (reservationFilterParameters.Status.HasValue)
-                query = query.Where(r => r.Status == reservationFilterParameters.Status.Value);
+            if (filterParameters.Status.HasValue)
+                query = query.Where(r => r.Status == filterParameters.Status.Value);
 
             return query;
         }
