@@ -45,6 +45,8 @@ try
 
         app.UseSwagger();
         app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
+     
+        app.UseWelcomePage("/welcome");
     }
 
     app.UseHttpsRedirection();
