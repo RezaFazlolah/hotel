@@ -15,7 +15,10 @@ public class HotelMappingProfiles
     {
         CreateMap<Hotel, HotelDto>()
             .ForMember(dst => dst.ManagerId,
-                opt => opt.MapFrom(src => src.Manager != null ? src.Manager.Id : (Guid?)null));
+                opt => opt.MapFrom(src =>
+                    src.Manager != null
+                        ? src.Manager.Id
+                        : (Guid?)null));
 
         CreateMap<Result<Hotel>, Result<HotelDto>>();
 
