@@ -13,9 +13,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.Hosting.LifeTime", LogEventLevel.Information)
-    // .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
     .MinimumLevel.Override("System", LogEventLevel.Warning)
-    .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
@@ -23,11 +21,11 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog((context, services, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .ReadFrom.Services(services)
-        .WriteTo.Console()
-        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));
+    builder.Host
+        .UseSerilog((context, services, configuration) =>
+            configuration
+                .ReadFrom.Configuration(context.Configuration)
+                .ReadFrom.Services(services));
 
     builder.Services.AddDomainServices();
     builder.Services.AddApplicationServices(builder.Configuration);
@@ -45,7 +43,7 @@ try
 
         app.UseSwagger();
         app.UseSwaggerUI(options => options.EnableTryItOutByDefault());
-     
+
         app.UseWelcomePage("/welcome");
     }
 
