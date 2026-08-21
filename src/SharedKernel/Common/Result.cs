@@ -2,37 +2,37 @@ using SharedKernel.Enums;
 
 namespace SharedKernel.Common;
 
-public abstract class BaseResult
+public abstract class ResultBase
 {
-    public bool Succeeded { get; init; }
-    public IEnumerable<Error> Errors { get; init; } = [];
-    public string? Message { get; init; }
-    public ResultCode Code { get; init; }
+    public bool Succeeded { get; protected init; }
+    public IEnumerable<Error> Errors { get; protected init; } = [];
+    public string? Message { get; protected init; }
+    public ResultCode Code { get; protected init; }
 }
 
 public class Result
-    : BaseResult
+    : ResultBase
 {
     private Result()
     {
     }
 
     public static Result Success(
-        ResultCode resultCode = ResultCode.Default,
-        string? message = null)
-        => new() { Succeeded = true, Code = resultCode, Message = message };
-
-    public static Result Failure(
-        IEnumerable<Error> errors,
-        ResultCode resultCode = ResultCode.Default,
-        string? message = null)
-        => new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
-
+        string? message = null,
+        ResultCode resultCode = ResultCode.Default)
+        => new() { Succeeded = true, Message = message, Code = resultCode };
+    
     public static Result Failure(
         Error error,
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
         => Failure([error], resultCode, message);
+    
+    public static Result Failure(
+        IEnumerable<Error> errors,
+        ResultCode resultCode = ResultCode.Default,
+        string? message = null)
+        => new() { Succeeded = false, Code = resultCode, Errors = errors, Message = message };
 
     public static Result Forbidden(Error? error)
     {
@@ -54,7 +54,7 @@ public class Result
 }
 
 public class Result<T>
-    : BaseResult
+    : ResultBase
 {
     public T Value
     {
