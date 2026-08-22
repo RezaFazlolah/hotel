@@ -19,16 +19,6 @@ public class HotelMappingProfiles
             .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty));
 
         CreateMap<GetAllHotelsQueryDto, GetAllHotelsQuery>()
-            .ForMember(dst => dst.PaginationParameters,
-                opt => opt.MapFrom(src =>
-                    src.PageNumber.HasValue && src.PageSize.HasValue
-                        ? new PaginationParameters
-                        {
-                            PageNumber = src.PageNumber.Value,
-                            PageSize = src.PageSize.Value
-                        }
-                        : new PaginationParameters())
-            )
             .ForMember(dst => dst.HotelFilterParameters,
                 opt => opt.MapFrom(src =>
                     new HotelFilterParameters
@@ -47,6 +37,16 @@ public class HotelMappingProfiles
                             IsAscending = src.IsAscending.Value
                         }
                         : new HotelSortParameters()
-                ));
+                ))
+            .ForMember(dst => dst.PaginationParameters,
+                opt => opt.MapFrom(src =>
+                    src.PageNumber.HasValue && src.PageSize.HasValue
+                        ? new PaginationParameters
+                        {
+                            PageNumber = src.PageNumber.Value,
+                            PageSize = src.PageSize.Value
+                        }
+                        : new PaginationParameters())
+            );
     }
 }

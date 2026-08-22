@@ -19,16 +19,6 @@ public class RoomMappingProfiles
             .ForMember(dst => dst.Id, opt => opt.Ignore());
 
         CreateMap<GetAllRoomsQueryDto, GetAllRoomsQuery>()
-            .ForMember(dst => dst.PaginationParameters,
-                opt => opt.MapFrom(src =>
-                    src.PageNumber.HasValue && src.PageSize.HasValue
-                        ? new PaginationParameters
-                        {
-                            PageNumber = src.PageNumber.Value,
-                            PageSize = src.PageSize.Value
-                        }
-                        : new PaginationParameters())
-            )
             .ForMember(dst => dst.RoomFilterParameters,
                 opt => opt.MapFrom(src =>
                     new RoomFilterParameters
@@ -49,6 +39,16 @@ public class RoomMappingProfiles
                             IsAscending = src.IsAscending.Value
                         }
                         : new RoomSortParameters()
-                ));
+                ))
+            .ForMember(dst => dst.PaginationParameters,
+                opt => opt.MapFrom(src =>
+                    src.PageNumber.HasValue && src.PageSize.HasValue
+                        ? new PaginationParameters
+                        {
+                            PageNumber = src.PageNumber.Value,
+                            PageSize = src.PageSize.Value
+                        }
+                        : new PaginationParameters())
+            );
     }
 }

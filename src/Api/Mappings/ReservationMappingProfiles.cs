@@ -19,16 +19,6 @@ public class ReservationMappingProfiles
             .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty));
 
         CreateMap<GetAllReservationsQueryDto, GetAllReservationsQuery>()
-            .ForMember(dst => dst.PaginationParameters,
-                opt => opt.MapFrom(src =>
-                    src.PageNumber.HasValue && src.PageSize.HasValue
-                        ? new PaginationParameters
-                        {
-                            PageNumber = src.PageNumber.Value,
-                            PageSize = src.PageSize.Value
-                        }
-                        : new PaginationParameters())
-            )
             .ForMember(dst => dst.ReservationFilterParameters,
                 opt => opt.MapFrom(src =>
                     new ReservationFilterParameters
@@ -50,6 +40,16 @@ public class ReservationMappingProfiles
                             IsAscending = src.IsAscending.Value
                         }
                         : new ReservationSortParameters()
-                ));
+                ))
+            .ForMember(dst => dst.PaginationParameters,
+                opt => opt.MapFrom(src =>
+                    src.PageNumber.HasValue && src.PageSize.HasValue
+                        ? new PaginationParameters
+                        {
+                            PageNumber = src.PageNumber.Value,
+                            PageSize = src.PageSize.Value
+                        }
+                        : new PaginationParameters())
+            );
     }
 }
