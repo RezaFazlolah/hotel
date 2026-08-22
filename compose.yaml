@@ -1,16 +1,24 @@
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2025-latest
-    container_name: sqlserver
-    restart: no
+  postgres:
+    image: postgres:18
+    container_name: postgresContainer
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+  seq:
+    image: datalust/seq:2026.1
+    container_name: seqContainer
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "YourStrong@Pass123"
-      MSSQL_PID: "Express"
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_ADMIN_PASSWORD}
     ports:
-      - "1434:1433"
+      - "5341:80"
     volumes:
-      - sqlserver_data:/var/opt/mssql
+      - seq_data:/data
 
 volumes:
-  sqlserver_data:
+  postgres_data:
+  seq_data:

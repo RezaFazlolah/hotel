@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Notes/">
+    <File Path="..\compose.yaml" />
     <File Path="..\notes\CLI.txt" />
     <File Path="..\notes\DbDiagram.odg" />
     <File Path="..\notes\Future.txt" />
