@@ -9,6 +9,7 @@ using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
 
+Serilog.Debugging.SelfLog.Enable(Console.Error);
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
