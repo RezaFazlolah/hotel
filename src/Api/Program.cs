@@ -69,7 +69,6 @@ try
     using (var scope = app.Services.CreateScope())
     {
         scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
-
         if (app.Environment.IsDevelopment())
             await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
@@ -78,7 +77,7 @@ try
 }
 catch (Exception ex) when (ex is not HostAbortedException)
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
+    Log.Fatal(ex, "Application terminated unexpectedly.");
 }
 finally
 {

@@ -21,13 +21,13 @@ public class Result
         string? message = null,
         ResultCode resultCode = ResultCode.Default)
         => new() { Succeeded = true, Message = message, Code = resultCode };
-    
+
     public static Result Failure(
         Error error,
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
         => Failure([error], resultCode, message);
-    
+
     public static Result Failure(
         IEnumerable<Error> errors,
         ResultCode resultCode = ResultCode.Default,
