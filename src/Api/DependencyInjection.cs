@@ -71,7 +71,7 @@ public static class DependencyInjection
                     };
                     options.MapInboundClaims = false;
                 });
-
+            
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;

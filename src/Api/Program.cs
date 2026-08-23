@@ -35,6 +35,19 @@ try
 
     var app = builder.Build();
 
+    app.UseSerilogRequestLogging(options =>
+    {
+        options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+        options.GetLevel = (httpContext, _, ex) =>
+        {
+            if (ex != null || httpContext.Response.StatusCode >= 500)
+                return LogEventLevel.Error;
+
+            return httpContext.Response.StatusCode >= 400
+                ? LogEventLevel.Warning
+                : LogEventLevel.Information;
+        };
+    });
     app.UseMiddleware<ExceptionMiddleware>();
 
     if (app.Environment.IsDevelopment())
