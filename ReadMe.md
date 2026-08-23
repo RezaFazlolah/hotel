@@ -10,6 +10,7 @@ with
   MediatR,
   AutoMapper,
   Serilog,
+  Seq,
   FluentValidation,
   Result Pattern,
   Options Pattern,
