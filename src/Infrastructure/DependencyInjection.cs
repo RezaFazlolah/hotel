@@ -27,8 +27,6 @@ public static class DependencyInjection
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));
-                // options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-                // options.UseSqlite(configuration.GetConnectionString("SQLite"));
             });
 
             services.AddIdentityCore<User>(options =>
@@ -50,14 +48,14 @@ public static class DependencyInjection
 
             services.AddScoped<IJwtService, JwtService>();
             services.AddSingleton<IPaginator, Paginator>();
-            
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGuestRepository, GuestRepository>();
             services.AddScoped<IManagerRepository, ManagerRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
 
             services.AddScoped<IManagerQueryService, ManagerQueryService>();
-            
+
             services.AddScoped<IHotelRepository, HotelRepository>();
             services.AddScoped<IHotelQueryService, HotelQueryService>();
 
