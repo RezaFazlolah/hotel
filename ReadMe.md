@@ -9,7 +9,9 @@ with
   Docker,
   MediatR,
   AutoMapper,
+  Serilog,
   FluentValidation,
   Result Pattern,
   Options Pattern,
+  
   
