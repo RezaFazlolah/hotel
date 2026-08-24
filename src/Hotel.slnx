@@ -1,16 +1,4 @@
 <Solution>
-  <Folder Name="/Notes/">
-    <File Path="..\compose.yaml" />
-    <File Path="..\notes\CLI.txt" />
-    <File Path="..\notes\DbDiagram.odg" />
-    <File Path="..\notes\Future.txt" />
-    <File Path="..\notes\Logic.txt" />
-    <File Path="..\notes\Notes.txt" />
-    <File Path="..\notes\PerformanceTweaks.txt" />
-    <File Path="..\notes\Problems.txt" />
-    <File Path="..\notes\Test.cs" />
-    <File Path="..\notes\Todo.txt" />
-  </Folder>
   <Project Path="Api/Api.csproj" />
   <Project Path="Application/Application.csproj" />
   <Project Path="Domain/Domain.csproj" />
