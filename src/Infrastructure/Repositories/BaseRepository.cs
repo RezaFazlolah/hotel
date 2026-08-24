@@ -4,7 +4,6 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
 using SharedKernel.Enums;
-using SharedKernel.Paginations;
 
 namespace Infrastructure.Repositories;
 
@@ -22,7 +21,8 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         CancellationToken ct)
     {
         var entity = await db.Set<TEntity>()
-            .SingleOrDefaultAsync(e => e.Id.Equals(id), ct);
+            .FindAsync([id], ct);
+
         return entity is null
             ? Result<TEntity>.Failure(new Error($"{EntityName} with ID {id} not found", ErrorCode.NotFound),
                 ResultCode.NotFound)
@@ -61,7 +61,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
-    // Question: do i need to check for duplicated IDs in a separate service?
+    // Question: do I need to check for duplicated IDs in a separate service?
     public virtual async Task<bool> ExistsAsync(
         TId id,
         CancellationToken ct)
