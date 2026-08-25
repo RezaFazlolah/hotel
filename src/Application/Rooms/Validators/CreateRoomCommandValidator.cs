@@ -3,10 +3,10 @@ using FluentValidation;
 
 namespace Application.Rooms.Validators;
 
-public class InsertRoomCommandValidator
-    : AbstractValidator<InsertRoomCommand>
+public class CreateRoomCommandValidator
+    : AbstractValidator<CreateRoomCommand>
 {
-    public InsertRoomCommandValidator()
+    public CreateRoomCommandValidator()
     {
         RuleFor(c => c.Number)
             .GreaterThan(0).

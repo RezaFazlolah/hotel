@@ -22,7 +22,7 @@ public class ReservationMappingProfiles
         
         CreateMap<Result<PagedResult<Reservation>>, Result<PagedResult<ReservationDto>>>();
 
-        CreateMap<InsertReservationCommand, Reservation>()
+        CreateMap<CreateReservationCommand, Reservation>()
             .ForMember(dst => dst.Id, opt => opt.Ignore())
             .ForMember(dst => dst.TotalPrice, opt => opt.Ignore())
             .ForMember(dst => dst.Status, opt => opt.Ignore())

@@ -13,7 +13,7 @@ public class HotelMappingProfiles
 {
     public HotelMappingProfiles()
     {
-        CreateMap<InsertHotelCommandDto, InsertHotelCommand>();
+        CreateMap<InsertHotelCommandDto, CreateHotelCommand>();
 
         CreateMap<UpdateHotelCommandDto, UpdateHotelCommand>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty));

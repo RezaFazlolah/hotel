@@ -4,7 +4,7 @@ using SharedKernel.Common;
 
 namespace Application.Reservations.Commands;
 
-public record InsertReservationCommand
+public record CreateReservationCommand
     : IRequest<Result<ReservationDto>>
 {
         public required Guid GuestId { get; init; }

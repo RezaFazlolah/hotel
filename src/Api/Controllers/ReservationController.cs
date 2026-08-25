@@ -39,7 +39,7 @@ public class ReservationController(
         [FromBody] InsertReservationCommandDto request,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<InsertReservationCommand>(request);
+        var command = mapper.Map<CreateReservationCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }

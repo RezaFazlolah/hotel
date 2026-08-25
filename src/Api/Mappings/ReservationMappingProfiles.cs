@@ -13,7 +13,7 @@ public class ReservationMappingProfiles
 {
     public ReservationMappingProfiles()
     {
-        CreateMap<InsertReservationCommandDto, InsertReservationCommand>();
+        CreateMap<InsertReservationCommandDto, CreateReservationCommand>();
 
         CreateMap<UpdateReservationCommandDto, UpdateReservationCommand>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty));

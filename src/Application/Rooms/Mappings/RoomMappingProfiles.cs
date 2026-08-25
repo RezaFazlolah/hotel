@@ -22,7 +22,7 @@ public class RoomMappingProfiles
        
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
         
-        CreateMap<InsertRoomCommand, Room>()
+        CreateMap<CreateRoomCommand, Room>()
             .ForMember(dst => dst.Id, opt => opt.Ignore())
             .ForMember(dst => dst.Hotel, opt => opt.Ignore())
             .ForMember(dst => dst.Reservations, opt => opt.Ignore());

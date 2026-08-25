@@ -41,7 +41,7 @@ public class HotelController(
         [FromBody] InsertHotelCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<InsertHotelCommand>(request);
+        var command = mapper.Map<CreateHotelCommand>(request);
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

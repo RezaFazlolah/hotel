@@ -4,7 +4,7 @@ using SharedKernel.Common;
 
 namespace Application.Hotels.Commands;
 
-public record InsertHotelCommand
+public record CreateHotelCommand
     : IRequest<Result<HotelDto>>
 {
     public required string Name { get; init; }

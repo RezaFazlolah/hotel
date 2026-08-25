@@ -11,12 +11,12 @@ public class RoomRepository(AppDbContext db)
     : BaseRepository<Guid, Room>(db),
         IRoomRepository
 {
-    public override async Task<Result<Room>> InsertAsync(
+    public override async Task<Result<Room>> AddAsync(
         Room room,
         CancellationToken ct)
         => await NumberExistsAsync(room.HotelId, room.Number, ct)
             ? Result<Room>.Failure(new Error($"room number {room.Number} already exists"))
-            : await base.InsertAsync(room, ct);
+            : await base.AddAsync(room, ct);
 
     public override async Task<Result<Room>> UpdateAsync(
         Room room,

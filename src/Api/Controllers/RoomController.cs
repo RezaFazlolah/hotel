@@ -41,7 +41,7 @@ public class RoomController(
         [FromBody] InsertRoomCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<InsertRoomCommand>(request);
+        var command = mapper.Map<CreateRoomCommand>(request);
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
