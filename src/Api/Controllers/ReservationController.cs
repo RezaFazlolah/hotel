@@ -35,11 +35,11 @@ public class ReservationController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> InsertAsync(
-        [FromBody] InsertReservationCommandDto request,
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateReservationCommandDto request,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<InsertReservationCommand>(request);
+        var command = mapper.Map<CreateReservationCommand>(request);
         var result = await mediator.Send(command, cancellationToken);
         return HandleResult(result);
     }

@@ -3,10 +3,10 @@ using FluentValidation;
 
 namespace Application.Reservations.Validators;
 
-public class InsertReservationCommandValidator
-    : AbstractValidator<InsertReservationCommand>
+public class CreateReservationCommandValidator
+    : AbstractValidator<CreateReservationCommand>
 {
-    public InsertReservationCommandValidator()
+    public CreateReservationCommandValidator()
     {
         RuleFor(x => x.CheckInDate)
             .GreaterThanOrEqualTo(x => DateTimeOffset.Now)

@@ -37,11 +37,11 @@ public class HotelController(
 
     [HttpPost]
     [Authorize(Roles = UserRoleAsString.Admin)]
-    public async Task<IActionResult> InsertAsync(
-        [FromBody] InsertHotelCommandDto request,
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateHotelCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<InsertHotelCommand>(request);
+        var command = mapper.Map<CreateHotelCommand>(request);
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

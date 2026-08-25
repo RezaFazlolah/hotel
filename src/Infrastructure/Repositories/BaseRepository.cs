@@ -29,7 +29,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
             : Result<TEntity>.Success(entity);
     }
 
-    public virtual async Task<Result<TEntity>> InsertAsync(
+    public virtual async Task<Result<TEntity>> AddAsync(
         TEntity entity,
         CancellationToken ct)
     {

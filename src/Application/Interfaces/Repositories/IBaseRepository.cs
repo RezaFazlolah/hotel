@@ -11,7 +11,7 @@ public interface IBaseRepository<in TId, TEntity>
         TId id,
         CancellationToken ct);
 
-    Task<Result<TEntity>> InsertAsync(
+    Task<Result<TEntity>> AddAsync(
         TEntity entity,
         CancellationToken ct);
 

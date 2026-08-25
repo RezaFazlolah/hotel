@@ -37,11 +37,11 @@ public class RoomController(
 
     [HttpPost]
     [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
-    public async Task<IActionResult> InsertAsync(
-        [FromBody] InsertRoomCommandDto request,
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateRoomCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<InsertRoomCommand>(request);
+        var command = mapper.Map<CreateRoomCommand>(request);
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

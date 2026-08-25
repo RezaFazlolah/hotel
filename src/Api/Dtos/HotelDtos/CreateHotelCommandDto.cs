@@ -1,11 +1,6 @@
-using Application.Hotels.Dtos;
-using MediatR;
-using SharedKernel.Common;
+namespace Api.Dtos.HotelDtos;
 
-namespace Application.Hotels.Commands;
-
-public record InsertHotelCommand
-    : IRequest<Result<HotelDto>>
+public record CreateHotelCommandDto
 {
     public required string Name { get; init; }
     public required string Address { get; init; }

@@ -10,16 +10,16 @@ using SharedKernel.Enums;
 
 namespace Application.Hotels.Handlers;
 
-public class InsertHotelCommandHandler(
+public class CreateHotelCommandHandler(
     IHotelRepository hotelRepository,
     IRoomRepository roomRepository,
     IManagerRepository managerRepository,
     ICurrentUserService currentUserService,
     IMapper mapper)
-    : IRequestHandler<InsertHotelCommand, Result<HotelDto>>
+    : IRequestHandler<CreateHotelCommand, Result<HotelDto>>
 {
     public async Task<Result<HotelDto>> Handle(
-        InsertHotelCommand request,
+        CreateHotelCommand request,
         CancellationToken ct)
     {
         var rootError = new Error($"insert hotel failed");
@@ -64,7 +64,7 @@ public class InsertHotelCommandHandler(
             }
         }
 
-        var result = await hotelRepository.InsertAsync(hotel, ct);
+        var result = await hotelRepository.AddAsync(hotel, ct);
         var resultDto = mapper.Map<Result<HotelDto>>(result);
         return Result<HotelDto>.Handle(resultDto, rootError);
     }

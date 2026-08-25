@@ -13,7 +13,7 @@ public class RoomMappingProfiles
 {
     public RoomMappingProfiles()
     {
-        CreateMap<InsertRoomCommandDto, InsertRoomCommand>();
+        CreateMap<CreateRoomCommandDto, CreateRoomCommand>();
 
         CreateMap<UpdateRoomCommandDto, UpdateRoomCommand>()
             .ForMember(dst => dst.Id, opt => opt.Ignore());

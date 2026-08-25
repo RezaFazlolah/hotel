@@ -5,7 +5,7 @@ using SharedKernel.Enums;
 
 namespace Application.Rooms.Commands;
 
-public record InsertRoomCommand
+public record CreateRoomCommand
     : IRequest<Result<RoomDto>>
 {
     public required int Number { get; init; }

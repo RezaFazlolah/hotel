@@ -21,7 +21,7 @@ public class UserRepository(
         CancellationToken ct)
         => await userManager.Users.AnyAsync(u => u.PhoneNumber == phoneNumber, ct);
 
-    public override Task<Result<User>> InsertAsync(
+    public override Task<Result<User>> AddAsync(
             User entity,
             CancellationToken ct)
         // throwing NotSupportedException is intentional, instead InsertAsync(User user, string password, CancellationToken ct) should be used for User

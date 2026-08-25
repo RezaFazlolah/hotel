@@ -3,10 +3,10 @@ using FluentValidation;
 
 namespace Application.Hotels.Validators;
 
-public class InsertHotelCommandValidator
-    : AbstractValidator<InsertHotelCommand>
+public class CreateHotelCommandValidator
+    : AbstractValidator<CreateHotelCommand>
 {
-    public InsertHotelCommandValidator()
+    public CreateHotelCommandValidator()
     {
         RuleFor(c => c.Name)
             .NotEmpty().

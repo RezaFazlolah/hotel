@@ -1,6 +1,6 @@
 namespace Api.Dtos.ReservationDtos;
 
-public record InsertReservationCommandDto
+public record CreateReservationCommandDto
 {
     public required Guid GuestId { get; init; }
     public required Guid RoomId { get; init; }

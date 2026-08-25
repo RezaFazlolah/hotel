@@ -27,7 +27,7 @@ public class HotelMappingProfiles
 
         CreateMap<Result<PagedResult<Hotel>>, Result<PagedResult<HotelDto>>>();
 
-        CreateMap<InsertHotelCommand, Hotel>()
+        CreateMap<CreateHotelCommand, Hotel>()
             .ForMember(dst => dst.Id, opt => opt.Ignore())
             .ForMember(dst => dst.Manager, opt => opt.Ignore())
             .ForMember(dst => dst.Rooms, opt => opt.Ignore());

@@ -11,7 +11,7 @@ using SharedKernel.Enums;
 
 namespace Application.Reservations.Handlers;
 
-public class InsertReservationCommandHandler(
+public class CreateReservationCommandHandler(
     ICurrentUserService currentUserService,
     IReservationService reservationService,
     IRoomRepository roomRepository,
@@ -19,10 +19,10 @@ public class InsertReservationCommandHandler(
     IGuestRepository guestRepository,
     IManagerRepository managerRepository,
     IMapper mapper)
-    : IRequestHandler<InsertReservationCommand, Result<ReservationDto>>
+    : IRequestHandler<CreateReservationCommand, Result<ReservationDto>>
 {
     public async Task<Result<ReservationDto>> Handle(
-        InsertReservationCommand request,
+        CreateReservationCommand request,
         CancellationToken ct)
     {
         var rootError = new Error($"insert reservation for guest {request.GuestId} and room {request.RoomId} failed");
@@ -92,7 +92,7 @@ public class InsertReservationCommandHandler(
         reservation.TotalPrice = totalPrice;
         reservation.Status = ReservationStatus.Confirmed;
 
-        var reservationInsertResult = await reservationRepository.InsertAsync(reservation, ct);
+        var reservationInsertResult = await reservationRepository.AddAsync(reservation, ct);
         var reservationInsertResultDto = mapper.Map<Result<ReservationDto>>(reservationInsertResult);
         return Result<ReservationDto>.Handle(reservationInsertResultDto, rootError);
     }
