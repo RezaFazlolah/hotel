@@ -68,8 +68,8 @@ try
     using (var scope = app.Services.CreateScope())
     {
         scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
-        if (app.Environment.IsDevelopment())
-            await DbSeeder.SeedAsync(scope.ServiceProvider);
+        // if (app.Environment.IsDevelopment())
+        // await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
 
     app.Run();
