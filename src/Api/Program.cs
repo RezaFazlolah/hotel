@@ -1,5 +1,4 @@
 using Api;
-using Api.MiddleWares;
 using Application;
 using AutoMapper;
 using Domain;
@@ -43,8 +42,9 @@ try
                 ? LogEventLevel.Warning
                 : LogEventLevel.Information;
     });
-    app.UseMiddleware<ExceptionMiddleware>();
-
+    
+    app.UseExceptionHandler();
+    
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();

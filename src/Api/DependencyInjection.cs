@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using Api.ExceptionHandlers;
 using Api.Services;
 using Application.Interfaces.Services;
 using Infrastructure.Configurations;
@@ -16,10 +17,8 @@ public static class DependencyInjection
     {
         public IServiceCollection AddApiServices()
         {
-            // scalar
             services.AddOpenApi();
 
-            // swagger
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
@@ -39,23 +38,19 @@ public static class DependencyInjection
                 });
             });
 
-            // HttpContextAccessor
             services.AddHttpContextAccessor();
 
-            // AutoMapper
             services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
 
             services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-            // auth
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer();
-
             services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
                 .Configure<IOptions<JwtSettings>>((options, jwtOptions) =>
                 {
@@ -71,6 +66,9 @@ public static class DependencyInjection
                     };
                     options.MapInboundClaims = false;
                 });
+            
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+            services.AddProblemDetails();
             
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 

@@ -33,6 +33,7 @@
     <ItemGroup>
         <Folder Include="bin\" />
         <Folder Include="Common\" />
+        <Folder Include="ExceptionHandling\" />
         <Folder Include="wwwroot\" />
     </ItemGroup>
 
