@@ -3,13 +3,15 @@ using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Infrastructure.Repositories;
 
 public class AdminRepository(
     AppDbContext db,
-    UserManager<User> userManager)
-    : UserRepository(db, userManager),
+    UserManager<User> userManager,
+    IDistributedCache cache)
+    : UserRepository(db, userManager, cache),
         IAdminRepository
 {
     public override async Task<bool> ExistsAsync(

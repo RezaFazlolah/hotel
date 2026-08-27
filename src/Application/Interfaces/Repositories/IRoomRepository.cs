@@ -4,7 +4,7 @@ using SharedKernel.Common;
 namespace Application.Interfaces.Repositories;
 
 public interface IRoomRepository
-    : IBaseRepository<Guid, Room>
+    : IRepositoryBase<Guid, Room>
 {
     Task<Result<IReadOnlyList<Room>>> GetAllByHotelAsync(
         Guid hotelId,

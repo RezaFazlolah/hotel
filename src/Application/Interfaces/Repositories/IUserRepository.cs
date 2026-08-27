@@ -7,7 +7,7 @@ using SharedKernel.Enums;
 namespace Application.Interfaces.Repositories;
 
 public interface IUserRepository
-    : IBaseRepository<Guid, User>
+    : IRepositoryBase<Guid, User>
 {
     Task<Result> InsertAsync(
         User user,

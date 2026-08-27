@@ -12,7 +12,5 @@ public class ManagerConfiguration
         builder.HasOne(m => m.Hotel)
             .WithOne(h => h.Manager)
             .HasForeignKey<Manager>(m => m.HotelId);
-
-        builder.ToTable("Managers");
     }
 }

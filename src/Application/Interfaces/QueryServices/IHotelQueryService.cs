@@ -7,7 +7,7 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.QueryServices;
 
 public interface IHotelQueryService
-    : IBaseQueryService<HotelDto>
+    : IQueryServiceBase<HotelDto>
 {
     Task<Result<PagedResult<HotelDto>>> GetAllAsync(
         HotelFilterParameters? hotelFilterParameters,

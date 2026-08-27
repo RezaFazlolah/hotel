@@ -1,6 +1,6 @@
 using Application.Common.Behaviors;
 using Application.Common.Paginations;
-using Application.Services;
+using Application.Reservations.Services;
 using Domain.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;

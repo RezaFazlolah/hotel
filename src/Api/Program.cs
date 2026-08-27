@@ -37,15 +37,11 @@ try
     app.UseSerilogRequestLogging(options =>
     {
         options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
-        options.GetLevel = (httpContext, _, ex) =>
-        {
-            if (ex != null || httpContext.Response.StatusCode >= 500)
-                return LogEventLevel.Error;
-
-            return httpContext.Response.StatusCode >= 400
+        options.GetLevel = (httpContext, _, ex) => ex != null || httpContext.Response.StatusCode >= 500
+            ? LogEventLevel.Error
+            : httpContext.Response.StatusCode >= 400
                 ? LogEventLevel.Warning
                 : LogEventLevel.Information;
-        };
     });
     app.UseMiddleware<ExceptionMiddleware>();
 
@@ -68,8 +64,8 @@ try
     using (var scope = app.Services.CreateScope())
     {
         scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
-        // if (app.Environment.IsDevelopment())
-        // await DbSeeder.SeedAsync(scope.ServiceProvider);
+        if (app.Environment.IsDevelopment())
+            await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
 
     app.Run();

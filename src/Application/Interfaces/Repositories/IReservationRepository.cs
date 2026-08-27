@@ -7,7 +7,7 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.Repositories;
 
 public interface IReservationRepository
-    : IBaseRepository<Guid, Reservation>
+    : IRepositoryBase<Guid, Reservation>
 {
     Task<bool> IsRoomReservedAsync(
         // check if there is any reservation

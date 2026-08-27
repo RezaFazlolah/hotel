@@ -7,7 +7,7 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.QueryServices;
 
 public interface IReservationQueryService
-    : IBaseQueryService<ReservationDto>
+    : IQueryServiceBase<ReservationDto>
 {
     Task<Result<PagedResult<ReservationDto>>> GetAllAsync(
         ReservationFilterParameters? filterParameters,

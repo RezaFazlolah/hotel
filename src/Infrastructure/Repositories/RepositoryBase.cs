@@ -1,14 +1,18 @@
+using System.Text.Json;
 using Application.Interfaces.Repositories;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
-    : IBaseRepository<TId, TEntity>
+public abstract class RepositoryBase<TId, TEntity>(
+    AppDbContext db,
+    IDistributedCache cache)
+    : IRepositoryBase<TId, TEntity>
     where TId : IEquatable<TId>
     where TEntity : class, IEntity<TId>
 {
@@ -35,6 +39,10 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     {
         await db.Set<TEntity>().AddAsync(entity, ct);
         await db.SaveChangesAsync(ct);
+        
+        // var options = new DistributedCacheEntryOptions()
+        // await cache.SetAsync(entity.Id, JsonSerializer.SerializeToUtf8Bytes(entity), );
+
         return Result<TEntity>.Success(entity, ResultCode.Created);
     }
 
@@ -44,6 +52,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     {
         db.Set<TEntity>().Update(entity);
         await db.SaveChangesAsync(ct);
+
         return Result<TEntity>.Success(entity, ResultCode.Updated);
     }
 
@@ -58,6 +67,7 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
 
         db.Set<TEntity>().Remove(entity);
         await db.SaveChangesAsync(ct);
+
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
@@ -65,8 +75,10 @@ public abstract class BaseRepository<TId, TEntity>(AppDbContext db)
     public virtual async Task<bool> ExistsAsync(
         TId id,
         CancellationToken ct)
-        => await db.Set<TEntity>()
+    {
+        return await db.Set<TEntity>()
             .AnyAsync(e => e.Id.Equals(id), ct);
+    }
 
     public virtual string EntityName => typeof(TEntity).Name;
 }

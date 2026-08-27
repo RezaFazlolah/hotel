@@ -8,6 +8,6 @@ using SharedKernel.Paginations;
 namespace Application.Interfaces.QueryServices;
 
 public interface IManagerQueryService
-    : IBaseQueryService<ManagerDto>
+    : IQueryServiceBase<ManagerDto>
 {
 }

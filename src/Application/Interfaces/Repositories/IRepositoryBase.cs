@@ -3,7 +3,7 @@ using SharedKernel.Paginations;
 
 namespace Application.Interfaces.Repositories;
 
-public interface IBaseRepository<in TId, TEntity>
+public interface IRepositoryBase<in TId, TEntity>
 {
     Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct);
 

@@ -17,7 +17,7 @@ namespace Infrastructure.QueryServices;
 public class ManagerQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Manager, ManagerDto>(db, configurationProvider),
+    : QueryServiceBase<Domain.Models.Manager, ManagerDto>(db, configurationProvider),
         IManagerQueryService
 {
 }

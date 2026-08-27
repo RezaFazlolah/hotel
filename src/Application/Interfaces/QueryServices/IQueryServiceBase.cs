@@ -2,7 +2,7 @@ using SharedKernel.Common;
 
 namespace Application.Interfaces.QueryServices;
 
-public interface IBaseQueryService<TDto>
+public interface IQueryServiceBase<TDto>
 {
     Task<Result<TDto>> GetByIdAsync(
         Guid id,

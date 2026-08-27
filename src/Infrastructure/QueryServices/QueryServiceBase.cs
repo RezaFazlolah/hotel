@@ -9,10 +9,10 @@ using SharedKernel.Enums;
 
 namespace Infrastructure.QueryServices;
 
-public abstract class BaseQueryService<TEntity, TDto>(
+public abstract class QueryServiceBase<TEntity, TDto>(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : IBaseQueryService<TDto>
+    : IQueryServiceBase<TDto>
     where TEntity : class, IEntity<Guid>
 {
     public virtual async Task<Result<TDto>> GetByIdAsync(

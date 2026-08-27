@@ -9,6 +9,5 @@ public class AdminConfiguration
 {
     public void Configure(EntityTypeBuilder<Admin> builder)
     {
-        builder.ToTable("Admins");
     }
 }

@@ -2,45 +2,48 @@ using Application.Interfaces.Repositories;
 using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public class RoomRepository(AppDbContext db)
-    : BaseRepository<Guid, Room>(db),
+public class RoomRepository(
+    AppDbContext db,
+    IDistributedCache cache)
+    : RepositoryBase<Guid, Domain.Models.Room>(db, cache),
         IRoomRepository
 {
-    public override async Task<Result<Room>> AddAsync(
-        Room room,
+    public override async Task<Result<Domain.Models.Room>> AddAsync(
+        Domain.Models.Room room,
         CancellationToken ct)
         => await NumberExistsAsync(room.HotelId, room.Number, ct)
-            ? Result<Room>.Failure(new Error($"room number {room.Number} already exists"))
+            ? Result<Domain.Models.Room>.Failure(new Error($"room number {room.Number} already exists"))
             : await base.AddAsync(room, ct);
 
-    public override async Task<Result<Room>> UpdateAsync(
-        Room room,
+    public override async Task<Result<Domain.Models.Room>> UpdateAsync(
+        Domain.Models.Room room,
         CancellationToken ct)
     {
         var existingRoomResult = await GetByIdAsync(room.Id, ct);
         if (!existingRoomResult.Succeeded)
-            return Result<Room>.Failure(existingRoomResult.Errors.Prepend(new Error($"update room {room.Id} failed")));
+            return Result<Domain.Models.Room>.Failure(existingRoomResult.Errors.Prepend(new Error($"update room {room.Id} failed")));
         var existingRoom = existingRoomResult.Value;
 
         if (room.Number != existingRoom.Number)
         {
             if (await NumberExistsAsync(room.HotelId, room.Number, ct))
-                return Result<Room>.Failure(
+                return Result<Domain.Models.Room>.Failure(
                     new Error($"update room {room.Id} failed. room number {room.Number} already exists"));
         }
 
         return await base.UpdateAsync(room, ct);
     }
 
-    public async Task<Result<IReadOnlyList<Room>>> GetAllByHotelAsync(
+    public async Task<Result<IReadOnlyList<Domain.Models.Room>>> GetAllByHotelAsync(
         Guid hotelId,
         CancellationToken ct)
-        => Result<IReadOnlyList<Room>>.Success(
+        => Result<IReadOnlyList<Domain.Models.Room>>.Success(
             await db.Rooms
                 .Where(r => r.HotelId == hotelId)
                 .ToListAsync(ct)

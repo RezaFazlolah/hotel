@@ -23,12 +23,13 @@ public static class DependencyInjection
     {
         public IServiceCollection AddInfrastructureServices(IConfiguration configuration)
         {
-            // Future: use options pattern for fetching connection string
+            // DbContext
             services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"));
-            });
+                options.UseNpgsql(configuration.GetConnectionString("PostgreSQL"))
+                    .UseSnakeCaseNamingConvention()
+            );
 
+            // identity
             services.AddIdentityCore<User>(options =>
                 {
                     options.Password.RequireDigit = false;
@@ -40,6 +41,10 @@ public static class DependencyInjection
                 })
                 .AddRoles<Role>()
                 .AddEntityFrameworkStores<AppDbContext>();
+
+            // redis
+            services.AddStackExchangeRedisCache(options =>
+                options.Configuration = configuration.GetConnectionString("Redis"));
 
             services.AddOptions<JwtSettings>()
                 .Bind(configuration.GetSection(JwtSettings.SectionName))
@@ -63,7 +68,8 @@ public static class DependencyInjection
             services.AddScoped<IRoomQueryService, RoomQueryService>();
 
             services.AddScoped<IReservationRepository, ReservationRepository>();
-            services.AddScoped<IReservationQueryService, ReservationQueryService>();
+            services.AddScoped<IReservationQueryService,
+                ReservationQueryService>();
 
             return services;
         }

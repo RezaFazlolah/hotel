@@ -18,7 +18,15 @@ services:
       - "5341:80"
     volumes:
       - seq_data:/data
+  reids:
+    image: redis:8.2
+    container_name: redisContainer
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:
   seq_data:
+  redis_data:

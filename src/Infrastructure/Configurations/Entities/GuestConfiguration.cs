@@ -9,6 +9,5 @@ public class GuestConfiguration
 {
     public void Configure(EntityTypeBuilder<Guest> builder)
     {
-        builder.ToTable("Guests");
     }
 }

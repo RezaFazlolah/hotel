@@ -1,10 +1,9 @@
 using Application.Interfaces.Repositories;
-using Application.Users.Filters;
-using Application.Users.Sorts;
 using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
@@ -12,8 +11,9 @@ namespace Infrastructure.Repositories;
 
 public class UserRepository(
     AppDbContext db,
-    UserManager<User> userManager)
-    : BaseRepository<Guid, User>(db),
+    UserManager<User> userManager, 
+    IDistributedCache cache)
+    : RepositoryBase<Guid, User>(db, cache),
         IUserRepository
 {
     public virtual async Task<bool> ExistsAsync(

@@ -6,7 +6,7 @@ using SharedKernel.Common;
 namespace Application.Interfaces.Repositories;
 
 public interface IHotelRepository
-    : IBaseRepository<Guid, Hotel>
+    : IRepositoryBase<Guid, Hotel>
 {
     Task<Result<Guid?>> GetManagerIdAsync(
         Guid hotelId,

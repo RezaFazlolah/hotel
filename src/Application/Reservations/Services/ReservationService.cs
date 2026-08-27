@@ -3,7 +3,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using SharedKernel.Common;
 
-namespace Application.Services;
+namespace Application.Reservations.Services;
 
 public class ReservationService(
     IRoomRepository roomRepository)

@@ -2,13 +2,16 @@ using Application.Interfaces.Repositories;
 using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public class HotelRepository(AppDbContext db)
-    : BaseRepository<Guid, Hotel>(db),
+public class HotelRepository(
+    AppDbContext db,
+    IDistributedCache cache)
+    : RepositoryBase<Guid, Hotel>(db, cache),
         IHotelRepository
 {
     public async Task<Result<Guid?>> GetManagerIdAsync(
