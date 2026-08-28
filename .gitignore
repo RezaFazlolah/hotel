@@ -15,6 +15,7 @@ AGENTS.md
 .~lock.*.odg
 [nN]otes/
 [lL]ogs/
+src/Api/Controllers/TestController.cs
 
 # dotenv files
 .env
