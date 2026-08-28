@@ -6,6 +6,7 @@ using Infrastructure;
 using Infrastructure.Persistence;
 using Scalar.AspNetCore;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 
 Serilog.Debugging.SelfLog.Enable(Console.Error);
@@ -22,8 +23,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog((context, services, configuration) =>
-        configuration
-            .ReadFrom.Configuration(context.Configuration)
+        configuration.ReadFrom.Configuration(context.Configuration)
             .ReadFrom.Services(services));
 
     builder.Services.AddDomainServices();
@@ -42,9 +42,9 @@ try
                 ? LogEventLevel.Warning
                 : LogEventLevel.Information;
     });
-    
+
     app.UseExceptionHandler();
-    
+
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
@@ -64,8 +64,8 @@ try
     using (var scope = app.Services.CreateScope())
     {
         scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
-        if (app.Environment.IsDevelopment())
-            await DbSeeder.SeedAsync(scope.ServiceProvider);
+        // if (app.Environment.IsDevelopment())
+        //     await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
 
     app.Run();
