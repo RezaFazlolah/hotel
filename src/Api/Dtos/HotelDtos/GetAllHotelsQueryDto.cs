@@ -5,9 +5,6 @@ namespace Api.Dtos.HotelDtos;
 // Future: use inheritance for GetAllHotelsQueryDto, GetAllRoomsQueryDto, GetAllReservationsQueryDto 
 public record GetAllHotelsQueryDto
 {
-    // pagination
-    public int? PageNumber { get; init; }
-    public int? PageSize { get; init; }
     // filter
     public string? Name { get; init; }
     public string? Address { get; init; }
@@ -16,4 +13,7 @@ public record GetAllHotelsQueryDto
     // sort
     public HotelSortBy? SortBy { get; init; }
     public bool? IsAscending { get; init; }
+    // pagination
+    public int? PageNumber { get; init; }
+    public int? PageSize { get; init; }
 }

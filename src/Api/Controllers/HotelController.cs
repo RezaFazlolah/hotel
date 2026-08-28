@@ -2,9 +2,11 @@ using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
 using Application.Hotels.Queries;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Common;
 using SharedKernel.Constants;
 
 namespace Api.Controllers;
@@ -13,7 +15,7 @@ namespace Api.Controllers;
 public class HotelController(
     IMediator mediator,
     IMapper mapper)
-    : BaseController()
+    : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(

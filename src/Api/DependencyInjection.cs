@@ -17,8 +17,10 @@ public static class DependencyInjection
     {
         public IServiceCollection AddApiServices()
         {
+            // scalar
             services.AddOpenApi();
 
+            // swagger
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
@@ -38,9 +40,10 @@ public static class DependencyInjection
                 });
             });
 
-            services.AddHttpContextAccessor();
-
+            // AutoMapper
             services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
+
+            services.AddHttpContextAccessor();
 
             services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -67,8 +70,8 @@ public static class DependencyInjection
                     options.MapInboundClaims = false;
                 });
             
-            services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddProblemDetails();
+            services.AddExceptionHandler<GlobalExceptionHandler>();
             
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 

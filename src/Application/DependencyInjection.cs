@@ -15,7 +15,7 @@ public static class DependencyInjection
         public IServiceCollection AddApplicationServices(
             IConfiguration configuration)
         {
-            // Fluent Validation
+            // FluentValidation
             services.AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>();
 
             // MediatR

@@ -27,6 +27,6 @@ public class BaseController
         };
     }
 
-    private string ErrorsToString(IEnumerable<Error> errors)
+    private static string ErrorsToString(IEnumerable<Error> errors)
         => string.Join("\n", errors.Select(e => e.Message));
 }

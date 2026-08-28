@@ -20,8 +20,7 @@ public class GetAllReservationsQueryValidator
             .When(x => x.ReservationFilterParameters != null);
 
         RuleFor(x => x.ReservationSortParameters)
-            .SetValidator(reservationSortParametersValidator)
-            .When(x => x.ReservationSortParameters != null);
+            .SetValidator(reservationSortParametersValidator);
         
         RuleFor(x => x.PaginationParameters)
             .SetValidator(paginationParametersValidator);

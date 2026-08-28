@@ -20,8 +20,7 @@ public class GetAllHotelsQueryValidator
             .When(x => x.HotelFilterParameters != null);
 
         RuleFor(x => x.HotelSortParameters)
-            .SetValidator(hotelSortParametersValidator)
-            .When(x => x.HotelSortParameters!= null);
+            .SetValidator(hotelSortParametersValidator);
         
         RuleFor(x => x.PaginationParameters)
             .SetValidator(paginationParametersValidator);

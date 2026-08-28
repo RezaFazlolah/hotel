@@ -20,8 +20,7 @@ public class GetAllRoomsQueryValidator
             .When(x => x.RoomFilterParameters != null);
 
         RuleFor(x => x.RoomSortParameters)
-            .SetValidator(roomSortParametersValidator)
-            .When(x => x.RoomSortParameters != null);
+            .SetValidator(roomSortParametersValidator);
         
         RuleFor(x => x.PaginationParameters)
             .SetValidator(paginationParametersValidator);
