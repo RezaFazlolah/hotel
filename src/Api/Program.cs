@@ -4,14 +4,12 @@ using AutoMapper;
 using Domain;
 using Infrastructure;
 using Infrastructure.Persistence;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
-using Serilog.Context;
+using Serilog.Debugging;
 using Serilog.Events;
 
-Serilog.Debugging.SelfLog.Enable(Console.Error);
+SelfLog.Enable(Console.Error);
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -24,16 +22,6 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services
-        .AddOpenTelemetry()
-        .ConfigureResource(resource =>
-            resource.AddService(
-                serviceName: builder.Environment.ApplicationName))
-        .WithTracing(tracing =>
-            tracing
-                .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter());
-
     builder.Host.UseSerilog((context, services, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration)
             .ReadFrom.Services(services));
@@ -41,7 +29,7 @@ try
     builder.Services.AddDomainServices();
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddInfrastructureServices(builder.Configuration);
-    builder.Services.AddApiServices();
+    builder.Services.AddApiServices(builder.Environment.ApplicationName);
 
     var app = builder.Build();
 
