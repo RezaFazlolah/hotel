@@ -5,7 +5,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Constants;
+using SharedKernel.Enums;
 
 namespace Api.Controllers;
 
@@ -36,7 +36,7 @@ public class RoomController(
     }
 
     [HttpPost]
-    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateRoomCommandDto request,
         CancellationToken ct)
@@ -47,7 +47,7 @@ public class RoomController(
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
     public async Task<IActionResult> UpdateAsync(
         [FromRoute] Guid id,
         [FromBody] UpdateRoomCommandDto request,
@@ -60,7 +60,7 @@ public class RoomController(
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
     public async Task<IActionResult> DeleteAsync(
         [FromRoute] Guid id,
         CancellationToken ct)

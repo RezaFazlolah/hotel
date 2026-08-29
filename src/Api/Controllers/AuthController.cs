@@ -4,7 +4,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Constants;
 using SharedKernel.Enums;
 
 namespace Api.Controllers;
@@ -36,7 +35,7 @@ public class AuthController(
         return HandleResult(result);
     }
 
-    [Authorize(Roles = UserRoleAsString.Admin)]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     [HttpPost("registerByAdmin")]
     public async Task<IActionResult> RegisterByAdminAsync(
         [FromBody] RegisterByAdminCommandDto request,

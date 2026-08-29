@@ -2,12 +2,10 @@ using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
 using Application.Hotels.Queries;
 using AutoMapper;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Common;
-using SharedKernel.Constants;
+using SharedKernel.Enums;
 
 namespace Api.Controllers;
 
@@ -38,7 +36,7 @@ public class HotelController(
     }
 
     [HttpPost]
-    [Authorize(Roles = UserRoleAsString.Admin)]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateHotelCommandDto request,
         CancellationToken ct)
@@ -49,7 +47,7 @@ public class HotelController(
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
     public async Task<IActionResult> UpdateAsync(
         [FromRoute] Guid id,
         [FromBody] UpdateHotelCommandDto request,
@@ -61,7 +59,7 @@ public class HotelController(
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = $"{UserRoleAsString.Admin}, {UserRoleAsString.Manager}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
     public async Task<IActionResult> DeleteAsync(
         [FromRoute] Guid id,
         CancellationToken ct)

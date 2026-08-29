@@ -3,7 +3,6 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.Constants;
 using SharedKernel.Enums;
 
 namespace Infrastructure.Persistence;
@@ -31,14 +30,14 @@ public static class DbSeeder
                     UserName = "09184129511",
                     PhoneNumber = "09184129511"
                 },
-                UserRoleAsString.Guest, "1234"),
+                nameof(UserRole.Guest), "1234"),
             (new Guest
                 {
                     FirstName = "guest2",
                     UserName = "09184129512",
                     PhoneNumber = "09184129512"
                 },
-                UserRoleAsString.Guest, "1234"),
+                nameof(UserRole.Guest), "1234"),
 
             (new Manager
                 {
@@ -46,21 +45,21 @@ public static class DbSeeder
                     UserName = "09184129521",
                     PhoneNumber = "09184129521"
                 },
-                UserRoleAsString.Manager, "1234"),
+                nameof(UserRole.Manager), "1234"),
             (new Manager
                 {
                     FirstName = "manager2",
                     UserName = "09184129522",
                     PhoneNumber = "09184129522"
                 },
-                UserRoleAsString.Manager, "1234"),
+                nameof(UserRole.Manager), "1234"),
             (new Manager
                 {
                     FirstName = "manager3",
                     UserName = "09184129523",
                     PhoneNumber = "09184129523"
                 },
-                UserRoleAsString.Manager, "1234"),
+                nameof(UserRole.Manager), "1234"),
 
             (new Admin
                 {
@@ -68,14 +67,14 @@ public static class DbSeeder
                     UserName = "09184129531",
                     PhoneNumber = "09184129531"
                 },
-                UserRoleAsString.Admin, "1234"),
+                nameof(UserRole.Admin), "1234"),
             (new Admin
                 {
                     FirstName = "admin2",
                     UserName = "09184129532",
                     PhoneNumber = "09184129532"
                 },
-                UserRoleAsString.Admin, "1234")
+                nameof(UserRole.Admin), "1234")
         };
 
         foreach (var user in users)
