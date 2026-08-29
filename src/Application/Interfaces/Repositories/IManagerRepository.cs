@@ -9,7 +9,7 @@ public interface IManagerRepository
         Guid managerId,
         CancellationToken ct);
 
-    Task<bool> ManagesHotel(
+    Task<bool> ManagesHotelAsync(
         Guid managerId,
         Guid hotelId,
         CancellationToken ct);

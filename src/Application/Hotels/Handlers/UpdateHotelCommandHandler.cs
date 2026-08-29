@@ -28,30 +28,24 @@ public class UpdateHotelCommandHandler(
             return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
-        var updatedHotel = mapper.Map<Hotel>(request);
-
         if (currentUserInfo.roles.Contains(UserRole.Admin))
         {
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(currentUserInfo.id, ct); 
-            if (!hotelIdResult.Succeeded)
-                return Result<HotelDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
-            var hotelId = hotelIdResult.Value;
-
-            if (hotelId != request.Id)
-                return Result<HotelDto>.Failure([rootError, new Error($"hotel not found", ErrorCode.Forbidden)],
-                    ResultCode.Forbidden);
+            var managesHotel = await managerRepository.ManagesHotelAsync(currentUserInfo.id, request.Id, ct);
+            if (!managesHotel)
+                return Result<HotelDto>.Failure([rootError, new Error($"hotel not found", ErrorCode.NotFound)],
+                    ResultCode.NotFound);
         }
         else
         {
-            return Result<HotelDto>.Failure([rootError, new Error("forbidden request", ErrorCode.Forbidden)]);
+            return Result<HotelDto>.Forbidden(rootError);
         }
 
+        var updatedHotel = mapper.Map<Hotel>(request);
         var hotelUpdateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-        return hotelUpdateResult.Succeeded
-            ? mapper.Map<Result<HotelDto>>(hotelUpdateResult)
-            : Result<HotelDto>.Failure(hotelUpdateResult.Errors.Prepend(rootError));
+        var hotelUpdateResultDto = mapper.Map<Result<HotelDto>>(hotelUpdateResult);
+        return Result<HotelDto>.Handle(hotelUpdateResultDto, rootError);
     }
 }

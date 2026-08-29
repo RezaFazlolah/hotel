@@ -38,7 +38,7 @@ public class ManagerRepository(
         return Result<Guid?>.Success(result.HotelId);
     }
 
-    public async Task<bool> ManagesHotel(
+    public async Task<bool> ManagesHotelAsync(
         Guid managerId,
         Guid hotelId,
         CancellationToken ct)

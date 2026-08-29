@@ -39,7 +39,7 @@ public class CreateRoomCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            var managesHotel = await managerRepository.ManagesHotel(currentUserInfo.id, request.HotelId, ct);
+            var managesHotel = await managerRepository.ManagesHotelAsync(currentUserInfo.id, request.HotelId, ct);
             if (!managesHotel)
                 return Result<RoomDto>.Failure(
                     [rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],

@@ -34,7 +34,7 @@ public class GetHotelByIdQueryHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            if (!await managerRepository.ManagesHotel(currentUserInfo.id, request.HotelId, ct))
+            if (!await managerRepository.ManagesHotelAsync(currentUserInfo.id, request.HotelId, ct))
                 return Result<HotelDto>.Failure([rootError, new Error("hotel not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
 
