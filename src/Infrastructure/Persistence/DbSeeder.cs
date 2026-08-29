@@ -88,6 +88,10 @@ public static class DbSeeder
             }
         }
 
+        var seedHotel = !db.Hotels.Any();
+        var seedRoom = seedHotel || !db.Rooms.Any();
+        var seedReservation = seedRoom || !db.Reservations.Any();
+
         // hotels
         var hotels = new List<Hotel>
         {
@@ -96,8 +100,11 @@ public static class DbSeeder
             new() { Name = "Khatam", Address = "Isfahan", Rating = 4.9m, Manager = null },
         };
 
-        if (!db.Hotels.Any())
+        if (seedHotel)
+        {
+            await db.Hotels.ExecuteDeleteAsync();
             await db.Hotels.AddRangeAsync(hotels);
+        }
 
         // rooms
         var rooms = new List<Room>
@@ -110,8 +117,11 @@ public static class DbSeeder
             new() { Number = 713, Type = RoomType.Vip, PricePerNight = 700, Hotel = hotels[2] }
         };
 
-        if (!db.Rooms.Any())
+        if (seedRoom)
+        {
+            await db.Rooms.ExecuteDeleteAsync();
             await db.Rooms.AddRangeAsync(rooms);
+        }
 
         // reservations
         var reservations = new List<Reservation>
@@ -152,8 +162,11 @@ public static class DbSeeder
             reservation.TotalPrice = reservationService.CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate,
                 reservation.Room.PricePerNight);
 
-        if (!db.Reservations.Any())
+        if (seedReservation)
+        {
+            await db.Reservations.ExecuteDeleteAsync();
             await db.Reservations.AddRangeAsync(reservations);
+        }
 
         await db.SaveChangesAsync();
     }
