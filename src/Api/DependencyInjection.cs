@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Api;
 
@@ -15,7 +17,7 @@ public static class DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddApiServices()
+        public IServiceCollection AddApiServices(string applicationName)
         {
             // scalar
             services.AddOpenApi();
@@ -43,11 +45,22 @@ public static class DependencyInjection
             // AutoMapper
             services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
 
+            // OpenTelemetry
+            services.AddOpenTelemetry().ConfigureResource(resource =>
+                    resource.AddService(serviceName: applicationName))
+                .WithTracing(tracing =>
+                    tracing.AddAspNetCoreInstrumentation()
+                        .AddConsoleExporter());
+
             services.AddHttpContextAccessor();
 
             services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+            services.AddProblemDetails();
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+
+            // Auth
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,10 +82,7 @@ public static class DependencyInjection
                     };
                     options.MapInboundClaims = false;
                 });
-            
-            services.AddProblemDetails();
-            services.AddExceptionHandler<GlobalExceptionHandler>();
-            
+
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;

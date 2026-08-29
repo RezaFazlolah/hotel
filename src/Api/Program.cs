@@ -6,10 +6,10 @@ using Infrastructure;
 using Infrastructure.Persistence;
 using Scalar.AspNetCore;
 using Serilog;
-using Serilog.Context;
+using Serilog.Debugging;
 using Serilog.Events;
 
-Serilog.Debugging.SelfLog.Enable(Console.Error);
+SelfLog.Enable(Console.Error);
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -29,7 +29,7 @@ try
     builder.Services.AddDomainServices();
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddInfrastructureServices(builder.Configuration);
-    builder.Services.AddApiServices();
+    builder.Services.AddApiServices(builder.Environment.ApplicationName);
 
     var app = builder.Build();
 
@@ -64,8 +64,8 @@ try
     using (var scope = app.Services.CreateScope())
     {
         scope.ServiceProvider.GetRequiredService<IMapper>().ConfigurationProvider.AssertConfigurationIsValid();
-        // if (app.Environment.IsDevelopment())
-        //     await DbSeeder.SeedAsync(scope.ServiceProvider);
+        if (app.Environment.IsDevelopment())
+            await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
 
     app.Run();
