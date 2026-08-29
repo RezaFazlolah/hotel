@@ -4,6 +4,8 @@ using AutoMapper;
 using Domain;
 using Infrastructure;
 using Infrastructure.Persistence;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Context;
@@ -21,6 +23,16 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services
+        .AddOpenTelemetry()
+        .ConfigureResource(resource =>
+            resource.AddService(
+                serviceName: builder.Environment.ApplicationName))
+        .WithTracing(tracing =>
+            tracing
+                .AddAspNetCoreInstrumentation()
+                .AddConsoleExporter());
 
     builder.Host.UseSerilog((context, services, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration)
