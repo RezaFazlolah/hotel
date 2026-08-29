@@ -2,17 +2,15 @@ HOTEL MANAGEMENT SYSTEM
 with
   ASP.NET Core,
   Clean Architecture,
-  JWT,
   RESTful API,
-  SOLID,
-  EF Core & PostgreSQL,
-  Docker,
+  EF Core,
   MediatR,
   AutoMapper,
+  FluentValidation,
+  JWT,
   Serilog,
   Seq,
-  FluentValidation,
+  Docker,
+  PostgreSQL,
   Result Pattern,
-  Options Pattern,
-  
-  
+  Options Pattern
