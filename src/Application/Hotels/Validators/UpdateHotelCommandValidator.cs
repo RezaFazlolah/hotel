@@ -9,7 +9,6 @@ public class UpdateHotelCommandValidator
     public UpdateHotelCommandValidator()
     {
         RuleFor(c => c.Rating)
-            .InclusiveBetween(1, 5)
-            .WithMessage("Rating must be between 1 and 5");
+            .ValidHotelRating();
     }
 }

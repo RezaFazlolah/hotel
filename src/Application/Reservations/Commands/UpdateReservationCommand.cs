@@ -8,6 +8,6 @@ public record UpdateReservationCommand
     : IRequest<Result<ReservationDto>>
 {
     public required Guid Id { get; init; }
-    public DateTimeOffset? CheckInDate { get; init; }
-    public DateTimeOffset? CheckOutDate { get; init; }
+    public required DateTimeOffset CheckInDate { get; init; }
+    public required DateTimeOffset CheckOutDate { get; init; }
 }

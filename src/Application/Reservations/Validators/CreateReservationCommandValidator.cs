@@ -9,11 +9,9 @@ public class CreateReservationCommandValidator
     public CreateReservationCommandValidator()
     {
         RuleFor(x => x.CheckInDate)
-            .GreaterThanOrEqualTo(x => DateTimeOffset.Now)
-            .WithMessage("time travel hasn't been invented yet. CheckInDate cant be in the past");
-        
+            .ValidCheckInDate();
+
         RuleFor(c => c.CheckOutDate)
-            .GreaterThan(c => c.CheckInDate)
-            .WithMessage("CheckOutDate must be after CheckInDate.");
+            .ValidCheckOutDate(x=>x.CheckInDate);
     }
 }

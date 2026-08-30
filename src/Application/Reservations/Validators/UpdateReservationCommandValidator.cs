@@ -8,8 +8,10 @@ public class UpdateReservationCommandValidator
 {
     public UpdateReservationCommandValidator()
     {
+        RuleFor(c => c.CheckInDate)
+            .ValidCheckInDate();
+
         RuleFor(c => c.CheckOutDate)
-            .LessThanOrEqualTo(c => c.CheckInDate)
-            .WithMessage("CheckOutDate must be after CheckInDate");
+            .ValidCheckOutDate(x => x.CheckInDate);
     }
 }
