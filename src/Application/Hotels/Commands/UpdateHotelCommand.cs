@@ -11,5 +11,4 @@ public record UpdateHotelCommand
     public required string Name { get; init; }
     public required string Address { get; init; }
     public required decimal Rating { get; init; }
-    // public Guid? ManagerId { get; init; }
 }

@@ -58,8 +58,8 @@ public class UpdateReservationCommandHandler(
         {
             GuestId = reservation.GuestId,
             RoomId = reservation.RoomId,
-            CheckInDate = request.CheckInDate ?? reservation.CheckInDate,
-            CheckOutDate = request.CheckOutDate ?? reservation.CheckOutDate
+            CheckInDate = request.CheckInDate,
+            CheckOutDate = request.CheckOutDate
         };
 
         var isRoomReserved = await reservationRepository.IsRoomReservedAsync(updatedReservation.RoomId,

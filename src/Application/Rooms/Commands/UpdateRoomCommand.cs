@@ -9,8 +9,8 @@ public record UpdateRoomCommand
     : IRequest<Result<RoomDto>>
 {
     public required Guid Id { get; init; }
-    public int? Number { get; init; }
-    public RoomType? Type { get; init; }
-    public decimal? PricePerNight { get; init; }
-    public Guid? HotelId { get; init; }
+    public required int Number { get; init; }
+    public required RoomType Type { get; init; }
+    public required decimal PricePerNight { get; init; }
+    public required Guid HotelId { get; init; }
 }
