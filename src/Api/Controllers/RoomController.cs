@@ -46,15 +46,26 @@ public class RoomController(
         return HandleResult(result);
     }
 
-    [HttpPut("{id:guid}")]
-    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
-    public async Task<IActionResult> UpdateAsync(
+    [HttpPut("admin/{id:guid}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
+    public async Task<IActionResult> UpdateAsAdminAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateRoomCommandDto request,
+        [FromBody] UpdateRoomAsAdminCommandDto request,
         CancellationToken ct)
     {
-        // future: i get error, its an EF Core tracking problem, fix it later when you read EF Core in details
-        var command = mapper.Map<UpdateRoomCommand>(request) with {Id = id};
+        var command = mapper.Map<UpdateRoomAsAdminCommand>(request) with { Id = id };
+        var result = await mediator.Send(command, ct);
+        return HandleResult(result);
+    }
+
+    [HttpPut("manager/{id:guid}")]
+    [Authorize(Roles = $"{nameof(UserRole.Manager)}")]
+    public async Task<IActionResult> UpdateAsManagerAsync(
+        [FromRoute] Guid id,
+        [FromBody] UpdateRoomAsManagerCommandDto request,
+        CancellationToken ct)
+    {
+        var command = mapper.Map<UpdateRoomAsManagerCommand>(request) with { Id = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

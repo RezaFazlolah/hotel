@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Application.Interfaces.Repositories;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
@@ -39,7 +38,7 @@ public abstract class RepositoryBase<TId, TEntity>(
     {
         await db.Set<TEntity>().AddAsync(entity, ct);
         await db.SaveChangesAsync(ct);
-        
+
         // var options = new DistributedCacheEntryOptions()
         // await cache.SetAsync(entity.Id, JsonSerializer.SerializeToUtf8Bytes(entity), );
 
@@ -50,6 +49,11 @@ public abstract class RepositoryBase<TId, TEntity>(
         TEntity entity,
         CancellationToken ct)
     {
+        var entityExists = await ExistsAsync(entity.Id, ct);
+        if (!entityExists)
+            return Result<TEntity>.Failure(new Error($"update {EntityName} {entity.Id} failed. {EntityName} not found.", ErrorCode
+                .NotFound), ResultCode.NotFound);
+
         db.Set<TEntity>().Update(entity);
         await db.SaveChangesAsync(ct);
 
@@ -77,7 +81,7 @@ public abstract class RepositoryBase<TId, TEntity>(
         CancellationToken ct)
     {
         return await db.Set<TEntity>()
-            .AnyAsync(e => e.Id.Equals(id), ct);
+            .FindAsync([id], ct) != null;
     }
 
     public virtual string EntityName => typeof(TEntity).Name;

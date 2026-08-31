@@ -15,8 +15,14 @@ public class RoomMappingProfiles
     {
         CreateMap<CreateRoomCommandDto, CreateRoomCommand>();
 
-        CreateMap<UpdateRoomCommandDto, UpdateRoomCommand>()
-            .ForMember(dst => dst.Id, opt => opt.Ignore());
+        CreateMap<UpdateRoomCommandDtoBase, UpdateRoomCommandBase>()
+            .ForMember(dst => dst.Id, opt => opt.Ignore())
+            .Include<UpdateRoomAsAdminCommandDto, UpdateRoomAsAdminCommand>()
+            .Include<UpdateRoomAsManagerCommandDto, UpdateRoomAsManagerCommand>();
+        CreateMap<UpdateRoomAsAdminCommandDto, UpdateRoomAsAdminCommand>()
+            .IncludeBase<UpdateRoomCommandDtoBase, UpdateRoomCommandBase>();
+        CreateMap<UpdateRoomAsManagerCommandDto, UpdateRoomAsManagerCommand>()
+            .IncludeBase<UpdateRoomCommandDtoBase, UpdateRoomCommandBase>();
 
         CreateMap<GetAllRoomsQueryDto, GetAllRoomsQuery>()
             .ForMember(dst => dst.RoomFilterParameters,
