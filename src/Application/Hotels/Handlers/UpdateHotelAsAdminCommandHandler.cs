@@ -1,0 +1,39 @@
+using Application.Common.Extensions;
+using Application.Hotels.Commands;
+using Application.Hotels.Dtos;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
+using AutoMapper;
+using Domain.Models;
+using MediatR;
+using SharedKernel.Common;
+using SharedKernel.Enums;
+
+namespace Application.Hotels.Handlers;
+
+public class UpdateHotelAsAdminCommandHandler(
+    ICurrentUserService currentUserService,
+    IHotelRepository hotelRepository,
+    IMapper mapper)
+    : IRequestHandler<UpdateHotelAsAdminCommand, Result<UpdatedHotelDto>>
+{
+    public async Task<Result<UpdatedHotelDto>> Handle(
+        UpdateHotelAsAdminCommand request,
+        CancellationToken ct)
+    {
+        var rootError = new Error($"update hotel {request.Id} failed");
+
+        var currentUserInfoResult = currentUserService.Info;
+        if (!currentUserInfoResult.Succeeded)
+            return Result<UpdatedHotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+        var currentUserInfo = currentUserInfoResult.Value;
+
+        if (!currentUserInfo.roles.Contains(UserRole.Admin))
+            return Result<UpdatedHotelDto>.Forbidden(rootError);
+
+        var updatedHotel = mapper.Map<Hotel>(request);
+        var updateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
+        var updateResultDto = updateResult.Map<Hotel, UpdatedHotelDto>(mapper);
+        return Result<UpdatedHotelDto>.Handle(updateResultDto, rootError);
+    }
+}

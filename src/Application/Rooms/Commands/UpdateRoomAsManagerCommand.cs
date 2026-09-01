@@ -5,7 +5,6 @@ using SharedKernel.Common;
 namespace Application.Rooms.Commands;
 
 public record UpdateRoomAsManagerCommand
-    : UpdateRoomCommandBase,
-        IRequest<Result<RoomDto>>
+    : UpdateRoomCommandBase
 {
 }

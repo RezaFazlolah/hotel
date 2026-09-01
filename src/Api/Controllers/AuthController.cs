@@ -1,5 +1,6 @@
 using Api.Dtos.AuthDtos;
 using Application.Auth.Commands;
+using Application.Auth.Queries;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -45,5 +46,13 @@ public class AuthController(
         // var command = mapper.Map<RegisterCommand>(request);
         // var result = await mediator.Send(command, cancellationToken);
         // return HandleResult(result);
+    }
+
+    [HttpGet("me")]
+    public async Task<IActionResult> MeAsync(CancellationToken ct)
+    {
+        var query = new MeQuery();
+        var result = await mediator.Send(query, ct);
+        return HandleResult(result);
     }
 }

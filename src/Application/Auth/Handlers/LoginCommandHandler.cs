@@ -39,7 +39,7 @@ public class LoginCommandHandler(
         if (!rolesResult.Succeeded)
             return Result<LoggedinUserDto>.Failure(
                 rolesResult.Errors.Prepend(new Error($"user {request.PhoneNumber} login failed")));
-        var roles = rolesResult.Value.Select(r => r.ToString()).ToArray();
+        var roles = rolesResult.Value;//.Select(r => r.ToString()).ToArray();
         
         var userDto = mapper.Map<LoggedinUserDto>(user) with {Roles = roles, Jwt = jwt};
         return Result<LoggedinUserDto>.Success(userDto);

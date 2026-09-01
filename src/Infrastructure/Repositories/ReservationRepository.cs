@@ -14,7 +14,7 @@ public class ReservationRepository(
     AppDbContext db,
     IRoomRepository roomRepository,
     IDistributedCache cache)
-    : RepositoryBase<Guid, Domain.Models.Reservation>(db, cache),
+    : RepositoryBase<Guid, Reservation>(db, cache),
         IReservationRepository
 {
     public override async Task<bool> ExistsAsync(
@@ -25,7 +25,7 @@ public class ReservationRepository(
                            && r.Status != ReservationStatus.Cancelled, ct);
 
     // reservation is cancelled, not deleted
-    public override Task<Result<Domain.Models.Reservation>> DeleteAsync(Guid id, CancellationToken ct)
+    public override Task<Result<Reservation>> DeleteAsync(Guid id, CancellationToken ct)
         => throw new NotSupportedException();
 
     public async Task<bool> IsRoomReservedAsync(
@@ -53,27 +53,27 @@ public class ReservationRepository(
                 && r.GuestId != guestId,
             ct);
 
-    public async Task<Result<PagedResult<Domain.Models.Reservation>>> GetAllByHotelAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelAsync(
         Guid hotelId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
     {
         var roomIdsResult = await roomRepository.GetAllIdsByHotelAsync(hotelId, ct);
         if (!roomIdsResult.Succeeded)
-            return Result<PagedResult<Domain.Models.Reservation>>.Failure(
+            return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
                     .Prepend(new Error($"get reservations for hotel {hotelId} failed"))
             );
         var roomIds = roomIdsResult.Value;
 
-        return Result<PagedResult<Domain.Models.Reservation>>.Success(
+        return Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomIds.Contains(r.Id))
                 .PaginateAsync(paginationParameters, ct)
         );
     }
 
-    public async Task<Result<PagedResult<Domain.Models.Reservation>>> GetAllByHotelsAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByHotelsAsync(
         IEnumerable<Guid> hotelIds,
         PaginationParameters paginationParameters,
         CancellationToken ct)
@@ -82,40 +82,40 @@ public class ReservationRepository(
 
         var roomIdsResult = await roomRepository.GetAllIdsByHotelsAsync(hotelsIdAsList, ct);
         if (!roomIdsResult.Succeeded)
-            return Result<PagedResult<Domain.Models.Reservation>>.Failure(
+            return Result<PagedResult<Reservation>>.Failure(
                 roomIdsResult.Errors
                     .Prepend(new Error($"get reservations for hotels {string.Join(", ", hotelsIdAsList)} failed"))
             );
         var roomIds = roomIdsResult.Value;
 
-        return Result<PagedResult<Domain.Models.Reservation>>.Success(
+        return Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomIds.Contains(r.Id))
                 .PaginateAsync(paginationParameters, ct)
         );
     }
 
-    public async Task<Result<PagedResult<Domain.Models.Reservation>>> GetAllByRoomAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomAsync(
         Guid roomId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
         => await GetAllByRoomsAsync([roomId], paginationParameters, ct);
 
-    public async Task<Result<PagedResult<Domain.Models.Reservation>>> GetAllByRoomsAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByRoomsAsync(
         IEnumerable<Guid> roomsId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
-        => Result<PagedResult<Domain.Models.Reservation>>.Success(
+        => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => roomsId.Contains(r.RoomId))
                 .PaginateAsync(paginationParameters, ct)
         );
 
-    public async Task<Result<PagedResult<Domain.Models.Reservation>>> GetAllByGuestAsync(
+    public async Task<Result<PagedResult<Reservation>>> GetAllByGuestAsync(
         Guid guestId,
         PaginationParameters paginationParameters,
         CancellationToken ct)
-        => Result<PagedResult<Domain.Models.Reservation>>.Success(
+        => Result<PagedResult<Reservation>>.Success(
             await db.Reservations
                 .Where(r => r.GuestId == guestId)
                 .PaginateAsync(paginationParameters, ct)

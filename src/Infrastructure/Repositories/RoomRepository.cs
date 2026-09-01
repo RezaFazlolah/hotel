@@ -10,7 +10,6 @@ namespace Infrastructure.Repositories;
 
 public class RoomRepository(
     AppDbContext db,
-    IHotelRepository hotelRepository,
     IDistributedCache cache)
     : RepositoryBase<Guid, Room>(db, cache),
         IRoomRepository

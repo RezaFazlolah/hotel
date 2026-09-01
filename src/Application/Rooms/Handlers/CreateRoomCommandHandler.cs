@@ -1,3 +1,4 @@
+using Application.Common.Extensions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Rooms.Commands;
@@ -59,7 +60,7 @@ public class CreateRoomCommandHandler(
         var room = mapper.Map<Room>(request);
         
         var result = await roomRepository.AddAsync(room, ct);
-        var resultDto = mapper.Map<Result<RoomDto>>(result);
+        var resultDto = result.Map<Room, RoomDto>(mapper);
         return Result<RoomDto>.Handle(resultDto, rootError);
     }
 }

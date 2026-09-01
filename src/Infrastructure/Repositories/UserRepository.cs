@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories;
 
 public class UserRepository(
     AppDbContext db,
-    UserManager<User> userManager, 
+    UserManager<User> userManager,
     IDistributedCache cache)
     : RepositoryBase<Guid, User>(db, cache),
         IUserRepository
@@ -124,10 +124,10 @@ public class UserRepository(
         Guid id,
         CancellationToken ct)
     {
-            var result = await userManager.Users.SingleOrDefaultAsync(u => id == u.Id, ct);
-            return result is null
-                ? Result<User>.Failure(new Error($"{EntityName} with id {id} not found", ErrorCode.NotFound),
-                    ResultCode.NotFound)
-                : Result<User>.Success(result);
+        var result = await userManager.Users.SingleOrDefaultAsync(u => id == u.Id, ct);
+        return result is null
+            ? Result<User>.Failure(new Error($"{EntityName} with id {id} not found", ErrorCode.NotFound),
+                ResultCode.NotFound)
+            : Result<User>.Success(result);
     }
 }

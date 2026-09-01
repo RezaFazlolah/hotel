@@ -1,3 +1,4 @@
+using Application.Common.Extensions;
 using Application.Hotels.Commands;
 using Application.Hotels.Dtos;
 using Application.Interfaces.Repositories;
@@ -65,7 +66,7 @@ public class CreateHotelCommandHandler(
         }
 
         var result = await hotelRepository.AddAsync(hotel, ct);
-        var resultDto = mapper.Map<Result<HotelDto>>(result);
+        var resultDto = result.Map<Hotel, HotelDto>(mapper);
         return Result<HotelDto>.Handle(resultDto, rootError);
     }
 }

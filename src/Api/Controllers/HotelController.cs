@@ -46,14 +46,26 @@ public class HotelController(
         return HandleResult(result);
     }
 
-    [HttpPut("{id:guid}")]
-    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
+    [HttpPut("admin/{id:guid}")]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
     public async Task<IActionResult> UpdateAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateHotelCommandDto request,
+        [FromBody] UpdateHotelAsAdminCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateHotelCommand>(request) with { Id = id };
+        var command = mapper.Map<UpdateHotelAsAdminCommand>(request) with { Id = id };
+        var result = await mediator.Send(command, ct);
+        return HandleResult(result);
+    }
+
+    [HttpPut("manager/{id:guid}")]
+    [Authorize(Roles = $"{nameof(UserRole.Manager)}")]
+    public async Task<IActionResult> UpdateAsync(
+        [FromRoute] Guid id,
+        [FromBody] UpdateHotelAsManagerCommandDto request,
+        CancellationToken ct)
+    {
+        var command = mapper.Map<UpdateHotelAsManagerCommand>(request) with { Id = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

@@ -1,8 +1,10 @@
+using Application.Common.Extensions;
 using Application.Hotels.Commands;
 using Application.Hotels.Dtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
+using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -29,13 +31,13 @@ public class DeleteHotelCommandHandler(
         if (roles.Contains(UserRole.Admin))
         {
             var result = await hotelRepository.DeleteAsync(request.HotelId, ct);
-            return mapper.Map<Result<HotelDto>>(result);
+            return result.Map<Hotel, HotelDto>(mapper);
         }
 
         if (roles.Contains(UserRole.Manager))
         {
             var managerId = currentUserService.Id.Value;
-            var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct); 
+            var hotelIdResult = await managerRepository.GetHotelIdAsync(managerId, ct);
             if (!hotelIdResult.Succeeded)
                 return Result<HotelDto>.Failure(
                     hotelIdResult.Errors.Prepend(
@@ -46,7 +48,7 @@ public class DeleteHotelCommandHandler(
                 return Result<HotelDto>.Failure(
                     new Error($"delete hotel {request.HotelId} failed.hotel {request.HotelId} not found"));
             var result = await hotelRepository.DeleteAsync(request.HotelId, ct);
-            return mapper.Map<Result<HotelDto>>(result);
+            return result.Map<Hotel, HotelDto>(mapper);
         }
 
         return Result<HotelDto>.Failure(

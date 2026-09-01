@@ -1,5 +1,3 @@
-using Application.Users.Filters;
-using Application.Users.Sorts;
 using Domain.Models;
 using SharedKernel.Common;
 using SharedKernel.Enums;

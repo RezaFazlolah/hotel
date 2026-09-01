@@ -45,7 +45,7 @@ public class RegisterCommandHandler(
             return Result<RegisteredUserDto>.Failure(addRoleResult.Errors.Prepend(new Error($"register user {request.PhoneNumber} failed.")));
         }
         
-        var registeredUserDto = mapper.Map<RegisteredUserDto>(registeredUser) with { Roles = [request.Role.ToString()] };
+        var registeredUserDto = mapper.Map<RegisteredUserDto>(registeredUser) with { Roles = [request.Role] };
         return Result<RegisteredUserDto>.Success(registeredUserDto);
     }
 }

@@ -1,3 +1,4 @@
+using Application.Common.Extensions;
 using Application.Interfaces;
 using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
@@ -54,6 +55,6 @@ public class DeleteRoomCommandHandler(
             return Result<RoomDto>.Failure(new Error($"delete room {request.RoomId} failed. unauthorized access"));
 
         var result = await roomRepository.DeleteAsync(request.RoomId, ct);
-        return mapper.Map<Result<RoomDto>>(result);
+        return result.Map<Room, RoomDto>(mapper);
     }
 }

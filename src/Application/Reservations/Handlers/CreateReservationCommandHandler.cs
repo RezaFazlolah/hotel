@@ -1,3 +1,4 @@
+using Application.Common.Extensions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
@@ -93,7 +94,8 @@ public class CreateReservationCommandHandler(
         reservation.Status = ReservationStatus.Confirmed;
 
         var reservationInsertResult = await reservationRepository.AddAsync(reservation, ct);
-        var reservationInsertResultDto = mapper.Map<Result<ReservationDto>>(reservationInsertResult);
+        var reservationInsertResultDto = reservationInsertResult.Map<Reservation, ReservationDto>(mapper);
+
         return Result<ReservationDto>.Handle(reservationInsertResultDto, rootError);
     }
 }

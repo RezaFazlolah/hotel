@@ -1,8 +1,10 @@
+using Application.Common.Extensions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
 using Application.Reservations.Dtos;
 using AutoMapper;
+using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -12,7 +14,7 @@ namespace Application.Reservations.Handlers;
 public class CancelReservationCommandHandler(
     ICurrentUserService currentUserService,
     IReservationRepository reservationRepository,
-    IManagerRepository  managerRepository,
+    IManagerRepository managerRepository,
     IMapper mapper)
     : IRequestHandler<CancelReservationCommand, Result<ReservationDto>>
 {
@@ -37,23 +39,21 @@ public class CancelReservationCommandHandler(
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
-            if(!await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
-                return Result<ReservationDto>.Failure([rootError,  new Error("reservation not found")]);
+            if (!await managerRepository.ManagesRoomAsync(currentUserInfo.id, reservation.RoomId, ct))
+                return Result<ReservationDto>.Failure([rootError, new Error("reservation not found")]);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Guest))
         {
             if (reservation.GuestId != currentUserInfo.id)
                 return Result<ReservationDto>.Failure([rootError, new Error("reservation not found")]);
         }
-        
+
         if (reservation.Status == ReservationStatus.Cancelled)
             return Result<ReservationDto>.Failure([rootError, new Error("reservation is already cancelled")]);
 
         reservation.Status = ReservationStatus.Cancelled;
         var reservationCancelResult = await reservationRepository.UpdateAsync(reservation, ct);
-
-        return reservationCancelResult.Succeeded
-            ? mapper.Map<Result<ReservationDto>>(reservationCancelResult.Value)
-            : Result<ReservationDto>.Failure(reservationCancelResult.Errors.Prepend(rootError));
+        var reservationCancelResultDto = reservationCancelResult.Map<Reservation, ReservationDto>(mapper);
+        return Result<ReservationDto>.Handle(reservationCancelResultDto, rootError);
     }
 }

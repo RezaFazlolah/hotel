@@ -1,6 +1,6 @@
 namespace Application.Auth.Dtos;
 
-public record RegisteredUserDto
+public record GuestDto
     : UserDto
 {
 }

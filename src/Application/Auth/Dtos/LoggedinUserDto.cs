@@ -1,7 +1,7 @@
 namespace Application.Auth.Dtos;
 
 public record LoggedinUserDto
- : BaseUserDto
+ : UserDto
 {
   public string Jwt { get; init; } = string.Empty;
 }

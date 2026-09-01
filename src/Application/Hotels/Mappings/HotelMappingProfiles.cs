@@ -13,27 +13,41 @@ public class HotelMappingProfiles
 {
     public HotelMappingProfiles()
     {
+        CreateMap<Hotel, HotelBaseDto>();
         CreateMap<Hotel, HotelDto>()
             .ForMember(dst => dst.ManagerId,
                 opt => opt.MapFrom(src =>
                     src.Manager != null
                         ? src.Manager.Id
-                        : (Guid?)null));
+                        : (Guid?)null))
+            .IncludeBase<Hotel, HotelBaseDto>();
+        CreateMap<Hotel, UpdatedHotelDto>()
+            .IncludeBase<Hotel, HotelBaseDto>();
 
         CreateMap<Result<Hotel>, Result<HotelDto>>();
+        CreateMap<Result<Hotel>, Result<UpdatedHotelDto>>();
 
-        CreateMap<PagedResult<Hotel>, PagedResult<HotelDto>>()
-            .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
+        CreateMap<PagedResult<Hotel>, PagedResult<HotelDto>>();
+        CreateMap<PagedResult<Hotel>, PagedResult<UpdatedHotelDto>>();
 
         CreateMap<Result<PagedResult<Hotel>>, Result<PagedResult<HotelDto>>>();
+        CreateMap<Result<PagedResult<Hotel>>, Result<PagedResult<UpdatedHotelDto>>>();
 
         CreateMap<CreateHotelCommand, Hotel>()
             .ForMember(dst => dst.Id, opt => opt.Ignore())
             .ForMember(dst => dst.Manager, opt => opt.Ignore())
             .ForMember(dst => dst.Rooms, opt => opt.Ignore());
 
-        CreateMap<UpdateHotelCommand, Hotel>()
+        CreateMap<UpdateHotelCommandBase, Hotel>()
+            .ForMember(dst => dst.Rating, opt => opt.Ignore())
             .ForMember(dst => dst.Manager, opt => opt.Ignore())
-            .ForMember(dst => dst.Rooms, opt => opt.Ignore());
+            .ForMember(dst => dst.Rooms, opt => opt.Ignore())
+            .Include<UpdateHotelAsAdminCommand, Hotel>()
+            .Include<UpdateHotelAsManagerCommand, Hotel>();
+        CreateMap<UpdateHotelAsAdminCommand, Hotel>()
+            .ForMember(dst => dst.Rating, opt => opt.MapFrom(src => src.Rating))
+            .IncludeBase<UpdateHotelCommandBase, Hotel>();
+        CreateMap<UpdateHotelAsManagerCommand, Hotel>()
+            .IncludeBase<UpdateHotelCommandBase, Hotel>();
     }
 }

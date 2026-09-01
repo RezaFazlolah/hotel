@@ -20,6 +20,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(InfrastructureAssemblyMarker).Assembly);
+        
+        modelBuilder.Entity<Admin>().ToTable("Admins");
+        modelBuilder.Entity<Manager>().ToTable("Managers");
+        modelBuilder.Entity<Guest>().ToTable("Guests");
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

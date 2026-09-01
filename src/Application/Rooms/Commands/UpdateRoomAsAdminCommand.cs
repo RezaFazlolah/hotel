@@ -6,8 +6,7 @@ using SharedKernel.Enums;
 namespace Application.Rooms.Commands;
 
 public record UpdateRoomAsAdminCommand
-    : UpdateRoomCommandBase,
-        IRequest<Result<RoomDto>>
+    : UpdateRoomCommandBase
 {
     public required Guid HotelId { get; init; }
 }

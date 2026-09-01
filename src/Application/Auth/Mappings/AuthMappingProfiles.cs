@@ -9,14 +9,24 @@ public class AuthMappingProfiles
 {
     public AuthMappingProfiles()
     {
-        CreateMap<User, BaseUserDto>()
-            .ForMember(dst => dst.Roles, opt => opt.Ignore());
+        CreateMap<User, UserDto>()
+            .ForMember(dst => dst.Roles, opt => opt.Ignore())
+            .Include<Admin, AdminDto>()
+            .Include<Manager, ManagerDto>()
+            .Include<Guest, GuestDto>();
+        CreateMap<Admin, AdminDto>()
+            .IncludeBase<User, UserDto>();
+        CreateMap<Manager, ManagerDto>()
+            .IncludeBase<User, UserDto>();
+        CreateMap<Guest, GuestDto>()
+            .IncludeBase<User, UserDto>();
+
 
         CreateMap<User, RegisteredUserDto>()
-            .IncludeBase<User, BaseUserDto>();
-            
+            .IncludeBase<User, UserDto>();
+
         CreateMap<User, LoggedinUserDto>()
-            .ForMember(dst=>dst.Jwt, opt=>opt.Ignore())
-            .IncludeBase<User, BaseUserDto>();
+            .ForMember(dst => dst.Jwt, opt => opt.Ignore())
+            .IncludeBase<User, UserDto>();
     }
 }

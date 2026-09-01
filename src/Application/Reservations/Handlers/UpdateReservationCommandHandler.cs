@@ -1,3 +1,4 @@
+using Application.Common.Extensions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Reservations.Commands;
@@ -70,7 +71,7 @@ public class UpdateReservationCommandHandler(
 
         var reservationUpdateResult = await reservationRepository.UpdateAsync(updatedReservation, ct);
         return reservationUpdateResult.Succeeded
-            ? mapper.Map<Result<ReservationDto>>(reservationUpdateResult)
+            ? reservationUpdateResult.Map<Reservation, ReservationDto>(mapper)
             : Result<ReservationDto>.Failure(reservationUpdateResult.Errors.Prepend(rootError));
     }
 }

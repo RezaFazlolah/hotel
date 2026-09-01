@@ -46,11 +46,17 @@ public class Result
 
     public static Result Handle(
         Result result,
-        Error error,
+        Error? error = null,
         ResultCode resultCode = ResultCode.Default)
-        => result.Succeeded
+    {
+        var errors = error is null
+            ? result.Errors
+            : result.Errors.Prepend(error);
+
+        return result.Succeeded
             ? result
-            : Failure(result.Errors.Prepend(error), resultCode);
+            : Failure(errors, resultCode);
+    }
 }
 
 public class Result<T>
@@ -97,9 +103,15 @@ public class Result<T>
 
     public static Result<T> Handle(
         Result<T> result,
-        Error error,
+        Error? error = null,
         ResultCode resultCode = ResultCode.Default)
-        => result.Succeeded
+    {
+        var errors = error is null
+            ? result.Errors
+            : result.Errors.Prepend(error);
+
+        return result.Succeeded
             ? result
-            : Failure(result.Errors.Prepend(error), resultCode);
+            : Failure(errors, resultCode);
+    }
 }

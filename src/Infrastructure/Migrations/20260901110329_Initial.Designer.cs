@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260826100622_Initial")]
+    [Migration("20260901110329_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -180,12 +180,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("concurrency_stamp");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)")
-                        .HasColumnName("discriminator");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)")
@@ -248,8 +242,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("user_name");
 
-                    b.HasKey("Id")
-                        .HasName("pk_asp_net_users");
+                    b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -260,9 +253,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -399,14 +390,14 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("Domain.Models.User");
 
-                    b.HasDiscriminator().HasValue("Admin");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Guest", b =>
                 {
                     b.HasBaseType("Domain.Models.User");
 
-                    b.HasDiscriminator().HasValue("Guest");
+                    b.ToTable("Guests", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Manager", b =>
@@ -419,9 +410,9 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("HotelId")
                         .IsUnique()
-                        .HasDatabaseName("ix_asp_net_users_hotel_id");
+                        .HasDatabaseName("ix_managers_hotel_id");
 
-                    b.HasDiscriminator().HasValue("Manager");
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Reservation", b =>
@@ -514,12 +505,39 @@ namespace Infrastructure.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
+            modelBuilder.Entity("Domain.Models.Admin", b =>
+                {
+                    b.HasOne("Domain.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Models.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_admins_asp_net_users_id");
+                });
+
+            modelBuilder.Entity("Domain.Models.Guest", b =>
+                {
+                    b.HasOne("Domain.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Models.Guest", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_guests_asp_net_users_id");
+                });
+
             modelBuilder.Entity("Domain.Models.Manager", b =>
                 {
                     b.HasOne("Domain.Models.Hotel", "Hotel")
                         .WithOne("Manager")
                         .HasForeignKey("Domain.Models.Manager", "HotelId")
-                        .HasConstraintName("fk_asp_net_users_hotels_hotel_id");
+                        .HasConstraintName("fk_managers_hotels_hotel_id");
+
+                    b.HasOne("Domain.Models.User", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Models.Manager", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_managers_asp_net_users_id");
 
                     b.Navigation("Hotel");
                 });

@@ -50,7 +50,7 @@ public class RoomController(
     [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
     public async Task<IActionResult> UpdateAsAdminAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateRoomAsAdminCommandDto request,
+        [FromBody] UpdateRoomAsAdminCommandBaseDto request,
         CancellationToken ct)
     {
         var command = mapper.Map<UpdateRoomAsAdminCommand>(request) with { Id = id };
@@ -62,7 +62,7 @@ public class RoomController(
     [Authorize(Roles = $"{nameof(UserRole.Manager)}")]
     public async Task<IActionResult> UpdateAsManagerAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateRoomAsManagerCommandDto request,
+        [FromBody] UpdateRoomAsManagerCommandBaseDto request,
         CancellationToken ct)
     {
         var command = mapper.Map<UpdateRoomAsManagerCommand>(request) with { Id = id };

@@ -2,7 +2,6 @@ using Application.Interfaces.QueryServices;
 using Application.Interfaces.Services;
 using Application.Reservations.Dtos;
 using Application.Reservations.Queries;
-using AutoMapper;
 using MediatR;
 using SharedKernel.Common;
 using SharedKernel.Enums;
@@ -12,8 +11,7 @@ namespace Application.Reservations.Handlers;
 
 public class GetAllReservationsQueryHandler(
     ICurrentUserService currentUserService,
-    IReservationQueryService reservationQueryService,
-    IMapper mapper)
+    IReservationQueryService reservationQueryService)
     : IRequestHandler<GetAllReservationsQuery, Result<PagedResult<ReservationDto>>>
 {
     public async Task<Result<PagedResult<ReservationDto>>> Handle(
@@ -52,7 +50,6 @@ public class GetAllReservationsQueryHandler(
             return Result<PagedResult<ReservationDto>>.Forbidden(rootError);
         }
 
-        var resultDto = mapper.Map<Result<PagedResult<ReservationDto>>>(result);
-        return Result<PagedResult<ReservationDto>>.Handle(resultDto, rootError);
+        return Result<PagedResult<ReservationDto>>.Handle(result, rootError);
     }
 }

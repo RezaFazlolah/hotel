@@ -51,7 +51,7 @@ public abstract class RepositoryBase<TId, TEntity>(
     {
         var entityExists = await ExistsAsync(entity.Id, ct);
         if (!entityExists)
-            return Result<TEntity>.Failure(new Error($"update {EntityName} {entity.Id} failed. {EntityName} not found.", ErrorCode
+            return Result<TEntity>.Failure(new Error($"{EntityName} not found", ErrorCode
                 .NotFound), ResultCode.NotFound);
 
         db.Set<TEntity>().Update(entity);
@@ -75,13 +75,12 @@ public abstract class RepositoryBase<TId, TEntity>(
         return Result<TEntity>.Success(entity, ResultCode.Deleted);
     }
 
-    // Question: do I need to check for duplicated IDs in a separate service?
     public virtual async Task<bool> ExistsAsync(
         TId id,
         CancellationToken ct)
     {
         return await db.Set<TEntity>()
-            .FindAsync([id], ct) != null;
+            .AnyAsync(e => e.Id.Equals(id), ct);
     }
 
     public virtual string EntityName => typeof(TEntity).Name;

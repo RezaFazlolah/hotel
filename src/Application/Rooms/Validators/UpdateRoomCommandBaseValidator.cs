@@ -3,10 +3,10 @@ using FluentValidation;
 
 namespace Application.Rooms.Validators;
 
-public class UpdateRoomCommandValidatorBase
+public class UpdateRoomCommandBaseValidator
     : AbstractValidator<UpdateRoomCommandBase>
 {
-    public UpdateRoomCommandValidatorBase()
+    public UpdateRoomCommandBaseValidator()
     {
         RuleFor(x => x.Number)
             .ValidRoomNumber();

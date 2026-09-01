@@ -33,4 +33,19 @@ public class HotelRepository(
                 ResultCode.NotFound);
         return Result<Guid?>.Success(result.ManagerId);
     }
+
+    public async Task<Result<decimal>> GetRatingAsync(
+        Guid hotelId,
+        CancellationToken ct)
+    {
+        var ratingResult = await db.Hotels
+            .Where(h => h.Id == hotelId)
+            .Select(decimal? (h) => h.Rating)
+            .FirstOrDefaultAsync(ct);
+
+        return ratingResult is null
+            ? Result<decimal>.Failure(new Error($"hotel {hotelId} not found", ErrorCode.NotFound)
+                , ResultCode.NotFound)
+            : Result<decimal>.Success(ratingResult.Value);
+    }
 }

@@ -59,8 +59,6 @@ public static class DependencyInjection
             services.AddScoped<IManagerRepository, ManagerRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
 
-            services.AddScoped<IManagerQueryService, ManagerQueryService>();
-
             services.AddScoped<IHotelRepository, HotelRepository>();
             services.AddScoped<IHotelQueryService, HotelQueryService>();
 

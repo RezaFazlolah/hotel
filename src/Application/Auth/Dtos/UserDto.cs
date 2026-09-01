@@ -1,10 +1,12 @@
+using SharedKernel.Enums;
+
 namespace Application.Auth.Dtos;
 
-public record BaseUserDto
+public record UserDto
 {
     public Guid Id { get; init; }
     public string PhoneNumber { get; init; } = string.Empty;
     public string FirstName { get; init; } = string.Empty;
     public string LastName { get; init; } = string.Empty;
-    public string[] Roles { get; init; } = [];
+    public IReadOnlyList<UserRole> Roles { get; init; } = [];
 }
