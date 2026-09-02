@@ -5,7 +5,7 @@ using SharedKernel.Common;
 namespace Application.Hotels.Commands;
 
 public record UpdateHotelCommandBase
-    : IRequest<Result<UpdatedHotelDto>>
+    : IRequest<Result<HotelDto>>
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }

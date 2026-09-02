@@ -14,10 +14,11 @@ namespace Application.Hotels.Handlers;
 public class UpdateHotelAsAdminCommandHandler(
     ICurrentUserService currentUserService,
     IHotelRepository hotelRepository,
+    IManagerRepository managerRepository,
     IMapper mapper)
-    : IRequestHandler<UpdateHotelAsAdminCommand, Result<UpdatedHotelDto>>
+    : IRequestHandler<UpdateHotelAsAdminCommand, Result<HotelDto>>
 {
-    public async Task<Result<UpdatedHotelDto>> Handle(
+    public async Task<Result<HotelDto>> Handle(
         UpdateHotelAsAdminCommand request,
         CancellationToken ct)
     {
@@ -25,15 +26,22 @@ public class UpdateHotelAsAdminCommandHandler(
 
         var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
-            return Result<UpdatedHotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+            return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
         if (!currentUserInfo.roles.Contains(UserRole.Admin))
-            return Result<UpdatedHotelDto>.Forbidden(rootError);
+            return Result<HotelDto>.Forbidden(rootError);
 
         var updatedHotel = mapper.Map<Hotel>(request);
+        
         var updateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-        var updateResultDto = updateResult.Map<Hotel, UpdatedHotelDto>(mapper);
-        return Result<UpdatedHotelDto>.Handle(updateResultDto, rootError);
+        if (updateResult.Succeeded)
+        {
+            var managerResult = await managerRepository.GetByHotelIdAsync(request.Id, ct);
+            if(managerResult.Succeeded)
+                updateResult.Value.Manager=managerResult.Value;
+        }
+        var updateResultDto = updateResult.Map<Hotel, HotelDto>(mapper);
+        return Result<HotelDto>.Handle(updateResultDto, rootError);
     }
 }

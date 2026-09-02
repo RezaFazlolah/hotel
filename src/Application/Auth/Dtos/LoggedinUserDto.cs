@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Application.Auth.Dtos;
 
 public record LoggedinUserDto
- : UserDto
+    : UserDto
 {
-  public string Jwt { get; init; } = string.Empty;
+    [JsonPropertyOrder(1)] 
+    public string Jwt { get; init; } = string.Empty;
 }

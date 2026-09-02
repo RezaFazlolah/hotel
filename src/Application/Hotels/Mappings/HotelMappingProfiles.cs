@@ -13,16 +13,16 @@ public class HotelMappingProfiles
 {
     public HotelMappingProfiles()
     {
-        CreateMap<Hotel, HotelBaseDto>();
+        CreateMap<Hotel, BaseHotelDto>();
         CreateMap<Hotel, HotelDto>()
             .ForMember(dst => dst.ManagerId,
                 opt => opt.MapFrom(src =>
                     src.Manager != null
                         ? src.Manager.Id
                         : (Guid?)null))
-            .IncludeBase<Hotel, HotelBaseDto>();
+            .IncludeBase<Hotel, BaseHotelDto>();
         CreateMap<Hotel, UpdatedHotelDto>()
-            .IncludeBase<Hotel, HotelBaseDto>();
+            .IncludeBase<Hotel, BaseHotelDto>();
 
         CreateMap<Result<Hotel>, Result<HotelDto>>();
         CreateMap<Result<Hotel>, Result<UpdatedHotelDto>>();

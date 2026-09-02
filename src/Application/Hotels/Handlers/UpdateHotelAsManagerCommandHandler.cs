@@ -16,9 +16,9 @@ public class UpdateHotelAsManagerCommandHandler(
     IHotelRepository hotelRepository,
     IManagerRepository managerRepository,
     IMapper mapper)
-    : IRequestHandler<UpdateHotelAsManagerCommand, Result<UpdatedHotelDto>>
+    : IRequestHandler<UpdateHotelAsManagerCommand, Result<HotelDto>>
 {
-    public async Task<Result<UpdatedHotelDto>> Handle(
+    public async Task<Result<HotelDto>> Handle(
         UpdateHotelAsManagerCommand request,
         CancellationToken ct)
     {
@@ -26,26 +26,32 @@ public class UpdateHotelAsManagerCommandHandler(
 
         var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
-            return Result<UpdatedHotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
+            return Result<HotelDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
         if (!currentUserInfo.roles.Contains(UserRole.Manager))
-            return Result<UpdatedHotelDto>.Forbidden(rootError);
+            return Result<HotelDto>.Forbidden(rootError);
 
         var managesHotel = await managerRepository.ManagesHotelAsync(currentUserInfo.id, request.Id, ct);
         if (!managesHotel)
-            return Result<UpdatedHotelDto>.Failure([rootError, new Error($"hotel not found", ErrorCode.NotFound)],
+            return Result<HotelDto>.Failure([rootError, new Error($"hotel not found", ErrorCode.NotFound)],
                 ResultCode.NotFound);
 
         var ratingResult = await hotelRepository.GetRatingAsync(request.Id, ct);
         if (!ratingResult.Succeeded)
-            return Result<UpdatedHotelDto>.Failure(ratingResult.Errors.Prepend(rootError));
+            return Result<HotelDto>.Failure(ratingResult.Errors.Prepend(rootError));
         var rating = ratingResult.Value;
 
         var updatedHotel = mapper.Map<Hotel>(request);
         updatedHotel.Rating = rating;
         var updateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-        var updateResultDto = updateResult.Map<Hotel, UpdatedHotelDto>(mapper);
-        return Result<UpdatedHotelDto>.Handle(updateResultDto, rootError);
+        if (updateResult.Succeeded)
+        {
+            var managerResult = await managerRepository.GetByHotelIdAsync(request.Id, ct);
+            if(managerResult.Succeeded)
+                updateResult.Value.Manager=managerResult.Value;
+        }
+        var updateResultDto = updateResult.Map<Hotel, HotelDto>(mapper);
+        return Result<HotelDto>.Handle(updateResultDto, rootError);
     }
 }

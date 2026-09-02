@@ -1,3 +1,4 @@
+using Domain.Models;
 using SharedKernel.Common;
 
 namespace Application.Interfaces.Repositories;
@@ -5,6 +6,10 @@ namespace Application.Interfaces.Repositories;
 public interface IManagerRepository
     : IUserRepository
 {
+    Task<Result<Manager?>> GetByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct);
+    
     Task<Result<Guid?>> GetHotelIdAsync(
         Guid managerId,
         CancellationToken ct);

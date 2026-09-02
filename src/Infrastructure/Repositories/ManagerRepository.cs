@@ -20,6 +20,14 @@ public class ManagerRepository(
         => await db.Managers
             .AnyAsync(m => m.Id == managerId, ct);
 
+    public async Task<Result<Manager?>> GetByHotelIdAsync(
+        Guid hotelId,
+        CancellationToken ct)
+    {
+        var result = await db.Managers.FirstOrDefaultAsync(m => m.HotelId == hotelId, ct);
+        return Result<Manager?>.Success(result);
+    }
+
     public async Task<Result<Guid?>> GetHotelIdAsync(
         Guid managerId,
         CancellationToken ct)
