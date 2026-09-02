@@ -8,6 +8,6 @@ public class UpdateRoomAsAdminCommandValidator
 {
     public UpdateRoomAsAdminCommandValidator()
     {
-        Include(new UpdateRoomCommandBaseValidator());
+        Include(new UpdateRoomBaseCommandValidator());
     }
 }

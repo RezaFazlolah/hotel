@@ -17,51 +17,73 @@ public class ReservationController(
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(
         [FromQuery] GetAllReservationsQueryDto request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var query = mapper.Map<GetAllReservationsQuery>(request);
-        var result = await mediator.Send(query, cancellationToken);
+        var result = await mediator.Send(query, ct);
         return HandleResult(result);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetByIdAsync(
         [FromRoute] Guid id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var query = new GetReservationByIdQuery(id);
-        var result = await mediator.Send(query, cancellationToken);
+        var result = await mediator.Send(query, ct);
         return HandleResult(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateReservationCommandDto request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var command = mapper.Map<CreateReservationCommand>(request);
-        var result = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync(
+    [HttpPut("admin/{id:guid}")]
+    public async Task<IActionResult> UpdateAsAdminAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateReservationCommandDto request,
-        CancellationToken cancellationToken)
+        [FromBody] UpdateReservationAsAdminCommandDto request,
+        CancellationToken ct)
     {
-        var command = mapper.Map<UpdateReservationCommand>(request) with { Id = id };
-        var result = await mediator.Send(command, cancellationToken);
+        var command = mapper.Map<UpdateReservationAsAdminCommand>(request) with { ReservationId = id };
+        var result = await mediator.Send(command, ct);
+        return HandleResult(result);
+    }
+
+    [HttpPut("manager/{id:guid}")]
+    public async Task<IActionResult> UpdateAsManagerAsync(
+        [FromRoute] Guid id,
+        [FromBody] UpdateReservationAsManagerCommandDto request,
+        CancellationToken ct)
+    {
+        var command = mapper.Map<UpdateReservationAsManagerCommand>(request) with { ReservationId = id };
+        var result = await mediator.Send(command, ct);
+        return HandleResult(result);
+    }
+
+    [HttpPut("guest/{id:guid}")]
+    public async Task<IActionResult> UpdateAsGuestAsync(
+        [FromRoute] Guid id,
+        [FromBody] UpdateReservationAsGuestCommandDto request,
+        CancellationToken ct)
+    {
+        var command = mapper.Map<UpdateReservationAsGuestCommand>(request) with { ReservationId = id };
+        var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> CancelAsync(
         [FromRoute] Guid id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var command = new CancelReservationCommand(id) { ReservationId = id };
-        var result = await mediator.Send(command, cancellationToken);
+        var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
 }

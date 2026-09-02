@@ -15,14 +15,14 @@ public class HotelMappingProfiles
     {
         CreateMap<CreateHotelCommandDto, CreateHotelCommand>();
 
-        CreateMap<UpdateHotelCommandBaseDto, UpdateHotelCommandBase>()
+        CreateMap<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>()
             .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty))
             .Include<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
             .Include<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>();
         CreateMap<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
-            .IncludeBase<UpdateHotelCommandBaseDto, UpdateHotelCommandBase>();
+            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
         CreateMap<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>()
-            .IncludeBase<UpdateHotelCommandBaseDto, UpdateHotelCommandBase>();
+            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
         
         
         CreateMap<GetAllHotelsQueryDto, GetAllHotelsQuery>()

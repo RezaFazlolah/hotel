@@ -1,4 +1,5 @@
 using FluentValidation;
+using SharedKernel.Enums;
 
 namespace Application.Reservations.Filters;
 
@@ -34,6 +35,7 @@ public class ReservationFilterParametersValidator
 
         RuleFor(x => x.Status)
             .IsInEnum()
-            .When(x => x.Status.HasValue);
+            .When(x => x.Status.HasValue)
+            .WithMessage($"Status must be {string.Join(", ", Enum.GetNames<ReservationStatus>())}");
     }
 }

@@ -1,4 +1,5 @@
 using FluentValidation;
+using SharedKernel.Enums;
 
 namespace Application.Rooms.Filters;
 
@@ -27,7 +28,7 @@ public class RoomFilterParametersValidator
         RuleFor(x => x.Type)
             .IsInEnum()
             .When(x => x.Type.HasValue)
-            .WithMessage("enter valid RoomType");
+            .WithMessage($"RoomType must be {string.Join(", ", Enum.GetNames<RoomType>())}");
         
         // PricePerNight
         RuleFor(x => x.MinPricePerNight)

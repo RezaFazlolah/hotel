@@ -54,4 +54,9 @@ public interface IReservationRepository
         Guid reservationId,
         Guid managerId,
         CancellationToken ct);
+    
+    Task<bool> IsReservedByGuest(
+        Guid reservationId,
+        Guid guestId,
+        CancellationToken ct);
 }

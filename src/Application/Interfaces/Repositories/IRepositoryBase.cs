@@ -19,6 +19,10 @@ public interface IRepositoryBase<in TId, TEntity>
         TEntity entity,
         CancellationToken ct);
 
+    Task<Result<TEntity>> UpdateWithReloadAsync(
+        TEntity entity,
+        CancellationToken ct);
+    
     Task<Result<TEntity>> DeleteAsync(
         TId id,
         CancellationToken ct);

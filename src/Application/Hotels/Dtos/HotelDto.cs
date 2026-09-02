@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace Application.Hotels.Dtos;
 
 public record HotelDto
-    : BaseHotelDto
+    : HotelBaseDto
 {
     [JsonPropertyOrder(1)]
     public Guid? ManagerId { get; init; }

@@ -127,7 +127,16 @@ public class ReservationRepository(
         Guid managerId,
         CancellationToken ct)
         => await db.Reservations
-            .AnyAsync(r => r.Id == reservationId
-                           && r.Room.Hotel.Manager != null
-                           && r.Room.Hotel.Manager.Id == managerId, ct);
+            .AnyAsync(r =>
+                r.Id == reservationId
+                && r.Room.Hotel.Manager != null
+                && r.Room.Hotel.Manager.Id == managerId, ct);
+
+    public async Task<bool> IsReservedByGuest(
+        Guid reservationId,
+        Guid guestId,
+        CancellationToken ct)
+        => await db.Reservations.AnyAsync(r =>
+            r.Id == reservationId
+            && r.GuestId == guestId, ct);
 }

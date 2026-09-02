@@ -1,4 +1,5 @@
 using FluentValidation;
+using SharedKernel.Enums;
 
 namespace Application.Reservations.Validators;
 
@@ -15,5 +16,13 @@ public static class ReservationValidationExtensions
             => ruleBuilder
                 .Must((command, checkOutDate) => checkOutDate > checkInDateSelector(command))
                 .WithMessage("CheckOutDate must be after CheckInDate.");
+    }
+
+    extension<T>(IRuleBuilder<T, ReservationStatus> ruleBuilder)
+    {
+        public IRuleBuilder<T, ReservationStatus> ValidReservationStatus()
+            => ruleBuilder
+                .IsInEnum()
+                .WithMessage($"ReservationStatus must be {string.Join(", ", Enum.GetNames<ReservationStatus>())}");
     }
 }

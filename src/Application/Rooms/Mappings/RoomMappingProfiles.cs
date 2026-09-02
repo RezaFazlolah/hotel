@@ -13,13 +13,10 @@ public class RoomMappingProfiles
     public RoomMappingProfiles()
     {
         CreateMap<Room, RoomDto>();
-        // .ForMember(dst => dst.HotelDto, opt => opt.MapFrom(src => src.Hotel));
 
         CreateMap<Result<Room>, Result<RoomDto>>();
-
         CreateMap<PagedResult<Room>, PagedResult<RoomDto>>()
             .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data));
-
         CreateMap<Result<PagedResult<Room>>, Result<PagedResult<RoomDto>>>();
 
         CreateMap<CreateRoomCommand, Room>()
@@ -27,7 +24,7 @@ public class RoomMappingProfiles
             .ForMember(dst => dst.Hotel, opt => opt.Ignore())
             .ForMember(dst => dst.Reservations, opt => opt.Ignore());
 
-        CreateMap<UpdateRoomCommandBase, Room>()
+        CreateMap<UpdateRoomBaseCommand, Room>()
             .ForMember(dst => dst.Hotel, opt => opt.Ignore())
             .ForMember(dst => dst.HotelId, opt => opt.Ignore())
             .ForMember(dst => dst.Reservations, opt => opt.Ignore())
@@ -35,8 +32,8 @@ public class RoomMappingProfiles
             .Include<UpdateRoomAsManagerCommand, Room>();
         CreateMap<UpdateRoomAsAdminCommand, Room>()
             .ForMember(dst=>dst.HotelId, opt=>opt.MapFrom(src=>src.HotelId))
-            .IncludeBase<UpdateRoomCommandBase, Room>();
+            .IncludeBase<UpdateRoomBaseCommand, Room>();
         CreateMap<UpdateRoomAsManagerCommand, Room>()
-            .IncludeBase<UpdateRoomCommandBase, Room>();
+            .IncludeBase<UpdateRoomBaseCommand, Room>();
     }
 }

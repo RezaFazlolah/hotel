@@ -60,6 +60,14 @@ public abstract class RepositoryBase<TId, TEntity>(
         return Result<TEntity>.Success(entity, ResultCode.Updated);
     }
 
+    public virtual async Task<Result<TEntity>> UpdateWithReloadAsync(
+        TEntity entity,
+        CancellationToken ct)
+    {
+        await db.SaveChangesAsync(ct);
+        return Result<TEntity>.Success(entity, ResultCode.Updated);
+    }
+    
     public virtual async Task<Result<TEntity>> DeleteAsync(
         TId id,
         CancellationToken ct)

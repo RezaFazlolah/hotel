@@ -1,7 +1,7 @@
 namespace Application.Hotels.Commands;
 
 public record UpdateHotelAsAdminCommand
-    : UpdateHotelCommandBase
+    : UpdateHotelBaseCommand
 {
     public required decimal Rating { get; init; }
 }

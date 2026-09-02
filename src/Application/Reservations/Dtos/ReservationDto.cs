@@ -11,7 +11,4 @@ public record ReservationDto
     public DateTimeOffset CheckOutDate { get; init; }
     public decimal TotalPrice { get; init; }
     public ReservationStatus Status { get; init; }
-    
-    // public required GuestDto Guest { get; set; }
-    // public required RoomDto Room { get; set; }
 }

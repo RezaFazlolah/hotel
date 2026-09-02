@@ -18,7 +18,7 @@ public static class RoomValidationExtensions
         public IRuleBuilder<T, RoomType> ValidRoomType()
             => ruleBuilder
                 .IsInEnum()
-                .WithMessage("RoomType must be an enum");
+                .WithMessage($"RoomType must be {string.Join(", ", Enum.GetNames<RoomType>())}");
     }
 
     extension<T>(IRuleBuilder<T, decimal> ruleBuilder)

@@ -9,6 +9,6 @@ public class HotelSortParametersValidator
     {
         RuleFor(x => x.SortBy)
             .IsInEnum()
-            .WithMessage("SortBy is not valid");
+            .WithMessage($"SortBy {string.Join(", ", Enum.GetNames<HotelSortBy>())}");
     }
 }

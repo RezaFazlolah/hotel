@@ -15,9 +15,18 @@ public class ReservationMappingProfiles
     {
         CreateMap<CreateReservationCommandDto, CreateReservationCommand>();
 
-        CreateMap<UpdateReservationCommandDto, UpdateReservationCommand>()
-            .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty));
-
+        CreateMap<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>()
+            .ForMember(dst => dst.ReservationId, opt => opt.Ignore())
+            .Include<UpdateReservationAsAdminCommandDto, UpdateReservationAsAdminCommand>()
+            .Include<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>()
+            .Include<UpdateReservationAsGuestCommandDto, UpdateReservationAsGuestCommand>();
+        CreateMap<UpdateReservationAsAdminCommandDto, UpdateReservationAsAdminCommand>()
+            .IncludeBase<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>();
+        CreateMap<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>()
+            .IncludeBase<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>();
+        CreateMap<UpdateReservationAsGuestCommandDto, UpdateReservationAsGuestCommand>()
+            .IncludeBase<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>();
+        
         CreateMap<GetAllReservationsQueryDto, GetAllReservationsQuery>()
             .ForMember(dst => dst.ReservationFilterParameters,
                 opt => opt.MapFrom(src =>

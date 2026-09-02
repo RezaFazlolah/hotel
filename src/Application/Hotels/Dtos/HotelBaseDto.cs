@@ -1,6 +1,6 @@
 namespace Application.Hotels.Dtos;
 
-public record BaseHotelDto
+public record HotelBaseDto
 {
     public Guid Id { get; init; }
     public string Name { get; init; } = string.Empty;
