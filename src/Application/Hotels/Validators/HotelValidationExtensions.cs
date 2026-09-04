@@ -6,16 +6,19 @@ public static class HotelValidationExtensions
 {
     extension<T>(IRuleBuilder<T, decimal> ruleBuilder)
     {
-        public IRuleBuilder<T, decimal> ValidHotelRating()
+        public IRuleBuilder<T, decimal> ValidHotelRating(int minRating, int maxRating)
             => ruleBuilder
-                .InclusiveBetween(1, 5)
+                .InclusiveBetween(minRating, maxRating)
                 .WithMessage("Rating must be between 1 and 5");
     }
+
     extension<T>(IRuleBuilder<T, decimal?> ruleBuilder)
     {
-        public IRuleBuilder<T, decimal?> ValidHotelRating()
+        public IRuleBuilder<T, decimal?> ValidHotelRating(int minRating, int maxRating)
             => ruleBuilder
-                .Must((_, rating) => rating is null or >= 1 and <= 5)
-                .WithMessage("Rating must be between 1 and 5");
+                .Must((_, rating) =>
+                    rating is null
+                    || (minRating <= rating && rating <= maxRating))
+                .WithMessage($"Rating must be between {minRating} and {maxRating}");
     }
 }

@@ -1,10 +1,12 @@
 using Application.Common.Behaviors;
 using Application.Common.Paginations;
+using Application.Hotels.Configurations;
 using Application.Reservations.Services;
 using Domain.Interfaces;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Application;
 
@@ -31,6 +33,11 @@ public static class DependencyInjection
                 .Bind(configuration.GetSection(PaginationSettings.SectionName))
                 .Validate(ps => ps.MaxPageSize > 0, "PaginationSettings:MaxPageSize must be greater than 0")
                 .ValidateOnStart();
+
+            services.AddOptions<HotelSettings>()
+                .Bind(configuration.GetSection(HotelSettings.SectionName))
+                .ValidateOnStart();
+            services.AddSingleton<IValidateOptions<HotelSettings>, HotelSettingsValidator>();
 
             services.AddScoped<IReservationService, ReservationService>();
 
