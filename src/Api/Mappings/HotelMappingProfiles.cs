@@ -15,19 +15,10 @@ public class HotelMappingProfiles
     {
         CreateMap<CreateHotelCommandDto, CreateHotelCommand>();
 
-        CreateMap<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>()
-            .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty))
-            .Include<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
-            .Include<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>();
-        CreateMap<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
-            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
-        CreateMap<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>()
-            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
-        
-        
         CreateMap<GetAllHotelsQueryDto, GetAllHotelsQuery>()
-            .ForMember(dst => dst.HotelFilterParameters,
-                opt => opt.MapFrom(src =>
+            .ForMember(dst =>
+                dst.HotelFilterParameters, opt =>
+                opt.MapFrom(src =>
                     new HotelFilterParameters
                     {
                         Name = src.Name,
@@ -55,5 +46,14 @@ public class HotelMappingProfiles
                         }
                         : new PaginationParameters())
             );
+        
+        CreateMap<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>()
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty))
+            .Include<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
+            .Include<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>();
+        CreateMap<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
+            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
+        CreateMap<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>()
+            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
     }
 }

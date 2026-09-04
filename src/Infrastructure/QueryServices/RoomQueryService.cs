@@ -16,7 +16,7 @@ namespace Infrastructure.QueryServices;
 public class RoomQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : QueryServiceBase<Domain.Models.Room, RoomDto>(db, configurationProvider),
+    : BaseQueryService<Domain.Models.Room, RoomDto>(db, configurationProvider),
         IRoomQueryService
 {
     public async Task<Result<PagedResult<RoomDto>>> GetAllAsync(

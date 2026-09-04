@@ -1,3 +1,4 @@
+using Application.Rooms.Validators;
 using FluentValidation;
 using SharedKernel.Enums;
 
@@ -9,41 +10,29 @@ public class RoomFilterParametersValidator
     public RoomFilterParametersValidator()
     {
         // Number
-        RuleFor(x=>x.MinNumber)
-            .GreaterThanOrEqualTo(1)
-            .When(x => x.MinNumber.HasValue)
-            .WithMessage("MinNumber must be greater than or equal to 1");
-
+        RuleFor(x => x.MinNumber)
+            .ValidRoomNumber();
         RuleFor(x => x.MaxNumber)
-            .GreaterThanOrEqualTo(1)
-            .When(x => x.MaxNumber.HasValue)
-            .WithMessage("MaxNumber must be greater than or equal to 1");
-
+            .ValidRoomNumber();
         RuleFor(x=>x.MinNumber)            
             .LessThanOrEqualTo(x=> x.MaxNumber)
             .When(x => x.MinNumber.HasValue &&  x.MaxNumber.HasValue)
-            .WithMessage("MaxNumber must be greater than or equal to MinNumber");
+            .WithMessage("MinNumber must be less than or equal to MaxNumber");
         
         // Type
         RuleFor(x => x.Type)
-            .IsInEnum()
-            .When(x => x.Type.HasValue)
-            .WithMessage($"RoomType must be {string.Join(", ", Enum.GetNames<RoomType>())}");
+            .ValidRoomType();
         
         // PricePerNight
         RuleFor(x => x.MinPricePerNight)
-            .GreaterThanOrEqualTo(0)
-            .When(x => x.MinPricePerNight.HasValue)
-            .WithMessage("MinPricePerNight must be greater than or equal to 0");
+            .ValidPricePerNight();
 
         RuleFor(x => x.MaxPricePerNight)
-            .GreaterThanOrEqualTo(0)
-            .When(x => x.MaxPricePerNight.HasValue)
-            .WithMessage("MaxPricePerNight must be greater than or equal to 1");
+            .ValidPricePerNight();
 
         RuleFor(x => x.MinPricePerNight)
             .LessThanOrEqualTo(x => x.MaxPricePerNight)
             .When(x => x.MinPricePerNight.HasValue && x.MaxPricePerNight.HasValue)
-            .WithMessage("MaxPricePerNight be greater than or equal to MinPricePerNight");
+            .WithMessage("MinPricePerNight be less than or equal to MaxPricePerNight");
     }
 }

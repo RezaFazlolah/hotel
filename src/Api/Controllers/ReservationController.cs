@@ -14,13 +14,13 @@ public class ReservationController(
     IMapper mapper)
     : BaseController
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllAsync(
-        [FromQuery] GetAllReservationsQueryDto request,
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateReservationCommandDto request,
         CancellationToken ct)
     {
-        var query = mapper.Map<GetAllReservationsQuery>(request);
-        var result = await mediator.Send(query, ct);
+        var command = mapper.Map<CreateReservationCommand>(request);
+        var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
 
@@ -34,13 +34,13 @@ public class ReservationController(
         return HandleResult(result);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateAsync(
-        [FromBody] CreateReservationCommandDto request,
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] GetAllReservationsQueryDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<CreateReservationCommand>(request);
-        var result = await mediator.Send(command, ct);
+        var query = mapper.Map<GetAllReservationsQuery>(request);
+        var result = await mediator.Send(query, ct);
         return HandleResult(result);
     }
 

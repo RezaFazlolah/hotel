@@ -8,16 +8,25 @@ using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
-public abstract class RepositoryBase<TId, TEntity>(
+public abstract class BaseRepository<TId, TEntity>(
     AppDbContext db,
     IDistributedCache cache)
     : IRepositoryBase<TId, TEntity>
     where TId : IEquatable<TId>
     where TEntity : class, IEntity<TId>
 {
-    public virtual async Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct)
-        => Result<IReadOnlyList<TEntity>>.Success(
-            await db.Set<TEntity>().ToListAsync(ct));
+    public virtual async Task<Result<TEntity>> AddAsync(
+        TEntity entity,
+        CancellationToken ct)
+    {
+        await db.Set<TEntity>().AddAsync(entity, ct);
+        await db.SaveChangesAsync(ct);
+
+        // var options = new DistributedCacheEntryOptions()
+        // await cache.SetAsync(entity.Id, JsonSerializer.SerializeToUtf8Bytes(entity), );
+
+        return Result<TEntity>.Success(entity, ResultCode.Created);
+    }
 
     public virtual async Task<Result<TEntity>> GetByIdAsync(
         TId id,
@@ -32,18 +41,9 @@ public abstract class RepositoryBase<TId, TEntity>(
             : Result<TEntity>.Success(entity);
     }
 
-    public virtual async Task<Result<TEntity>> AddAsync(
-        TEntity entity,
-        CancellationToken ct)
-    {
-        await db.Set<TEntity>().AddAsync(entity, ct);
-        await db.SaveChangesAsync(ct);
-
-        // var options = new DistributedCacheEntryOptions()
-        // await cache.SetAsync(entity.Id, JsonSerializer.SerializeToUtf8Bytes(entity), );
-
-        return Result<TEntity>.Success(entity, ResultCode.Created);
-    }
+    public virtual async Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct)
+        => Result<IReadOnlyList<TEntity>>.Success(
+            await db.Set<TEntity>().ToListAsync(ct));
 
     public virtual async Task<Result<TEntity>> UpdateAsync(
         TEntity entity,

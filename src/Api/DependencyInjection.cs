@@ -36,17 +36,19 @@ public static class DependencyInjection
                     Description = "Enter your JWT token here"
                 });
 
-                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-                {
-                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-                });
+                options.AddSecurityRequirement(document =>
+                    new OpenApiSecurityRequirement
+                    {
+                        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                    });
             });
 
             // AutoMapper
             services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
 
             // OpenTelemetry
-            services.AddOpenTelemetry().ConfigureResource(resource =>
+            services.AddOpenTelemetry()
+                .ConfigureResource(resource =>
                     resource.AddService(serviceName: applicationName))
                 .WithTracing(tracing =>
                     tracing.AddAspNetCoreInstrumentation()
@@ -54,13 +56,13 @@ public static class DependencyInjection
 
             services.AddHttpContextAccessor();
 
-            services.AddControllers().AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddProblemDetails();
             services.AddExceptionHandler<GlobalExceptionHandler>();
 
-            // Auth
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

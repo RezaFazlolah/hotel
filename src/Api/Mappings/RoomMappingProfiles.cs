@@ -15,15 +15,6 @@ public class RoomMappingProfiles
     {
         CreateMap<CreateRoomCommandDto, CreateRoomCommand>();
 
-        CreateMap<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>()
-            .ForMember(dst => dst.Id, opt => opt.Ignore())
-            .Include<UpdateRoomAsAdminCommandBaseDto, UpdateRoomAsAdminCommand>()
-            .Include<UpdateRoomAsManagerCommandBaseDto, UpdateRoomAsManagerCommand>();
-        CreateMap<UpdateRoomAsAdminCommandBaseDto, UpdateRoomAsAdminCommand>()
-            .IncludeBase<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>();
-        CreateMap<UpdateRoomAsManagerCommandBaseDto, UpdateRoomAsManagerCommand>()
-            .IncludeBase<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>();
-
         CreateMap<GetAllRoomsQueryDto, GetAllRoomsQuery>()
             .ForMember(dst => dst.RoomFilterParameters,
                 opt => opt.MapFrom(src =>
@@ -56,5 +47,14 @@ public class RoomMappingProfiles
                         }
                         : new PaginationParameters())
             );
+
+        CreateMap<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>()
+            .ForMember(dst => dst.Id, opt => opt.Ignore())
+            .Include<UpdateRoomAsAdminCommandBaseDto, UpdateRoomAsAdminCommand>()
+            .Include<UpdateRoomAsManagerCommandBaseDto, UpdateRoomAsManagerCommand>();
+        CreateMap<UpdateRoomAsAdminCommandBaseDto, UpdateRoomAsAdminCommand>()
+            .IncludeBase<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>();
+        CreateMap<UpdateRoomAsManagerCommandBaseDto, UpdateRoomAsManagerCommand>()
+            .IncludeBase<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>();
     }
 }

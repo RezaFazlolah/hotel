@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories;
 public class RoomRepository(
     AppDbContext db,
     IDistributedCache cache)
-    : RepositoryBase<Guid, Room>(db, cache),
+    : BaseRepository<Guid, Room>(db, cache),
         IRoomRepository
 {
     public async Task<Result<IReadOnlyList<Room>>> GetAllByHotelAsync(

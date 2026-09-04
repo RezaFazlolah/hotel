@@ -15,13 +15,14 @@ public class HotelController(
     IMapper mapper)
     : BaseController
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllAsync(
-        [FromQuery] GetAllHotelsQueryDto request,
+    [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateHotelCommandDto request,
         CancellationToken ct)
     {
-        var query = mapper.Map<GetAllHotelsQuery>(request);
-        var result = await mediator.Send(query, ct);
+        var command = mapper.Map<CreateHotelCommand>(request);
+        var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
 
@@ -35,20 +36,19 @@ public class HotelController(
         return HandleResult(result);
     }
 
-    [HttpPost]
-    [Authorize(Roles = nameof(UserRole.Admin))]
-    public async Task<IActionResult> CreateAsync(
-        [FromBody] CreateHotelCommandDto request,
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] GetAllHotelsQueryDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<CreateHotelCommand>(request);
-        var result = await mediator.Send(command, ct);
+        var query = mapper.Map<GetAllHotelsQuery>(request);
+        var result = await mediator.Send(query, ct);
         return HandleResult(result);
     }
 
     [HttpPut("admin/{id:guid}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
-    public async Task<IActionResult> UpdateAsync(
+    public async Task<IActionResult> UpdateAsAdminAsync(
         [FromRoute] Guid id,
         [FromBody] UpdateHotelAsAdminCommandDto request,
         CancellationToken ct)
@@ -60,7 +60,7 @@ public class HotelController(
 
     [HttpPut("manager/{id:guid}")]
     [Authorize(Roles = $"{nameof(UserRole.Manager)}")]
-    public async Task<IActionResult> UpdateAsync(
+    public async Task<IActionResult> UpdateAsManagerAsync(
         [FromRoute] Guid id,
         [FromBody] UpdateHotelAsManagerCommandDto request,
         CancellationToken ct)

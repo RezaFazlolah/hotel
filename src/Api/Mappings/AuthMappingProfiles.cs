@@ -10,12 +10,12 @@ public class AuthMappingProfiles
 {
     public AuthMappingProfiles()
     {
-        CreateMap<LoginCommandDto, LoginCommand>();
-
         CreateMap<RegisterCommandDto, RegisterCommand>()
             .ForMember(src=>src.Role,
                 opt => opt.MapFrom(_ => UserRole.Guest));
 
         CreateMap<RegisterByAdminCommandDto, RegisterCommand>();
+        
+        CreateMap<LoginCommandDto, LoginCommand>();
     }
 }

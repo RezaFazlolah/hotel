@@ -14,7 +14,7 @@ public class ReservationRepository(
     AppDbContext db,
     IRoomRepository roomRepository,
     IDistributedCache cache)
-    : RepositoryBase<Guid, Reservation>(db, cache),
+    : BaseRepository<Guid, Reservation>(db, cache),
         IReservationRepository
 {
     public override async Task<bool> ExistsAsync(
@@ -42,15 +42,15 @@ public class ReservationRepository(
 
     public async Task<bool> IsRoomReservedAsync(
         Guid roomId,
-        Guid guestId,
+        Guid reservationId,
         DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct)
         => await db.Reservations.AnyAsync(r =>
                 r.RoomId == roomId
-                && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate)
                 && r.Status != ReservationStatus.Cancelled
-                && r.GuestId != guestId,
+                && r.Id != reservationId
+                && !(r.CheckOutDate < checkInDate || checkOutDate < r.CheckInDate),
             ct);
 
     public async Task<Result<PagedResult<Reservation>>> GetAllByHotelAsync(

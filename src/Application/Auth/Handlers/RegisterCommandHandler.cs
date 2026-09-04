@@ -20,7 +20,7 @@ public class RegisterCommandHandler(
     {
         var registeringUser = UserFactory.CreateUserFromRegisterCommand(request); 
 
-        var userRegisterResult = await userRepository.InsertAsync(registeringUser, request.Password, ct);
+        var userRegisterResult = await userRepository.AddAsync(registeringUser, request.Password, ct);
         if(!userRegisterResult.Succeeded)
             return Result<RegisteredUserDto>.Failure(userRegisterResult.Errors.Prepend(new Error($"register user {request.PhoneNumber} failed.")));
         

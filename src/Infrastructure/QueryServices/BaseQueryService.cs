@@ -9,7 +9,7 @@ using SharedKernel.Enums;
 
 namespace Infrastructure.QueryServices;
 
-public abstract class QueryServiceBase<TEntity, TDto>(
+public abstract class BaseQueryService<TEntity, TDto>(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
     : IQueryServiceBase<TDto>

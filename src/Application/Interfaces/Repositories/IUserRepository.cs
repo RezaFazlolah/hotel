@@ -7,7 +7,7 @@ namespace Application.Interfaces.Repositories;
 public interface IUserRepository
     : IRepositoryBase<Guid, User>
 {
-    Task<Result> InsertAsync(
+    Task<Result> AddAsync(
         User user,
         string password,
         CancellationToken ct);

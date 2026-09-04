@@ -11,7 +11,7 @@ public class CreateReservationCommandValidator
         RuleFor(x => x.CheckInDate)
             .ValidCheckInDate();
 
-        RuleFor(c => c.CheckOutDate)
+        RuleFor(x => x.CheckOutDate)
             .ValidCheckOutDate(x=>x.CheckInDate);
     }
 }

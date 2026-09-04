@@ -10,7 +10,7 @@ public class UpdateHotelAsAdminCommandValidator
     {
         Include(new UpdateHotelBaseCommandValidator());
         
-        RuleFor(c => c.Rating)
+        RuleFor(x => x.Rating)
             .ValidHotelRating();
     }
 }

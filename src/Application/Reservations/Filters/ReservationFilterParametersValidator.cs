@@ -1,3 +1,4 @@
+using Application.Reservations.Validators;
 using FluentValidation;
 using SharedKernel.Enums;
 
@@ -9,25 +10,18 @@ public class ReservationFilterParametersValidator
     public ReservationFilterParametersValidator()
     {
         RuleFor(x => x.MinCheckInDate)
-            .LessThanOrEqualTo(x => x.MaxCheckInDate)
-            .When(x => x.MinCheckInDate.HasValue && x.MaxCheckInDate.HasValue)
-            .WithMessage("MinCheckInDate must be less than or equal to MaxCheckInDate");
-
+            .ValidMinCheckInDate();
         RuleFor(x => x.MinCheckOutDate)
-            .LessThanOrEqualTo(x => x.MaxCheckOutDate)
-            .When(x => x.MinCheckOutDate.HasValue && x.MaxCheckOutDate.HasValue)
-            .WithMessage("MinCheckOutDate must be less than or equal to MaxCheckOutDate");
+            .ValidMinCheckOutDate();
+        RuleFor(x => x.MaxCheckInDate)
+            .ValidMaxCheckInDate(x => x.MinCheckInDate);
+        RuleFor(x => x.MaxCheckOutDate)
+            .ValidMaxCheckOutDate(x => x.MinCheckOutDate);
 
         RuleFor(x => x.MinTotalPrice)
-            .GreaterThanOrEqualTo(0)
-            .When(x => x.MinTotalPrice.HasValue)
-            .WithMessage("MinTotalPrice cannot be negative");
-
+            .ValidTotalPrice();
         RuleFor(x => x.MaxTotalPrice)
-            .GreaterThanOrEqualTo(0)
-            .When(x => x.MaxTotalPrice.HasValue)
-            .WithMessage("MaxTotalPrice cannot be negative");
-
+            .ValidTotalPrice();
         RuleFor(x => x.MinTotalPrice)
             .LessThanOrEqualTo(x => x.MaxTotalPrice)
             .When(x => x.MinTotalPrice.HasValue && x.MaxTotalPrice.HasValue)

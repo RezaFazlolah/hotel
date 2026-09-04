@@ -8,17 +8,17 @@ public class CreateRoomCommandValidator
 {
     public CreateRoomCommandValidator()
     {
-        RuleFor(c => c.HotelId)
+        RuleFor(x => x.HotelId)
             .NotEmpty()
             .WithMessage("hotelId is required");
 
-        RuleFor(c => c.Number)
+        RuleFor(x => x.Number)
             .ValidRoomNumber();
 
-        RuleFor(c => c.Type)
+        RuleFor(x => x.Type)
             .ValidRoomType();
 
-        RuleFor(c => c.PricePerNight)
+        RuleFor(x => x.PricePerNight)
             .ValidPricePerNight();
     }
 }

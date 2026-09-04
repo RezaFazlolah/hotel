@@ -22,6 +22,7 @@ public class UpdateReservationAsGuestCommandHandler(
         CancellationToken ct)
     {
         var rootError = new Error($"update reservation {request.ReservationId} failed");
+
         var userInfoResult = currentUserService.Info;
         if (!userInfoResult.Succeeded)
             return Result<ReservationDto>.Failure(userInfoResult.Errors.Prepend(rootError));
@@ -39,8 +40,8 @@ public class UpdateReservationAsGuestCommandHandler(
             return Result<ReservationDto>.Failure([rootError, new Error($"reservation not found", ErrorCode.NotFound)],
                 ResultCode.NotFound);
 
-        var isReserved = await reservationRepository.IsRoomReservedAsync(reservation.RoomId, userInfo.id, request.CheckInDate,
-            request.CheckOutDate, ct);
+        var isReserved = await reservationRepository.IsRoomReservedAsync(reservation.RoomId, request.ReservationId,
+            request.CheckInDate, request.CheckOutDate, ct);
         if (isReserved)
             return Result<ReservationDto>.Failure([rootError, new Error("room is reserved")]);
 

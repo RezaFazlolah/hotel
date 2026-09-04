@@ -13,14 +13,9 @@ public class UserRepository(
     AppDbContext db,
     UserManager<User> userManager,
     IDistributedCache cache)
-    : RepositoryBase<Guid, User>(db, cache),
+    : BaseRepository<Guid, User>(db, cache),
         IUserRepository
 {
-    public virtual async Task<bool> ExistsAsync(
-        string phoneNumber,
-        CancellationToken ct)
-        => await userManager.Users.AnyAsync(u => u.PhoneNumber == phoneNumber, ct);
-
     public override Task<Result<User>> AddAsync(
             User entity,
             CancellationToken ct)
@@ -28,7 +23,7 @@ public class UserRepository(
         => throw new NotSupportedException(
             "use UserRepository.InsertAsync(User user, string password, CancellationToken ct) instead");
 
-    public virtual async Task<Result> InsertAsync(
+    public virtual async Task<Result> AddAsync(
         User user,
         string password,
         CancellationToken ct)
@@ -130,4 +125,9 @@ public class UserRepository(
                 ResultCode.NotFound)
             : Result<User>.Success(result);
     }
+    
+    public virtual async Task<bool> ExistsAsync(
+        string phoneNumber,
+        CancellationToken ct)
+        => await userManager.Users.AnyAsync(u => u.PhoneNumber == phoneNumber, ct);
 }

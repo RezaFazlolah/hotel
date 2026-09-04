@@ -8,15 +8,15 @@ public class CreateHotelCommandValidator
 {
     public CreateHotelCommandValidator()
     {
-        RuleFor(c => c.Name)
-            .NotEmpty().
-            WithMessage("Name is required");
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .WithMessage("Name is required");
         
-        RuleFor(c => c.Address)
+        RuleFor(x => x.Address)
             .NotEmpty()
             .WithMessage("Address is required");
 
-        RuleFor(c => c.Rating)
+        RuleFor(x => x.Rating)
             .ValidHotelRating();
     }
 }

@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories;
 public class HotelRepository(
     AppDbContext db,
     IDistributedCache cache)
-    : RepositoryBase<Guid, Hotel>(db, cache),
+    : BaseRepository<Guid, Hotel>(db, cache),
         IHotelRepository
 {
     public async Task<Result<Guid?>> GetManagerIdAsync(

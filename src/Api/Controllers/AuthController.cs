@@ -25,17 +25,6 @@ public class AuthController(
         return HandleResult(result);
     }
 
-    [AllowAnonymous]
-    [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync(
-        [FromBody] LoginCommandDto request,
-        CancellationToken cancellationToken)
-    {
-        var command = mapper.Map<LoginCommand>(request);
-        var result = await mediator.Send(command, cancellationToken);
-        return HandleResult(result);
-    }
-
     [Authorize(Roles = nameof(UserRole.Admin))]
     [HttpPost("registerByAdmin")]
     public async Task<IActionResult> RegisterByAdminAsync(
@@ -46,6 +35,17 @@ public class AuthController(
         // var command = mapper.Map<RegisterCommand>(request);
         // var result = await mediator.Send(command, cancellationToken);
         // return HandleResult(result);
+    }
+    
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> LoginAsync(
+        [FromBody] LoginCommandDto request,
+        CancellationToken cancellationToken)
+    {
+        var command = mapper.Map<LoginCommand>(request);
+        var result = await mediator.Send(command, cancellationToken);
+        return HandleResult(result);
     }
 
     [HttpGet("me")]

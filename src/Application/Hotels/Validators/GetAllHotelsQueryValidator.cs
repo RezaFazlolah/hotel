@@ -15,13 +15,13 @@ public class GetAllHotelsQueryValidator
         IValidator<HotelSortParameters> hotelSortParametersValidator,
         IValidator<PaginationParameters> paginationParametersValidator)
     {
-        RuleFor(x=>x.HotelFilterParameters)
+        RuleFor(x => x.HotelFilterParameters)
             .SetValidator(hotelFilterParametersValidator)
             .When(x => x.HotelFilterParameters != null);
 
         RuleFor(x => x.HotelSortParameters)
             .SetValidator(hotelSortParametersValidator);
-        
+
         RuleFor(x => x.PaginationParameters)
             .SetValidator(paginationParametersValidator);
     }

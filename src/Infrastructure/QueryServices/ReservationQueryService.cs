@@ -16,7 +16,7 @@ namespace Infrastructure.QueryServices;
 public class ReservationQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : QueryServiceBase<Domain.Models.Reservation, ReservationDto>(db, configurationProvider),
+    : BaseQueryService<Domain.Models.Reservation, ReservationDto>(db, configurationProvider),
         IReservationQueryService
 {
     public async Task<Result<PagedResult<ReservationDto>>> GetAllAsync(

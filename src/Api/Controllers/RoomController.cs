@@ -15,13 +15,14 @@ public class RoomController(
     IMapper mapper)
     : BaseController
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllAsync(
-        [FromQuery] GetAllRoomsQueryDto request,
+    [HttpPost]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateRoomCommandDto request,
         CancellationToken ct)
     {
-        var query = mapper.Map<GetAllRoomsQuery>(request);
-        var result = await mediator.Send(query, ct);
+        var command = mapper.Map<CreateRoomCommand>(request);
+        var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
 
@@ -35,14 +36,13 @@ public class RoomController(
         return HandleResult(result);
     }
 
-    [HttpPost]
-    [Authorize(Roles = $"{nameof(UserRole.Admin)}, {nameof(UserRole.Manager)}")]
-    public async Task<IActionResult> CreateAsync(
-        [FromBody] CreateRoomCommandDto request,
+    [HttpGet]
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] GetAllRoomsQueryDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<CreateRoomCommand>(request);
-        var result = await mediator.Send(command, ct);
+        var query = mapper.Map<GetAllRoomsQuery>(request);
+        var result = await mediator.Send(query, ct);
         return HandleResult(result);
     }
 

@@ -5,15 +5,15 @@ namespace Application.Interfaces.Repositories;
 
 public interface IRepositoryBase<in TId, TEntity>
 {
-    Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct);
+    Task<Result<TEntity>> AddAsync(
+        TEntity entity,
+        CancellationToken ct);
 
     Task<Result<TEntity>> GetByIdAsync(
         TId id,
         CancellationToken ct);
 
-    Task<Result<TEntity>> AddAsync(
-        TEntity entity,
-        CancellationToken ct);
+    Task<Result<IReadOnlyList<TEntity>>> GetAllAsync(CancellationToken ct);
 
     Task<Result<TEntity>> UpdateAsync(
         TEntity entity,
