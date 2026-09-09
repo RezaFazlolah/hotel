@@ -32,6 +32,7 @@ public class HotelMappingProfiles
             .ForMember(dst => dst.Rooms, opt => opt.Ignore());
 
         CreateMap<UpdateHotelBaseCommand, Hotel>()
+            .ForMember(dst => dst.Id, opt => opt.MapFrom(src=>src.HotelId))
             .ForMember(dst => dst.Rating, opt => opt.Ignore())
             .ForMember(dst => dst.Manager, opt => opt.Ignore())
             .ForMember(dst => dst.Rooms, opt => opt.Ignore())

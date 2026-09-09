@@ -48,7 +48,7 @@ public class HotelMappingProfiles
             );
         
         CreateMap<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>()
-            .ForMember(dst => dst.Id, opt => opt.MapFrom(_ => Guid.Empty))
+            .ForMember(dst => dst.HotelId, opt => opt.MapFrom(_ => Guid.Empty))
             .Include<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
             .Include<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>();
         CreateMap<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()

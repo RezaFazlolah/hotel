@@ -33,7 +33,9 @@ public static class RoomValidationExtensions
     {
         public IRuleBuilder<T, RoomType?> ValidRoomType()
             => ruleBuilder
-                .Must((_, roomType) => roomType is null || Enum.IsDefined<RoomType>(roomType.Value))
+                .Must((_, roomType) =>
+                    roomType is null
+                    || Enum.IsDefined<RoomType>(roomType.Value))
                 .WithMessage($"RoomType must be {string.Join(", ", Enum.GetNames<RoomType>())}");
     }
 

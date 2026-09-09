@@ -22,7 +22,7 @@ public class UpdateHotelAsAdminCommandHandler(
         UpdateHotelAsAdminCommand request,
         CancellationToken ct)
     {
-        var rootError = new Error($"update hotel {request.Id} failed");
+        var rootError = new Error($"update hotel {request.HotelId} failed");
 
         var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
@@ -32,15 +32,18 @@ public class UpdateHotelAsAdminCommandHandler(
         if (!currentUserInfo.roles.Contains(UserRole.Admin))
             return Result<HotelDto>.Forbidden(rootError);
 
-        var updatedHotel = mapper.Map<Hotel>(request);
-        
-        var updateResult = await hotelRepository.UpdateAsync(updatedHotel, ct);
-        if (updateResult.Succeeded)
-        {
-            var managerResult = await managerRepository.GetByHotelIdAsync(request.Id, ct);
-            if(managerResult.Succeeded)
-                updateResult.Value.Manager=managerResult.Value;
-        }
+        var hotelResult = await hotelRepository.GetByIdAsync(request.HotelId, ct);
+        if (!hotelResult.Succeeded)
+            return Result<HotelDto>.Failure(hotelResult.Errors.Prepend(rootError));
+        var hotel = hotelResult.Value;
+
+        var managerResult = await managerRepository.GetByHotelIdAsync(request.HotelId, ct);
+        if (!managerResult.Succeeded)
+            return Result<HotelDto>.Failure(managerResult.Errors.Prepend(rootError));
+        hotel.Manager = managerResult.Value;
+
+        mapper.Map(request, hotel);
+        var updateResult = await hotelRepository.UpdateWithReloadAsync(hotel, ct);
         var updateResultDto = updateResult.Map<Hotel, HotelDto>(mapper);
         return Result<HotelDto>.Handle(updateResultDto, rootError);
     }

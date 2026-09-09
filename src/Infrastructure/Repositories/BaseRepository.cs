@@ -56,7 +56,6 @@ public abstract class BaseRepository<TId, TEntity>(
 
         db.Set<TEntity>().Update(entity);
         await db.SaveChangesAsync(ct);
-
         return Result<TEntity>.Success(entity, ResultCode.Updated);
     }
 

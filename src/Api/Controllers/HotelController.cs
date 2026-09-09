@@ -53,7 +53,7 @@ public class HotelController(
         [FromBody] UpdateHotelAsAdminCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateHotelAsAdminCommand>(request) with { Id = id };
+        var command = mapper.Map<UpdateHotelAsAdminCommand>(request) with { HotelId = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
@@ -65,7 +65,7 @@ public class HotelController(
         [FromBody] UpdateHotelAsManagerCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateHotelAsManagerCommand>(request) with { Id = id };
+        var command = mapper.Map<UpdateHotelAsManagerCommand>(request) with { HotelId = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
