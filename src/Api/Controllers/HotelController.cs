@@ -2,6 +2,7 @@ using Api.Dtos.HotelDtos;
 using Application.Hotels.Commands;
 using Application.Hotels.Queries;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,8 @@ namespace Api.Controllers;
 [Authorize]
 public class HotelController(
     IMediator mediator,
-    IMapper mapper)
+    IMapper mapper,
+    IValidator<GetAllHotelsQueryDto> getAllHotelsQueryDtoValidator)
     : BaseController
 {
     [HttpPost]
@@ -41,6 +43,10 @@ public class HotelController(
         [FromQuery] GetAllHotelsQueryDto request,
         CancellationToken ct)
     {
+        var validationResult = await getAllHotelsQueryDtoValidator.ValidateAsync(request, ct);
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+        
         var query = mapper.Map<GetAllHotelsQuery>(request);
         var result = await mediator.Send(query, ct);
         return HandleResult(result);

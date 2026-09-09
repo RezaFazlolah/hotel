@@ -1,3 +1,4 @@
+using Application.Common.Paginations;
 using Application.Hotels.Filters;
 using Application.Hotels.Queries;
 using Application.Hotels.Sorts;

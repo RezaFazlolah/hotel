@@ -1,4 +1,5 @@
 using Api.Dtos.HotelDtos;
+using Application.Common.Paginations;
 using Application.Hotels.Commands;
 using Application.Hotels.Filters;
 using Application.Hotels.Queries;

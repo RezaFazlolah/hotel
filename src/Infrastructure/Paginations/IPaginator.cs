@@ -1,6 +1,7 @@
+using Application.Common.Paginations;
 using SharedKernel.Paginations;
 
-namespace Application.Interfaces;
+namespace Infrastructure.Paginations;
 
 public interface IPaginator
 {

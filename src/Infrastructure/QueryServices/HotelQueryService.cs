@@ -1,3 +1,4 @@
+using Application.Common.Paginations;
 using Application.Hotels.Dtos;
 using Application.Hotels.Filters;
 using Application.Hotels.Sorts;
@@ -5,7 +6,7 @@ using Application.Interfaces.QueryServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
-using Infrastructure.Common;
+using Infrastructure.Paginations;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;

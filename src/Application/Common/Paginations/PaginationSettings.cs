@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+
 namespace Application.Common.Paginations;
 
 public class PaginationSettings

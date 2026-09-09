@@ -2,6 +2,6 @@ namespace SharedKernel.Paginations;
 
 public class PaginationParameters
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 50;
+    public int PageNumber { get; init; }
+    public int PageSize { get; init; }
 }

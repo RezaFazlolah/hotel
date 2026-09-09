@@ -1,4 +1,5 @@
 using Api.Dtos.RoomDtos;
+using Application.Common.Paginations;
 using Application.Rooms.Commands;
 using Application.Rooms.Filters;
 using Application.Rooms.Queries;

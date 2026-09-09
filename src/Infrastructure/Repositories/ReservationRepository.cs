@@ -1,6 +1,7 @@
+using Application.Common.Paginations;
 using Application.Interfaces.Repositories;
 using Domain.Models;
-using Infrastructure.Common;
+using Infrastructure.Paginations;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;

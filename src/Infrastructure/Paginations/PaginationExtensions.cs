@@ -1,7 +1,8 @@
+using Application.Common.Paginations;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Paginations;
 
-namespace Infrastructure.Common;
+namespace Infrastructure.Paginations;
 
 public static class PaginationExtensions
 {

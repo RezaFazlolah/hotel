@@ -1,3 +1,4 @@
+using Application.Common.Paginations;
 using Application.Interfaces.QueryServices;
 using Application.Reservations.Dtos;
 using Application.Reservations.Filters;
@@ -5,7 +6,7 @@ using Application.Reservations.Sorts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Models;
-using Infrastructure.Common;
+using Infrastructure.Paginations;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Common;
@@ -16,7 +17,7 @@ namespace Infrastructure.QueryServices;
 public class ReservationQueryService(
     AppDbContext db,
     IConfigurationProvider configurationProvider)
-    : BaseQueryService<Domain.Models.Reservation, ReservationDto>(db, configurationProvider),
+    : BaseQueryService<Reservation, ReservationDto>(db, configurationProvider),
         IReservationQueryService
 {
     public async Task<Result<PagedResult<ReservationDto>>> GetAllAsync(
