@@ -5,7 +5,7 @@ namespace Domain.Models;
 public class Role
     : IdentityRole<Guid>
 {
-    public Role() 
+    public Role()
         : base()
     {
     }

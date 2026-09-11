@@ -6,8 +6,10 @@ using Domain.Models;
 using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
+using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace Infrastructure.Services;
 
@@ -31,15 +33,19 @@ public class JwtService(
         claims.AddRange(rolesAsClaims);
 
         var jwtSettings = jwtOptions.Value;
+        var claimsAsDictionary = claims.ToDictionary(c => c.Type, object (c) => c.Value);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
-        var token = new JwtSecurityToken(
-            issuer: jwtSettings.Issuer,
-            audience: jwtSettings.Audience,
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
-            signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256));
 
-        var result = new JwtSecurityTokenHandler().WriteToken(token);
-        return Result<string>.Success(result);
+        var jwtDescriptor = new SecurityTokenDescriptor
+        {
+            SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature),
+            Claims = claimsAsDictionary,
+            Expires = DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
+            NotBefore = DateTime.UtcNow
+        };
+
+        var jwtHandler = new JsonWebTokenHandler();
+        var jwt = jwtHandler.CreateToken(jwtDescriptor);
+        return Result<string>.Success(jwt);
     }
 }

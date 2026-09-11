@@ -28,7 +28,7 @@ public class UserRepository(
         string password,
         CancellationToken ct)
     {
-        var userCreateResult = (await userManager.CreateAsync(user, password));
+        var userCreateResult = await userManager.CreateAsync(user, password);
         if (!userCreateResult.Succeeded)
         {
             var errors = userCreateResult.Errors.Select(e => $"{e.Code}: {e.Description}");
