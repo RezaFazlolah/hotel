@@ -29,7 +29,7 @@ try
     builder.Services.AddDomainServices();
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddInfrastructureServices(builder.Configuration);
-    builder.Services.AddApiServices(builder.Environment.ApplicationName);
+    builder.Services.AddApiServices(builder.Configuration, builder.Environment.ApplicationName);
 
     var app = builder.Build();
 

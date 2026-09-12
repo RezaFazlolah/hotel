@@ -4,6 +4,8 @@ using Api.ExceptionHandlers;
 using Api.Services;
 using Application.Interfaces.Services;
 using Infrastructure.Configurations;
+using Infrastructure.Jwt;
+using Infrastructure.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,7 +19,7 @@ public static class DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddApiServices(string applicationName)
+        public IServiceCollection AddApiServices(IConfiguration configuration, string applicationName)
         {
             // scalar
             services.AddOpenApi();
@@ -78,6 +80,7 @@ public static class DependencyInjection
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.FromMinutes(jwtOptions.Value.ClockSkewInMinutes),
                         ValidIssuer = jwtOptions.Value.Issuer,
                         ValidAudience = jwtOptions.Value.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key))

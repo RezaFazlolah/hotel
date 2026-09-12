@@ -51,8 +51,7 @@ public abstract class BaseRepository<TId, TEntity>(
     {
         var entityExists = await ExistsAsync(entity.Id, ct);
         if (!entityExists)
-            return Result<TEntity>.Failure(new Error($"{EntityName} not found", ErrorCode
-                .NotFound), ResultCode.NotFound);
+            return Result<TEntity>.Failure(new Error($"{EntityName} not found", ErrorCode.NotFound), ResultCode.NotFound);
 
         db.Set<TEntity>().Update(entity);
         await db.SaveChangesAsync(ct);

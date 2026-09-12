@@ -1,15 +1,14 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.Services;
 using Domain.Models;
 using Infrastructure.Configurations;
+using Infrastructure.Jwt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.Common;
-using JwtRegisteredClaimNames = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
 
 namespace Infrastructure.Services;
 
@@ -23,8 +22,6 @@ public class JwtService(
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.PhoneNumber, user.PhoneNumber ?? string.Empty),
-            new(JwtRegisteredClaimNames.Name, user.FullName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -35,17 +32,20 @@ public class JwtService(
         var jwtSettings = jwtOptions.Value;
         var claimsAsDictionary = claims.ToDictionary(c => c.Type, object (c) => c.Value);
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
-
+        var now = DateTime.UtcNow;
+        
         var jwtDescriptor = new SecurityTokenDescriptor
         {
-            SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature),
+            Issuer = jwtSettings.Issuer,
+            Audience = jwtSettings.Audience,
             Claims = claimsAsDictionary,
-            Expires = DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
-            NotBefore = DateTime.UtcNow
+            IssuedAt = now,
+            Expires = now.AddMinutes(jwtSettings.DurationInMinutes),
+            SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature),
         };
 
-        var jwtHandler = new JsonWebTokenHandler();
-        var jwt = jwtHandler.CreateToken(jwtDescriptor);
-        return Result<string>.Success(jwt);
+        var handler = new JsonWebTokenHandler();
+        var token = handler.CreateToken(jwtDescriptor);
+        return Result<string>.Success(token);
     }
 }

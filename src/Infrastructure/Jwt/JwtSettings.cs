@@ -1,4 +1,4 @@
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Jwt;
 
 public class JwtSettings
 {
@@ -7,4 +7,5 @@ public class JwtSettings
     public string Issuer { get; init; } = string.Empty;
     public string Audience { get; init; } = string.Empty;
     public int DurationInMinutes { get; init; }
+    public int ClockSkewInMinutes { get; init; }
 }

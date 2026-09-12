@@ -4,6 +4,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Models;
 using Infrastructure.Configurations;
+using Infrastructure.Jwt;
 using Infrastructure.Paginations;
 using Infrastructure.Persistence;
 using Infrastructure.QueryServices;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using JwtSettingsValidator = Infrastructure.Jwt.JwtSettingsValidator;
 
 namespace Infrastructure;
 
