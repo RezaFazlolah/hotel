@@ -1,5 +1,4 @@
 using Api.Dtos.HotelDtos;
-using Application.Common.Paginations;
 using Application.Hotels.Commands;
 using Application.Hotels.Filters;
 using Application.Hotels.Queries;
@@ -47,14 +46,11 @@ public class HotelMappingProfiles
                         }
                         : new PaginationParameters())
             );
-        
-        CreateMap<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>()
-            .ForMember(dst => dst.HotelId, opt => opt.MapFrom(_ => Guid.Empty))
-            .Include<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
-            .Include<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>();
-        CreateMap<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
-            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
+
         CreateMap<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>()
-            .IncludeBase<UpdateHotelBaseCommandDto, UpdateHotelBaseCommand>();
+            .ForMember(dst => dst.HotelId, opt => opt.MapFrom(_ => Guid.Empty))
+            .Include<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>();
+        CreateMap<UpdateHotelAsAdminCommandDto, UpdateHotelAsAdminCommand>()
+            .IncludeBase<UpdateHotelAsManagerCommandDto, UpdateHotelAsManagerCommand>();
     }
 }

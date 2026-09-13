@@ -1,6 +1,13 @@
+using Application.Hotels.Dtos;
+using MediatR;
+using SharedKernel.Common;
+
 namespace Application.Hotels.Commands;
 
 public record UpdateHotelAsManagerCommand
-    : UpdateHotelBaseCommand
+    : IRequest<Result<HotelDto>>
 {
+    public required Guid HotelId { get; init; }
+    public required string Name { get; init; }
+    public required string Address { get; init; }
 }

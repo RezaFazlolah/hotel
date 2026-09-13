@@ -1,6 +1,7 @@
 using Application.Common.Behaviors;
 using Application.Common.Paginations;
 using Application.Hotels.Configurations;
+using Application.Interfaces;
 using Application.Reservations.Services;
 using Domain.Interfaces;
 using FluentValidation;

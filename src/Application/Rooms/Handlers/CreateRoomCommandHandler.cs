@@ -34,16 +34,14 @@ public class CreateRoomCommandHandler(
         {
             var hotelExists = await hotelRepository.ExistsAsync(request.HotelId, ct);
             if (!hotelExists)
-                return Result<RoomDto>.Failure(
-                    [rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
+                return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
         }
         else if (currentUserInfo.roles.Contains(UserRole.Manager))
         {
             var managesHotel = await managerRepository.ManagesHotelAsync(currentUserInfo.id, request.HotelId, ct);
             if (!managesHotel)
-                return Result<RoomDto>.Failure(
-                    [rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
+                return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
                     ResultCode.NotFound);
         }
         else
@@ -58,7 +56,7 @@ public class CreateRoomCommandHandler(
             ]);
 
         var room = mapper.Map<Room>(request);
-        
+
         var result = await roomRepository.AddAsync(room, ct);
         var resultDto = result.Map<Room, RoomDto>(mapper);
         return Result<RoomDto>.Handle(resultDto, rootError);

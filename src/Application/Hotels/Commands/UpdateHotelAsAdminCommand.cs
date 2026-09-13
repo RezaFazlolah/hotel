@@ -1,7 +1,8 @@
 namespace Application.Hotels.Commands;
 
 public record UpdateHotelAsAdminCommand
-    : UpdateHotelBaseCommand
+    : UpdateHotelAsManagerCommand
 {
     public required decimal Rating { get; init; }
+    public required Guid? ManagerId { get; init; }
 }

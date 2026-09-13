@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using SharedKernel.Common;
 
 namespace Domain.Models;
 
@@ -12,4 +13,15 @@ public class Hotel
 
     public Manager? Manager { get; set; }
     public ICollection<Room> Rooms { get; init; } = [];
+
+    public Result AssignManager(Manager? manager)
+    {
+        if (manager?.HotelId is null)
+        {
+            Manager = manager;
+            return Result.Success();
+        }
+
+        return Result.Failure(new Error($"manager {manager.Id} already manages another hotel"));
+    }
 }

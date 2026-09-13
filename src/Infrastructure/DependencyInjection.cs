@@ -3,14 +3,12 @@ using Application.Interfaces.QueryServices;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Domain.Models;
-using Infrastructure.Configurations;
 using Infrastructure.Jwt;
 using Infrastructure.Paginations;
 using Infrastructure.Persistence;
 using Infrastructure.QueryServices;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
-using Infrastructure.Validators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,9 +66,10 @@ public static class DependencyInjection
             services.AddScoped<IRoomQueryService, RoomQueryService>();
 
             services.AddScoped<IReservationRepository, ReservationRepository>();
-            services.AddScoped<IReservationQueryService,
-                ReservationQueryService>();
-
+            services.AddScoped<IReservationQueryService, ReservationQueryService>();
+            
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
             return services;
         }
     }

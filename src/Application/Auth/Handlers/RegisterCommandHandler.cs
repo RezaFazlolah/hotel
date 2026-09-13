@@ -3,7 +3,6 @@ using Application.Auth.Dtos;
 using Application.Auth.Factories;
 using Application.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Models;
 using MediatR;
 using SharedKernel.Common;
 
@@ -18,7 +17,7 @@ public class RegisterCommandHandler(
         RegisterCommand request,
         CancellationToken ct)
     {
-        var registeringUser = UserFactory.CreateUserFromRegisterCommand(request); 
+        var registeringUser = UserFactory.CreateFromRegisterCommand(request); 
 
         var userRegisterResult = await userRepository.AddAsync(registeringUser, request.Password, ct);
         if(!userRegisterResult.Succeeded)

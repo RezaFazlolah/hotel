@@ -1,6 +1,7 @@
 using Application.Common.Extensions;
 using Application.Hotels.Commands;
 using Application.Hotels.Dtos;
+using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
@@ -13,9 +14,9 @@ namespace Application.Hotels.Handlers;
 
 public class CreateHotelCommandHandler(
     IHotelRepository hotelRepository,
-    IRoomRepository roomRepository,
     IManagerRepository managerRepository,
     ICurrentUserService currentUserService,
+    IUnitOfWork unitOfWork,
     IMapper mapper)
     : IRequestHandler<CreateHotelCommand, Result<HotelDto>>
 {
@@ -38,34 +39,19 @@ public class CreateHotelCommandHandler(
         if (request.ManagerId.HasValue)
         {
             var managerId = request.ManagerId.Value;
+            
             var managerResult = await managerRepository.GetByIdAsync(managerId, ct);
             if (!managerResult.Succeeded)
-                return Result<HotelDto>.Failure(
-                    [rootError, new Error($"manager {managerId} not found", ErrorCode.NotFound)], ResultCode.NotFound);
+                return Result<HotelDto>.Failure(managerResult.Errors.Prepend(rootError));
             var manager = (Manager)managerResult.Value;
 
-            if (manager.HotelId != null)
-                return Result<HotelDto>.Failure(
-                    [rootError, new Error($"manager {managerId} already manages another hotel")]);
-
-            hotel.Manager = manager;
-        }
-
-        var roomIds = request.RoomIds.ToList();
-        if (roomIds.Count > 0)
-        {
-            foreach (var roomId in roomIds)
-            {
-                var roomResult = await roomRepository.GetByIdAsync(roomId, ct);
-                if (!roomResult.Succeeded)
-                    return Result<HotelDto>.Failure(roomResult.Errors.Prepend(rootError), ResultCode.NotFound);
-                var room = roomResult.Value;
-
-                hotel.Rooms.Add(room);
-            }
+            var managerAssignmentResult = hotel.AssignManager(manager);
+            if (!managerAssignmentResult.Succeeded)
+                return Result<HotelDto>.Failure(managerAssignmentResult.Errors.Prepend(rootError));
         }
 
         var result = await hotelRepository.AddAsync(hotel, ct);
+        await unitOfWork.SaveChangesAsync(ct);
         var resultDto = result.Map<Hotel, HotelDto>(mapper);
         return Result<HotelDto>.Handle(resultDto, rootError);
     }

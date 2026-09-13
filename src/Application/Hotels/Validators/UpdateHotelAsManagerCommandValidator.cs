@@ -8,6 +8,5 @@ public class UpdateHotelAsManagerCommandValidator
 {
     public UpdateHotelAsManagerCommandValidator()
     {
-        Include(new UpdateHotelBaseCommandValidator());
     }
 }

@@ -1,6 +1,7 @@
 namespace Api.Dtos.HotelDtos;
 
 public record UpdateHotelAsManagerCommandDto()
-    : UpdateHotelBaseCommandDto
 {
+    public required string Name { get; init; }
+    public required string Address { get; init; }
 }

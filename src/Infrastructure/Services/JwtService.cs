@@ -2,7 +2,6 @@ using System.Security.Claims;
 using System.Text;
 using Application.Interfaces.Services;
 using Domain.Models;
-using Infrastructure.Configurations;
 using Infrastructure.Jwt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

@@ -43,8 +43,8 @@ public class UpdateHotelAsManagerCommandHandler(
         var hotel = hotelResult.Value;
 
         mapper.Map(request, hotel);
-        var updateResult = await hotelRepository.UpdateAsync(hotel, ct);
+        var updateResult = await hotelRepository.UpdateWithReloadAsync(hotel, ct);
         var updateResultDto = updateResult.Map<Hotel, HotelDto>(mapper);
-        return Result<HotelDto>.Handle(updateResultDto);
+        return Result<HotelDto>.Handle(updateResultDto, rootError);
     }
 }

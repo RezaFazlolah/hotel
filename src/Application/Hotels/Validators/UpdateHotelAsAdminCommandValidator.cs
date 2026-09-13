@@ -12,7 +12,7 @@ public class UpdateHotelAsAdminCommandValidator
     {
         var hotelSettings = hotelOptions.Value;
 
-        Include(new UpdateHotelBaseCommandValidator());
+        Include(new UpdateHotelAsManagerCommandValidator());
 
         RuleFor(x => x.Rating)
             .ValidHotelRating(hotelSettings.MinRating, hotelSettings.MaxRating);

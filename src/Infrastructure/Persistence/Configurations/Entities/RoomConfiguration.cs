@@ -2,7 +2,7 @@ using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations.Entities;
+namespace Infrastructure.Persistence.Configurations.Entities;
 
 public class RoomConfiguration
     : IEntityTypeConfiguration<Room>

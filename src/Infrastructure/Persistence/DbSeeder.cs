@@ -167,6 +167,7 @@ public static class DbSeeder
             await db.Reservations.AddRangeAsync(reservations);
         }
 
+        
         await db.SaveChangesAsync();
     }
 }

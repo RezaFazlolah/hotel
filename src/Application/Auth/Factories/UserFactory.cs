@@ -12,7 +12,7 @@ public static class UserFactory
     /// this approach is cleaner
     /// </summary>
     /// <returns></returns>
-    public static User CreateUserFromRegisterCommand(RegisterCommand registerCommand)
+    public static User CreateFromRegisterCommand(RegisterCommand registerCommand)
         => new()
         {
             PhoneNumber = registerCommand.PhoneNumber,
