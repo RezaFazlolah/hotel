@@ -43,9 +43,9 @@ public class HotelController(
         [FromQuery] GetAllHotelsQueryDto request,
         CancellationToken ct)
     {
-        // var validationResult = await getAllHotelsQueryDtoValidator.ValidateAsync(request, ct);
-        // if (!validationResult.IsValid)
-        //     return BadRequest(validationResult.Errors);
+        var validationResult = await getAllHotelsQueryDtoValidator.ValidateAsync(request, ct);
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
         
         var query = mapper.Map<GetAllHotelsQuery>(request);
         var result = await mediator.Send(query, ct);

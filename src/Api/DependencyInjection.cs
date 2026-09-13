@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Api.ExceptionHandlers;
 using Api.Services;
 using Application.Interfaces.Services;
+using FluentValidation;
 using Infrastructure.Configurations;
 using Infrastructure.Jwt;
 using Infrastructure.Validators;
@@ -19,7 +20,9 @@ public static class DependencyInjection
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddApiServices(IConfiguration configuration, string applicationName)
+        public IServiceCollection AddApiServices(
+            IConfiguration configuration,
+            string applicationName)
         {
             // scalar
             services.AddOpenApi();
@@ -47,6 +50,8 @@ public static class DependencyInjection
 
             // AutoMapper
             services.AddAutoMapper(_ => { }, typeof(ApiAssemblyMarker).Assembly);
+
+            services.AddValidatorsFromAssemblyContaining<ApiAssemblyMarker>();
 
             // OpenTelemetry
             services.AddOpenTelemetry()

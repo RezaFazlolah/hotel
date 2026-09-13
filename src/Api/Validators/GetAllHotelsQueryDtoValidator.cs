@@ -8,5 +8,6 @@ public class GetAllHotelsQueryDtoValidator
 {
     public GetAllHotelsQueryDtoValidator()
     {
+        
     }
 }

@@ -14,7 +14,6 @@ namespace Application.Hotels.Handlers;
 public class UpdateHotelAsAdminCommandHandler(
     ICurrentUserService currentUserService,
     IHotelRepository hotelRepository,
-    IManagerRepository managerRepository,
     IMapper mapper)
     : IRequestHandler<UpdateHotelAsAdminCommand, Result<HotelDto>>
 {
