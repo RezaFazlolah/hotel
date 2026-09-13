@@ -1,10 +1,8 @@
-using Application.Common.Paginations;
 using Application.Interfaces.Repositories;
 using Domain.Models;
 using Infrastructure.Paginations;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 using SharedKernel.Paginations;
@@ -13,9 +11,8 @@ namespace Infrastructure.Repositories;
 
 public class ReservationRepository(
     AppDbContext db,
-    IRoomRepository roomRepository,
-    IDistributedCache cache)
-    : BaseRepository<Guid, Reservation>(db, cache),
+    IRoomRepository roomRepository)
+    : BaseRepository<Guid, Reservation>(db),
         IReservationRepository
 {
     public override async Task<bool> ExistsAsync(

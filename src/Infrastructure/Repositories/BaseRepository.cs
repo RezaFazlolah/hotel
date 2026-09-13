@@ -9,8 +9,7 @@ using SharedKernel.Enums;
 namespace Infrastructure.Repositories;
 
 public abstract class BaseRepository<TId, TEntity>(
-    AppDbContext db,
-    IDistributedCache cache)
+    AppDbContext db)
     : IRepositoryBase<TId, TEntity>
     where TId : IEquatable<TId>
     where TEntity : class, IEntity<TId>

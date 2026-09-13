@@ -2,16 +2,14 @@ using Application.Interfaces.Repositories;
 using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
 namespace Infrastructure.Repositories;
 
 public class RoomRepository(
-    AppDbContext db,
-    IDistributedCache cache)
-    : BaseRepository<Guid, Room>(db, cache),
+    AppDbContext db)
+    : BaseRepository<Guid, Room>(db),
         IRoomRepository
 {
     public async Task<Result<IReadOnlyList<Room>>> GetAllByHotelAsync(
@@ -93,12 +91,12 @@ public class RoomRepository(
             .Where(r => r.Hotel.Manager != null && r.Hotel.Manager.Id == managerId)
             .Select(r => r.Id)
             .ToListAsync(ct));
-    
+
     // same as ManagerRepository.ManagesRoomAsync(Guid managerId, Guid roomId, CancellationToken ct)
     public async Task<bool> IsManagedByManagerAsync(
-            Guid roomId,
-            Guid managerId,
-            CancellationToken ct)
+        Guid roomId,
+        Guid managerId,
+        CancellationToken ct)
         => await db.Rooms
             .AnyAsync(r => r.Id == roomId
                            && r.Hotel.Manager != null

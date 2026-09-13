@@ -3,7 +3,6 @@ using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
@@ -11,9 +10,8 @@ namespace Infrastructure.Repositories;
 
 public class ManagerRepository(
     AppDbContext db,
-    UserManager<User> userManager,
-    IDistributedCache cache)
-    : UserRepository(db, userManager, cache),
+    UserManager<User> userManager)
+    : UserRepository(db, userManager),
         IManagerRepository
 {
     public override async Task<bool> ExistsAsync(Guid managerId, CancellationToken ct)

@@ -37,11 +37,6 @@ public class UpdateHotelAsAdminCommandHandler(
             return Result<HotelDto>.Failure(hotelResult.Errors.Prepend(rootError));
         var hotel = hotelResult.Value;
 
-        var managerResult = await managerRepository.GetByHotelIdAsync(request.HotelId, ct);
-        if (!managerResult.Succeeded)
-            return Result<HotelDto>.Failure(managerResult.Errors.Prepend(rootError));
-        hotel.Manager = managerResult.Value;
-
         mapper.Map(request, hotel);
         var updateResult = await hotelRepository.UpdateWithReloadAsync(hotel, ct);
         var updateResultDto = updateResult.Map<Hotel, HotelDto>(mapper);

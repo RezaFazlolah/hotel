@@ -45,8 +45,8 @@ public static class DependencyInjection
                 .AddEntityFrameworkStores<AppDbContext>();
 
             // redis
-            services.AddStackExchangeRedisCache(options =>
-                options.Configuration = configuration.GetConnectionString("Redis"));
+            // services.AddStackExchangeRedisCache(options =>
+                // options.Configuration = configuration.GetConnectionString("Redis"));
 
             services.AddOptions<JwtSettings>()
                 .Bind(configuration.GetSection(JwtSettings.SectionName))

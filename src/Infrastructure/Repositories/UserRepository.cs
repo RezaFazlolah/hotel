@@ -3,7 +3,6 @@ using Domain.Models;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using SharedKernel.Common;
 using SharedKernel.Enums;
 
@@ -11,9 +10,8 @@ namespace Infrastructure.Repositories;
 
 public class UserRepository(
     AppDbContext db,
-    UserManager<User> userManager,
-    IDistributedCache cache)
-    : BaseRepository<Guid, User>(db, cache),
+    UserManager<User> userManager)
+    : BaseRepository<Guid, User>(db),
         IUserRepository
 {
     public override Task<Result<User>> AddAsync(
@@ -125,7 +123,7 @@ public class UserRepository(
                 ResultCode.NotFound)
             : Result<User>.Success(result);
     }
-    
+
     public virtual async Task<bool> ExistsAsync(
         string phoneNumber,
         CancellationToken ct)

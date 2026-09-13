@@ -9,9 +9,8 @@ using SharedKernel.Enums;
 namespace Infrastructure.Repositories;
 
 public class HotelRepository(
-    AppDbContext db,
-    IDistributedCache cache)
-    : BaseRepository<Guid, Hotel>(db, cache),
+    AppDbContext db)
+    : BaseRepository<Guid, Hotel>(db),
         IHotelRepository
 {
     public async Task<Result<Guid?>> GetManagerIdAsync(
