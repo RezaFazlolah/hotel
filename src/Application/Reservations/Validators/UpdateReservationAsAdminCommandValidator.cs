@@ -8,7 +8,7 @@ public class UpdateReservationAsAdminCommandValidator
 {
     public UpdateReservationAsAdminCommandValidator()
     {
-        Include(new UpdateReservationBaseCommandValidator());
+        Include(new UpdateReservationAsManagerCommandValidator());
 
         RuleFor(x => x.Status)
             .ValidReservationStatus();

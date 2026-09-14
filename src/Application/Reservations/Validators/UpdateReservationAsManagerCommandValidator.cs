@@ -8,6 +8,6 @@ public class UpdateReservationAsManagerCommandValidator
 {
     public UpdateReservationAsManagerCommandValidator()
     {
-        Include(new UpdateReservationBaseCommandValidator());
+        Include(new UpdateReservationAsGuestCommandValidator());
     }
 }

@@ -3,8 +3,7 @@ using SharedKernel.Enums;
 namespace Api.Dtos.ReservationDtos;
 
 public record UpdateReservationAsAdminCommandDto
-    : UpdateReservationBaseCommandDto
+    : UpdateReservationAsManagerCommandDto
 {
-    public required Guid RoomId { get; set; }
     public required ReservationStatus Status { get; init; }
 }

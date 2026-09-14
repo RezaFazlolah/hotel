@@ -1,5 +1,4 @@
 using Api.Dtos.ReservationDtos;
-using Application.Common.Paginations;
 using Application.Reservations.Commands;
 using Application.Reservations.Filters;
 using Application.Reservations.Queries;
@@ -50,16 +49,13 @@ public class ReservationMappingProfiles
                         : new PaginationParameters())
             );
 
-        CreateMap<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>()
-            .ForMember(dst => dst.ReservationId, opt => opt.Ignore())
-            .Include<UpdateReservationAsAdminCommandDto, UpdateReservationAsAdminCommand>()
-            .Include<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>()
-            .Include<UpdateReservationAsGuestCommandDto, UpdateReservationAsGuestCommand>();
-        CreateMap<UpdateReservationAsAdminCommandDto, UpdateReservationAsAdminCommand>()
-            .IncludeBase<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>();
-        CreateMap<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>()
-            .IncludeBase<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>();
         CreateMap<UpdateReservationAsGuestCommandDto, UpdateReservationAsGuestCommand>()
-            .IncludeBase<UpdateReservationBaseCommandDto, UpdateReservationBaseCommand>();
+            .ForMember(dst => dst.ReservationId, opt => opt.Ignore())
+            .Include<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>()
+            .Include<UpdateReservationAsAdminCommandDto, UpdateReservationAsAdminCommand>();
+        CreateMap<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>()
+            .IncludeBase<UpdateReservationAsGuestCommandDto, UpdateReservationAsGuestCommand>();
+        CreateMap<UpdateReservationAsAdminCommandDto, UpdateReservationAsAdminCommand>()
+            .IncludeBase<UpdateReservationAsManagerCommandDto, UpdateReservationAsManagerCommand>();
     }
 }

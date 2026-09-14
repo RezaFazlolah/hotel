@@ -8,6 +8,10 @@ public class UpdateReservationAsGuestCommandValidator
 {
     public UpdateReservationAsGuestCommandValidator()
     {
-        Include(new UpdateReservationBaseCommandValidator());
+        RuleFor(x => x.CheckInDate)
+            .ValidCheckInDate();
+
+        RuleFor(x => x.CheckOutDate)
+            .ValidCheckOutDate(x => x.CheckInDate);
     }
 }

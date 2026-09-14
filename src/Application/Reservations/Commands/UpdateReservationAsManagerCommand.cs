@@ -1,7 +1,7 @@
 namespace Application.Reservations.Commands;
 
 public record UpdateReservationAsManagerCommand
-    : UpdateReservationBaseCommand
+    : UpdateReservationAsGuestCommand
 {
     public required Guid RoomId { get; set; }
 }
