@@ -8,6 +8,13 @@ public class UpdateRoomAsManagerCommandValidator
 {
     public UpdateRoomAsManagerCommandValidator()
     {
-        Include(new UpdateRoomBaseCommandValidator());
+        RuleFor(x => x.Number)
+            .ValidRoomNumber();
+
+        RuleFor(x => x.Type)
+            .ValidRoomType();
+
+        RuleFor(x => x.PricePerNight)
+            .ValidPricePerNight();
     }
 }

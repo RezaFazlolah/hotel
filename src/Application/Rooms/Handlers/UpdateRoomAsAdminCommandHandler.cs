@@ -22,7 +22,7 @@ public class UpdateRoomAsAdminCommandHandler(
         UpdateRoomAsAdminCommand request,
         CancellationToken ct)
     {
-        var rootError = new Error($"update room {request.Id} failed");
+        var rootError = new Error($"update room {request.RoomId} failed");
 
         var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
@@ -32,13 +32,20 @@ public class UpdateRoomAsAdminCommandHandler(
         if (!currentUserInfo.roles.Contains(UserRole.Admin))
             return Result<RoomDto>.Forbidden(rootError);
 
-        var roomExists = await roomRepository.ExistsAsync(request.Id, ct);
-        if (!roomExists)
-            return Result<RoomDto>.Failure([rootError, new Error("room not found", ErrorCode.NotFound)], ResultCode.NotFound);
+        var roomResult = await roomRepository.GetByIdAsync(request.RoomId, ct);
+        if(!roomResult.Succeeded)
+            return Result<RoomDto>.Failure(roomResult.Errors.Prepend(rootError));
+        var room =  roomResult.Value;
 
-        var hotelExists = await hotelRepository.ExistsAsync(request.HotelId, ct);
-        if (!hotelExists)
-            return Result<RoomDto>.Failure([rootError, new Error("hotel not found", ErrorCode.NotFound)],
+        // Future: purpose of this region is to load room's hotel, after implementing RoomRepository.GetByIdAsync() which can custom-load navigation properties, laod room with its hotel
+        var hotelResult = await hotelRepository.GetByIdAsync(request.HotelId, ct);
+        if(!hotelResult.Succeeded)
+            return Result<RoomDto>.Failure(hotelResult.Errors.Prepend(rootError));
+        room.Hotel =  hotelResult.Value;
+        
+        var newHotelExists = await hotelRepository.ExistsAsync(request.HotelId, ct);
+        if (!newHotelExists)
+            return Result<RoomDto>.Failure([rootError, new Error($"hotel {request.HotelId} not found", ErrorCode.NotFound)],
                 ResultCode.NotFound);
 
         var roomNumberExists = await roomRepository.NumberExistsAsync(request.HotelId, request.Number, ct);

@@ -1,7 +1,7 @@
 namespace Application.Rooms.Commands;
 
 public record UpdateRoomAsAdminCommand
-    : UpdateRoomBaseCommand
+    : UpdateRoomAsManagerCommand
 {
     public required Guid HotelId { get; init; }
 }

@@ -26,7 +26,7 @@ public class GetReservationByIdQueryHandler(
             return Result<ReservationDto>.Failure(currentUserInfoResult.Errors.Prepend(rootError));
         var currentUserInfo = currentUserInfoResult.Value;
 
-        if (!currentUserService.IsAuthenticated())
+        if (!currentUserService.IsAuthenticated)
             return Result<ReservationDto>.Forbidden(rootError);
 
         var reservationResult = await reservationQueryService.GetByIdAsync(request.Id, ct);

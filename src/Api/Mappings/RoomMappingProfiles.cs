@@ -1,5 +1,4 @@
 using Api.Dtos.RoomDtos;
-using Application.Common.Paginations;
 using Application.Rooms.Commands;
 using Application.Rooms.Filters;
 using Application.Rooms.Queries;
@@ -49,13 +48,11 @@ public class RoomMappingProfiles
                         : new PaginationParameters())
             );
 
-        CreateMap<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>()
-            .ForMember(dst => dst.Id, opt => opt.Ignore())
-            .Include<UpdateRoomAsAdminCommandBaseDto, UpdateRoomAsAdminCommand>()
-            .Include<UpdateRoomAsManagerCommandBaseDto, UpdateRoomAsManagerCommand>();
-        CreateMap<UpdateRoomAsAdminCommandBaseDto, UpdateRoomAsAdminCommand>()
-            .IncludeBase<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>();
-        CreateMap<UpdateRoomAsManagerCommandBaseDto, UpdateRoomAsManagerCommand>()
-            .IncludeBase<UpdateRoomBaseCommandDto, UpdateRoomBaseCommand>();
+        CreateMap<UpdateRoomAsManagerCommandDto, UpdateRoomAsManagerCommand>()
+            .ForMember(dst => dst.RoomId, opt => opt.Ignore())
+            .Include<UpdateRoomAsAdminCommandDto, UpdateRoomAsAdminCommand>();
+        CreateMap<UpdateRoomAsAdminCommandDto, UpdateRoomAsAdminCommand>()
+            .IncludeBase<UpdateRoomAsManagerCommandDto, UpdateRoomAsManagerCommand>();
+
     }
 }

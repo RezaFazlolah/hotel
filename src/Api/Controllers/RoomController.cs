@@ -50,10 +50,10 @@ public class RoomController(
     [Authorize(Roles = $"{nameof(UserRole.Admin)}")]
     public async Task<IActionResult> UpdateAsAdminAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateRoomAsAdminCommandBaseDto request,
+        [FromBody] UpdateRoomAsAdminCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateRoomAsAdminCommand>(request) with { Id = id };
+        var command = mapper.Map<UpdateRoomAsAdminCommand>(request) with { RoomId = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }
@@ -62,10 +62,10 @@ public class RoomController(
     [Authorize(Roles = $"{nameof(UserRole.Manager)}")]
     public async Task<IActionResult> UpdateAsManagerAsync(
         [FromRoute] Guid id,
-        [FromBody] UpdateRoomAsManagerCommandBaseDto request,
+        [FromBody] UpdateRoomAsManagerCommandDto request,
         CancellationToken ct)
     {
-        var command = mapper.Map<UpdateRoomAsManagerCommand>(request) with { Id = id };
+        var command = mapper.Map<UpdateRoomAsManagerCommand>(request) with { RoomId = id };
         var result = await mediator.Send(command, ct);
         return HandleResult(result);
     }

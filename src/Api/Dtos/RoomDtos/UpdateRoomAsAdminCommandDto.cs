@@ -1,7 +1,7 @@
 namespace Api.Dtos.RoomDtos;
 
-public record UpdateRoomAsAdminCommandBaseDto
-    : UpdateRoomBaseCommandDto
+public record UpdateRoomAsAdminCommandDto
+    : UpdateRoomAsManagerCommandDto
 {
     public required Guid HotelId { get; init; }
 }

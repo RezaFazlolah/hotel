@@ -62,11 +62,6 @@ public class CurrentUserService(
         return await userRepository.GetByIdAsync(currentUserId, CancellationToken.None);
     }
 
-    public bool IsAuthenticated()
-    {
-        var rolesResult = Roles;
-        return rolesResult.Succeeded
-            ? rolesResult.Value.Any(r => Enum.IsDefined<UserRole>(r))
-            : false;
-    }
+    public bool IsAuthenticated
+        => httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
 }

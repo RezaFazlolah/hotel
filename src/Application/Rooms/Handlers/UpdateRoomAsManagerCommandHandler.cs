@@ -22,7 +22,7 @@ public class UpdateRoomAsManagerCommandHandler(
         UpdateRoomAsManagerCommand request,
         CancellationToken ct)
     {
-        var rootError = new Error($"update room {request.Id} failed");
+        var rootError = new Error($"update room {request.RoomId} failed");
 
         var currentUserInfoResult = currentUserService.Info;
         if (!currentUserInfoResult.Succeeded)
@@ -32,11 +32,11 @@ public class UpdateRoomAsManagerCommandHandler(
         if (!currentUserInfo.roles.Contains(UserRole.Manager))
             return Result<RoomDto>.Forbidden(rootError);
 
-        var managesRoom = await managerRepository.ManagesRoomAsync(currentUserInfo.id, request.Id, ct);
+        var managesRoom = await managerRepository.ManagesRoomAsync(currentUserInfo.id, request.RoomId, ct);
         if (!managesRoom)
             return Result<RoomDto>.Failure([rootError, new Error($"room not found", ErrorCode.NotFound)], ResultCode.NotFound);
 
-        var hotelIdResult = await roomRepository.GetHotelIdAsync(request.Id, ct);
+        var hotelIdResult = await roomRepository.GetHotelIdAsync(request.RoomId, ct);
         if (!hotelIdResult.Succeeded)
             return Result<RoomDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
         var hotelId = hotelIdResult.Value;
