@@ -36,12 +36,6 @@ public class UpdateRoomAsAdminCommandHandler(
         if(!roomResult.Succeeded)
             return Result<RoomDto>.Failure(roomResult.Errors.Prepend(rootError));
         var room =  roomResult.Value;
-
-        // Future: purpose of this region is to load room's hotel, after implementing RoomRepository.GetByIdAsync() which can custom-load navigation properties, laod room with its hotel
-        var hotelResult = await hotelRepository.GetByIdAsync(request.HotelId, ct);
-        if(!hotelResult.Succeeded)
-            return Result<RoomDto>.Failure(hotelResult.Errors.Prepend(rootError));
-        room.Hotel =  hotelResult.Value;
         
         var newHotelExists = await hotelRepository.ExistsAsync(request.HotelId, ct);
         if (!newHotelExists)
@@ -52,8 +46,8 @@ public class UpdateRoomAsAdminCommandHandler(
         if (roomNumberExists)
             return Result<RoomDto>.Failure([rootError, new Error($"room number {request.Number} already exists")]);
 
-        var updatedRoom = mapper.Map<Room>(request);
-        var result = await roomRepository.UpdateAsync(updatedRoom, ct);
+        mapper.Map(request, room);
+        var result = await roomRepository.UpdateWithReloadAsync(room, ct);
         var resultDto = result.Map<Room, RoomDto>(mapper);
         return Result<RoomDto>.Handle(resultDto, rootError);
     }

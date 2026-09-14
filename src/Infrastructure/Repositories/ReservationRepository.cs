@@ -137,4 +137,19 @@ public class ReservationRepository(
         => await db.Reservations.AnyAsync(r =>
             r.Id == reservationId
             && r.GuestId == guestId, ct);
+    
+    public async Task<Result<IEnumerable<Guid>>> GetReservationIds(Guid managerId, CancellationToken ct)
+    {
+        var result= await db.Managers.Where(m => m.Id == managerId)
+            .Select(List<Guid>? (m) => 
+                m.Hotel == null
+                    ? new List<Guid>()
+                    : m.Hotel.Rooms.SelectMany(r => r.Reservations).Select(r=>r.Id).ToList()
+            )
+            .FirstOrDefaultAsync(ct);
+    
+        if(result is null)
+            return Result<IEnumerable<Guid>>.Failure(new Error($"manager {managerId} not found"));
+        return Result<IEnumerable<Guid>>.Success(result);
+    }
 }

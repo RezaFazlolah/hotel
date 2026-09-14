@@ -10,7 +10,7 @@ public static class RoomValidationExtensions
         public IRuleBuilder<T, int> ValidRoomNumber()
             => ruleBuilder
                 .GreaterThan(0)
-                .WithMessage("RoomNumber must be greater than or equal to 0");
+                .WithMessage("RoomNumber must be greater than 0");
     }
 
     extension<T>(IRuleBuilder<T, int?> ruleBuilder)
@@ -18,7 +18,7 @@ public static class RoomValidationExtensions
         public IRuleBuilder<T, int?> ValidRoomNumber()
             => ruleBuilder
                 .Must((_, roomNumber) => roomNumber is null or > 0)
-                .WithMessage("RoomNumber must be greater than or equal to 0");
+                .WithMessage("RoomNumber must be greater than 0");
     }
 
     extension<T>(IRuleBuilder<T, RoomType> ruleBuilder)
@@ -43,7 +43,7 @@ public static class RoomValidationExtensions
     {
         public IRuleBuilder<T, decimal> ValidPricePerNight()
             => ruleBuilder
-                .GreaterThan(0)
+                .GreaterThanOrEqualTo(0)
                 .WithMessage("PricePerNight must be greater than or equal to 0");
     }
 
@@ -51,7 +51,7 @@ public static class RoomValidationExtensions
     {
         public IRuleBuilder<T, decimal?> ValidPricePerNight()
             => ruleBuilder
-                .Must((_, roomPricePerNight) => roomPricePerNight is null or > 0)
+                .Must((_, roomPricePerNight) => roomPricePerNight is null or >= 0)
                 .WithMessage("PricePerNight must be greater than or equal to 0");
     }
 }

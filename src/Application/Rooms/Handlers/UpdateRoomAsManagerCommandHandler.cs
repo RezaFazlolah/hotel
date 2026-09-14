@@ -36,18 +36,17 @@ public class UpdateRoomAsManagerCommandHandler(
         if (!managesRoom)
             return Result<RoomDto>.Failure([rootError, new Error($"room not found", ErrorCode.NotFound)], ResultCode.NotFound);
 
-        var hotelIdResult = await roomRepository.GetHotelIdAsync(request.RoomId, ct);
-        if (!hotelIdResult.Succeeded)
-            return Result<RoomDto>.Failure(hotelIdResult.Errors.Prepend(rootError));
-        var hotelId = hotelIdResult.Value;
+        var roomResult = await roomRepository.GetByIdAsync(request.RoomId, ct);
+        if(!roomResult.Succeeded)
+            return Result<RoomDto>.Failure(roomResult.Errors.Prepend(rootError));
+        var room =  roomResult.Value;
 
-        var roomNumberExists = await roomRepository.NumberExistsAsync(hotelId, request.Number, ct);
+        var roomNumberExists = await roomRepository.NumberExistsAsync(room.HotelId, request.Number, ct);
         if (roomNumberExists)
             return Result<RoomDto>.Failure([rootError, new Error($"room number {request.Number} already exists")]);
 
-        var updatedRoom = mapper.Map<Room>(request);
-        updatedRoom.HotelId = hotelId;
-        var result = await roomRepository.UpdateAsync(updatedRoom, ct);
+        mapper.Map(request, room);
+        var result = await roomRepository.UpdateWithReloadAsync(room, ct);
         var resultDto = result.Map<Room, RoomDto>(mapper);
         return Result<RoomDto>.Handle(resultDto, rootError);    }
 }

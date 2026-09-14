@@ -9,5 +9,4 @@ public record RoomDto
     public int Number { get; init; }
     public RoomType Type { get; init; }
     public decimal PricePerNight { get; init; }
-    // public HotelDto? Hotel { get; set; }
 }
