@@ -9,18 +9,17 @@ public class ReservationService(
     IRoomRepository roomRepository)
     : IReservationService
 {
-    public async Task<Result<decimal>> CalculatePriceAsync(
+    public async Task<Result> CalculatePriceAsync(
         Reservation reservation,
         CancellationToken ct)
     {
         var roomResult = await roomRepository.GetByIdAsync(reservation.RoomId, ct);
         if (!roomResult.Succeeded)
-            return Result<decimal>.Failure(
-                roomResult.Errors.Prepend(new Error($"calculate reservation {reservation.Id} price failed")));
+            return Result.Failure(roomResult.Errors);
         var room = roomResult.Value;
 
-        var reservationTotalPrice = CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate, room.PricePerNight);
-        return Result<decimal>.Success(reservationTotalPrice);
+        reservation.TotalPrice = CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate, room.PricePerNight);
+        return Result.Success();
     }
 
     public decimal CalculatePrice(

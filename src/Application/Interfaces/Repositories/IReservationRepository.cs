@@ -19,8 +19,8 @@ public interface IReservationRepository
 
     Task<bool> IsRoomReservedAsync(
         // check if there is any reservation, but guestId is ignored, it's used for updating reservation
+        Guid reservationId,
         Guid roomId,
-        Guid guestId,
         DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct);
@@ -51,12 +51,12 @@ public interface IReservationRepository
         CancellationToken ct);
 
     // same as IManagerRepository.ManagesReservationAsync(Guid managerId, Guid reservationId, CancellationToken ct)
-    Task<bool> IsManagedByManager(
+    Task<bool> IsManagedByManagerAsync(
         Guid reservationId,
         Guid managerId,
         CancellationToken ct);
     
-    Task<bool> IsReservedByGuest(
+    Task<bool> IsReservedByGuestAsync(
         Guid reservationId,
         Guid guestId,
         CancellationToken ct);

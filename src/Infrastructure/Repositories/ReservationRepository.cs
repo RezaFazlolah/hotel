@@ -39,8 +39,8 @@ public class ReservationRepository(
                 ct);
 
     public async Task<bool> IsRoomReservedAsync(
-        Guid roomId,
         Guid reservationId,
+        Guid roomId,
         DateTimeOffset checkInDate,
         DateTimeOffset checkOutDate,
         CancellationToken ct)
@@ -120,7 +120,7 @@ public class ReservationRepository(
         );
 
     // same as ManagerRepository.ManagesReservationAsync(Guid managerId, Guid reservationId, CancellationToken ct)
-    public async Task<bool> IsManagedByManager(
+    public async Task<bool> IsManagedByManagerAsync(
         Guid reservationId,
         Guid managerId,
         CancellationToken ct)
@@ -130,7 +130,7 @@ public class ReservationRepository(
                 && r.Room.Hotel.Manager != null
                 && r.Room.Hotel.Manager.Id == managerId, ct);
 
-    public async Task<bool> IsReservedByGuest(
+    public async Task<bool> IsReservedByGuestAsync(
         Guid reservationId,
         Guid guestId,
         CancellationToken ct)

@@ -67,9 +67,9 @@ public class CreateReservationCommandHandler(
         {
             var roomExists = await roomRepository.ExistsAsync(request.RoomId, ct);
             if (!roomExists)
-                return Result<ReservationDto>.Failure([rootError, new Error($"room not found")]);
+                return Result<ReservationDto>.Failure([rootError, new Error($"room not found")], ResultCode.NotFound);
 
-            // Future: InsertHotelForGuestCommandDto, it shouldn't take guestId as a parameter, unlike admin & manager
+            // Future: CreateHotelAsGuestCommandDto, it shouldn't take guestId as a parameter, unlike admin & manager
             // for Guest, ignore request's GuestId.
             request = request with { GuestId = currentUserInfo.id };
         }
@@ -81,21 +81,18 @@ public class CreateReservationCommandHandler(
         var isReserved = await reservationRepository.IsRoomReservedAsync(request.RoomId, request.CheckInDate,
             request.CheckOutDate, ct);
         if (isReserved)
-            return Result<ReservationDto>.Failure([rootError, new Error($"room is reserved")]);
+            return Result<ReservationDto>.Failure([rootError, new Error($"room is reserved")], ResultCode.Conflict);
 
         var reservation = mapper.Map<Reservation>(request);
         
-        var totalPriceResult = await reservationService.CalculatePriceAsync(reservation, ct);
-        if (!totalPriceResult.Succeeded)
-            return Result<ReservationDto>.Failure(totalPriceResult.Errors.Prepend(rootError));
-        var totalPrice = totalPriceResult.Value;
+        var calculateTotalPriceResult = await reservationService.CalculatePriceAsync(reservation, ct);
+        if (!calculateTotalPriceResult.Succeeded)
+            return Result<ReservationDto>.Failure(calculateTotalPriceResult.Errors.Prepend(rootError));
 
-        reservation.TotalPrice = totalPrice;
         reservation.Status = ReservationStatus.Confirmed;
 
-        var reservationInsertResult = await reservationRepository.AddAsync(reservation, ct);
-        var reservationInsertResultDto = reservationInsertResult.Map<Reservation, ReservationDto>(mapper);
-
-        return Result<ReservationDto>.Handle(reservationInsertResultDto, rootError);
+        var reservationCreateResult = await reservationRepository.AddAsync(reservation, ct);
+        var reservationCreateResultDto = reservationCreateResult.Map<Reservation, ReservationDto>(mapper);
+        return Result<ReservationDto>.Handle(reservationCreateResultDto, rootError);
     }
 }

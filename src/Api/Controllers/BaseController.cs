@@ -21,8 +21,9 @@ public class BaseController
         return result.Code switch
         {
             ResultCode.Unauthorized => Unauthorized(ErrorsToString(result.Errors)),
-            ResultCode.Forbidden => Forbid(ErrorsToString(result.Errors)),
+            ResultCode.Forbidden => Forbid(),
             ResultCode.NotFound => NotFound(ErrorsToString(result.Errors)),
+            ResultCode.Conflict => Conflict(ErrorsToString(result.Errors)),
             _ => BadRequest(ErrorsToString(result.Errors)),
         };
     }

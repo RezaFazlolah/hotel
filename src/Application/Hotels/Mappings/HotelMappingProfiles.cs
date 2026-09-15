@@ -15,12 +15,12 @@ public class HotelMappingProfiles
     {
         CreateMap<Hotel, HotelBaseDto>();
         CreateMap<Hotel, HotelDto>()
+            .IncludeBase<Hotel, HotelBaseDto>()
             .ForMember(dst => dst.ManagerId,
                 opt => opt.MapFrom(src =>
                     src.Manager != null
                         ? src.Manager.Id
-                        : (Guid?)null))
-            .IncludeBase<Hotel, HotelBaseDto>();
+                        : (Guid?)null));
 
         CreateMap<Result<Hotel>, Result<HotelDto>>();
         CreateMap<PagedResult<Hotel>, PagedResult<HotelDto>>();
@@ -38,8 +38,8 @@ public class HotelMappingProfiles
             .ForMember(dst => dst.Rooms, opt => opt.Ignore())
             .Include<UpdateHotelAsAdminCommand, Hotel>();
         CreateMap<UpdateHotelAsAdminCommand, Hotel>()
+            .IncludeBase<UpdateHotelAsManagerCommand, Hotel>()
             .ForMember(dst => dst.Rating, opt => opt.MapFrom(src => src.Rating))
-            .ForMember(dst => dst.Manager, opt => opt.Ignore())
-            .IncludeBase<UpdateHotelAsManagerCommand, Hotel>();
+            .ForMember(dst => dst.Manager, opt => opt.Ignore());
     }
 }

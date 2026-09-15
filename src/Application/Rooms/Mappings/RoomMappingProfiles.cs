@@ -31,8 +31,8 @@ public class RoomMappingProfiles
             .ForMember(dst => dst.Reservations, opt => opt.Ignore())
             .Include<UpdateRoomAsAdminCommand, Room>();
         CreateMap<UpdateRoomAsAdminCommand, Room>()
-            .ForMember(dst=>dst.HotelId, opt=>opt.MapFrom(src=>src.HotelId))
-            .IncludeBase<UpdateRoomAsManagerCommand, Room>();
+            .IncludeBase<UpdateRoomAsManagerCommand, Room>()
+            .ForMember(dst => dst.HotelId, opt => opt.MapFrom(src => src.HotelId));
 
     }
 }

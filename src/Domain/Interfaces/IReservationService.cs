@@ -5,7 +5,7 @@ namespace Domain.Interfaces;
 
 public interface IReservationService
 {
-    public Task<Result<decimal>> CalculatePriceAsync(
+    public Task<Result> CalculatePriceAsync(
         Reservation reservation,
         CancellationToken ct);
 

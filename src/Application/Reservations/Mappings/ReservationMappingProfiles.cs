@@ -33,13 +33,14 @@ public class ReservationMappingProfiles
             .ForMember(dst=>dst.Guest, opt => opt.Ignore())
             .ForMember(dst=>dst.RoomId, opt => opt.Ignore())
             .ForMember(dst=>dst.Room, opt => opt.Ignore())
-            .Include<UpdateReservationAsManagerCommand, Reservation>()
-            .Include<UpdateReservationAsAdminCommand, Reservation>();
+            .Include<UpdateReservationAsManagerCommand, Reservation>();
         CreateMap<UpdateReservationAsManagerCommand, Reservation>()
-            .ForMember(dst=>dst.RoomId, opt => opt.MapFrom(src=>src.RoomId))
-            .IncludeBase<UpdateReservationAsGuestCommand, Reservation>();
+            .IncludeBase<UpdateReservationAsGuestCommand, Reservation>()
+            .ForMember(dst => dst.RoomId, opt => opt.MapFrom(src => src.RoomId))
+            .Include<UpdateReservationAsAdminCommand, Reservation>();
         CreateMap<UpdateReservationAsAdminCommand, Reservation>()
-            .ForMember(dst=>dst.Status, opt => opt.MapFrom(src=>src.Status))
-            .IncludeBase<UpdateReservationAsManagerCommand, Reservation>();
+            .IncludeBase<UpdateReservationAsManagerCommand, Reservation>()
+            .ForMember(dst => dst.RoomId, opt => opt.MapFrom(src => src.RoomId))
+            .ForMember(dst => dst.Status, opt => opt.MapFrom(src => src.Status));
     }
 }
