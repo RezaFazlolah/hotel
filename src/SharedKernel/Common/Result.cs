@@ -74,7 +74,8 @@ public class Result<T>
     {
     }
 
-    public static Result<T> Success(T value,
+    public static Result<T> Success(
+        T value,
         ResultCode resultCode = ResultCode.Default,
         string? message = null)
         => new() { Succeeded = true, Value = value, Code = resultCode, Message = message };

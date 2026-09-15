@@ -18,13 +18,7 @@ public class ReservationService(
             return Result.Failure(roomResult.Errors);
         var room = roomResult.Value;
 
-        reservation.TotalPrice = CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate, room.PricePerNight);
+        reservation.SetTotalPrice(room.PricePerNight);
         return Result.Success();
     }
-
-    public decimal CalculatePrice(
-        DateTimeOffset checkInDate,
-        DateTimeOffset checkOutDate,
-        decimal pricePerNight)
-        => (checkOutDate.Date - checkInDate.Date).Days * pricePerNight;
 }

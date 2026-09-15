@@ -158,8 +158,7 @@ public static class DbSeeder
         };
 
         foreach (var reservation in reservations)
-            reservation.TotalPrice = reservationService.CalculatePrice(reservation.CheckInDate, reservation.CheckOutDate,
-                reservation.Room.PricePerNight);
+            reservation.SetTotalPrice(reservation.Room.PricePerNight);
 
         if (seedReservation)
         {
