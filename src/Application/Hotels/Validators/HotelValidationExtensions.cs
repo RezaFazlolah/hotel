@@ -21,4 +21,17 @@ public static class HotelValidationExtensions
                     || (minRating <= rating && rating <= maxRating))
                 .WithMessage($"Rating must be between {minRating} and {maxRating}");
     }
+
+    extension<T>(IRuleBuilder<T, string> ruleBuilder)
+    {
+        public IRuleBuilder<T, string> ValidHotelName()
+            => ruleBuilder.
+                MaximumLength(200)
+                .WithMessage("max Name length is 200");
+        
+        public IRuleBuilder<T, string> ValidHotelAddress()
+            => ruleBuilder.
+                MaximumLength(500)
+                .WithMessage("max Address length is 500");
+    }
 }

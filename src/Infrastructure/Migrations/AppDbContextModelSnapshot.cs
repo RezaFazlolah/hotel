@@ -17,7 +17,7 @@ namespace Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -387,14 +387,14 @@ namespace Infrastructure.Migrations
                 {
                     b.HasBaseType("Domain.Models.User");
 
-                    b.ToTable("Admins", (string)null);
+                    b.ToTable("admins", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Guest", b =>
                 {
                     b.HasBaseType("Domain.Models.User");
 
-                    b.ToTable("Guests", (string)null);
+                    b.ToTable("guests", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Manager", b =>
@@ -409,7 +409,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_managers_hotel_id");
 
-                    b.ToTable("Managers", (string)null);
+                    b.ToTable("managers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Reservation", b =>

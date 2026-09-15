@@ -22,6 +22,8 @@ public class Hotel
             return Result.Success();
         }
 
-        return Result.Failure(new Error($"manager {manager.Id} already manages another hotel"));
+        return manager.HotelId == Id
+            ? Result.Success()
+            : Result.Failure(new Error($"manager {manager.Id} already manages another hotel"));
     }
 }

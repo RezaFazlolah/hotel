@@ -89,14 +89,14 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Admins",
+                name: "admins",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Admins", x => x.id);
+                    table.PrimaryKey("PK_admins", x => x.id);
                     table.ForeignKey(
                         name: "fk_admins_asp_net_users_id",
                         column: x => x.id,
@@ -191,14 +191,14 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Guests",
+                name: "guests",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Guests", x => x.id);
+                    table.PrimaryKey("PK_guests", x => x.id);
                     table.ForeignKey(
                         name: "fk_guests_asp_net_users_id",
                         column: x => x.id,
@@ -208,7 +208,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Managers",
+                name: "managers",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -216,7 +216,7 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Managers", x => x.id);
+                    table.PrimaryKey("PK_managers", x => x.id);
                     table.ForeignKey(
                         name: "fk_managers_asp_net_users_id",
                         column: x => x.id,
@@ -269,7 +269,7 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "fk_reservations_guests_guest_id",
                         column: x => x.guest_id,
-                        principalTable: "Guests",
+                        principalTable: "guests",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -319,7 +319,7 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "ix_managers_hotel_id",
-                table: "Managers",
+                table: "managers",
                 column: "hotel_id",
                 unique: true);
 
@@ -344,7 +344,7 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Admins");
+                name: "admins");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -362,7 +362,7 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Managers");
+                name: "managers");
 
             migrationBuilder.DropTable(
                 name: "reservations");
@@ -371,7 +371,7 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Guests");
+                name: "guests");
 
             migrationBuilder.DropTable(
                 name: "rooms");
